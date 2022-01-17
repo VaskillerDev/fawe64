@@ -1,11 +1,11 @@
 #FAWE64
 
 ##Требования:
-[NodeJs](https://nodejs.org/en/)
-[WASI SDK](https://github.com/WebAssembly/wasi-sdk)
-[Chocolatey](https://chocolatey.org/install)
-[Make (Windows)](https://community.chocolatey.org/packages/make)
-[Wasm4](https://www.npmjs.com/package/wasm4)
+* [NodeJs](https://nodejs.org/en/)
+* [WASI SDK](https://github.com/WebAssembly/wasi-sdk)
+* [Chocolatey](https://chocolatey.org/install)
+* [Make (Windows)](https://community.chocolatey.org/packages/make)
+* [Wasm4](https://www.npmjs.com/package/wasm4)
 
 ##Как запускать:
 
