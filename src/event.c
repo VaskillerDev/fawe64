@@ -3,14 +3,16 @@
 //
 #include "libs.h"
 
-EventEmitter eventEmitter_new(void) {
-struct EventEmitter emitter = {
-    .map = {},
-};
-return emitter;
+EventEmitter eventEmitter_new (void)
+{
+  struct EventEmitter emitter = {
+      .map = {},
+  };
+  return emitter;
 }
 
-void eventEmitter_on(EventEmitter* emitter, enum EventName name, void* lambda) {
+void eventEmitter_on (EventEmitter *emitter, enum EventName name, void *lambda)
+{
 
   struct EventKeyValue kv = {
       .eventNameAsKey = name,
@@ -20,11 +22,13 @@ void eventEmitter_on(EventEmitter* emitter, enum EventName name, void* lambda) {
   emitter->map[name] = kv;
 }
 
-void eventEmitter_emit(EventEmitter* emitter, enum EventName name, void* args) {
-  void (*lambda)() = emitter->map[name].lambdaRefAsValue;
-  if (lambda == NULL) {
+void eventEmitter_emit (EventEmitter *emitter, enum EventName name, void *args)
+{
+  void (*lambda) () = emitter->map[name].lambdaRefAsValue;
+  if (lambda == NULL)
+    {
       tracef ("calling %d event: is NULL", name);
       return;
-  }
-  args == NULL ? lambda() : lambda(args);
+    }
+  args == NULL ? lambda () : lambda (args);
 }

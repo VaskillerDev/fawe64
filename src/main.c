@@ -1,16 +1,22 @@
 #include "libs.h"
 
+EventEmitter emitter;
 MenuState menuState;
 GameState gameSate;
 
 void start ()
 {
-  menuState = menuState_new();
-  gameSate = gameState_new();
+  emitter = eventEmitter_new();
+  gameSate = gameState_new ();
+  menuState = menuState_new ();
+
+  game_setEventEmitter (&gameSate, &emitter);
+  menu_setEventEmitter (&menuState, &emitter);
 }
 
 void update ()
 {
-  menu_init(&menuState);
-  menu_draw(&menuState, &gameSate);
+  menu_processInput (&menuState);
+  menu_draw_logo (&menuState);
+  menu_draw_options(&menuState, &gameSate);
 }
