@@ -1,11 +1,8 @@
 // Код главного меню
 // Created by user on 15.01.2022.
 //
-#ifndef FAWE64_MENU_H
-#define FAWE64_MENU_H
+#pragma once
 #include "libs.h"
-#include "image_pool.h"
-#include "sprite.h"
 /**
  * 
  * Дефолтный конструктор состояния меню
@@ -17,7 +14,7 @@ struct MenuState menuState_new (void);
  * Обработка ввода
  * @param state
  */
-void menu_processInput (struct MenuState *state);
+void menu_processInput (struct MenuState *state, struct GameState *gameState);
 
 /**
  * Отрисовать меню
@@ -29,7 +26,7 @@ void menu_draw_logo (struct MenuState *state);
  * Отрисовать меню
  * @param state
  */
-void menu_draw_options (struct MenuState *state, struct GameState *gameState);
+void menu_draw_options (struct MenuState *state, bool isCanContinue);
 
 /**
  * Опции меню
@@ -64,11 +61,8 @@ typedef struct MenuState {
     EventEmitter *emitter;
 
     ImagePool imagePool;
-    Sprite* sprite;
     Sprite* logo;
 
 } MenuState;
 
 void menu_setEventEmitter (MenuState *state, EventEmitter *emitter);
-
-#endif //FAWE64_MENU_H

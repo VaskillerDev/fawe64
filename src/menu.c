@@ -16,14 +16,14 @@ struct MenuState menuState_new(void)
   menuState.logo = sprite_new(imagePool_getImage(&menuState.imagePool, 0));
   menuState.logo->pos.y = 14;
 
-  Image *frames[3] = {
+/*  Image *frames[3] = {
       imagePool_getImage(&menuState.imagePool, 1),
       imagePool_getImage(&menuState.imagePool, 2),
       imagePool_getImage(&menuState.imagePool, 3)};
 
   menuState.sprite = sprite_animated_new(frames, 3, 20);
   menuState.sprite->pos.y = 85;
-  menuState.sprite->pos.x = 80;
+  menuState.sprite->pos.x = 80;*/
 
   return menuState;
 }
@@ -35,7 +35,7 @@ uint8_t prevGamepad = 0;
 const uint8_t optionXPos = 34;
 const uint8_t optionYPos = 146;
 
-void menu_processInput(struct MenuState *state)
+void menu_processInput(struct MenuState *state, struct GameState *gameState)
 {
   uint8_t gamepad = *GAMEPAD1;
   uint8_t pressedThisFrame = gamepad & (gamepad ^ prevGamepad);
@@ -58,7 +58,13 @@ void menu_processInput(struct MenuState *state)
   if (clickedButton1 && prevCurrentOption != state->currentOption)
   {
     prevCurrentOption = state->currentOption;
-    eventEmitter_emit(state->emitter, E_MENU_CURRENT_OPTION_CHANGED, (void *)state->currentOption);
+
+    struct CurrentOptionChangedEvent event = {
+        .currentOption = state->currentOption,
+        .gameState = gameState,
+    };
+
+    eventEmitter_emit(state->emitter, E_MENU_CURRENT_OPTION_CHANGED, (void *) &event);
   }
   prevGamepad = gamepad;
 }
@@ -68,7 +74,6 @@ void menu_draw_logo(struct MenuState *state)
   uint_16 textColors[4] = {4, 0, 0, 0};
   DrawText ("FAWE 64", 8, state->logoYPos,textColors);
   sprite_Draw(state->logo);
-  sprite_Draw(state->sprite);
 
   if (state->isDraw == true) {
     return;
@@ -78,7 +83,7 @@ void menu_draw_logo(struct MenuState *state)
 }
 
 // readonly gameState
-void menu_draw_options(struct MenuState *state, struct GameState *gameState)
+void menu_draw_options(struct MenuState *state, bool isCanContinue)
 {
   char *textContent = "none";
   switch (state->currentOption)
@@ -87,7 +92,7 @@ void menu_draw_options(struct MenuState *state, struct GameState *gameState)
     textContent = "CONTINUE >";
     break;
   case 2:
-    textContent = gameState->isCanContinue ? "< NEW GAME >" : " NEW GAME >";
+    textContent = isCanContinue ? "< NEW GAME >" : " NEW GAME >";
     break;
   case 3:
     textContent = "< SETTINGS >";
