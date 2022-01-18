@@ -38,3 +38,5 @@
 build
 *.aseprite
 wasi-sdk-14.0
+
+src/.vscode
