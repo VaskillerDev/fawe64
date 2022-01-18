@@ -2,13 +2,15 @@
 // Created by user on 15.01.2022.
 //
 #include "libs.h"
+#include "render.h"
 
 struct MenuState menuState_new (void)
 {
   struct MenuState menuState = {
       .logoYPos = 0,
       .isDraw = false,
-      .currentOption = NEW_GAME
+      .currentOption = NEW_GAME,
+      .logoImage = image_new((void*)piligrim_idle_b_img_0, 16, 16, menuImgColors)
   };
 
   return menuState;
@@ -50,13 +52,9 @@ void menu_processInput (struct MenuState *state)
 }
 
 void menu_draw_logo (struct MenuState *state) {
-  uint16_t colors = *DRAW_COLORS;
-  *DRAW_COLORS = 0x42;
-  blit (menuImg, 0, 14, 160, 128, BLIT_1BPP);
-  *DRAW_COLORS = 0x4;
-  text ("FAWE 64", 8, state->logoYPos);
-  *DRAW_COLORS = colors;
 
+  DrawImage(state->logoImage, 10, 14, true);
+  
   if (state->isDraw == true) return;
   state->logoYPos = state->logoYPos >= logoYPosMax ? logoYPosMax : (state->logoYPos += 1);
   state->isDraw = state->logoYPos == logoYPosMax;

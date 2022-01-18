@@ -4,7 +4,9 @@
 #ifndef FAWE64_MENU_H
 #define FAWE64_MENU_H
 #include "libs.h"
+#include "image.h"
 /**
+ * 
  * Дефолтный конструктор состояния меню
  * @return
  */
@@ -59,6 +61,8 @@ typedef struct MenuState {
      * Эмиттер событий
      */
     EventEmitter *emitter;
+
+    Image* logoImage;
 } MenuState;
 
 void menu_setEventEmitter (MenuState *state, EventEmitter *emitter);

@@ -37,3 +37,4 @@
 # Build
 build
 *.aseprite
+wasi-sdk-14.0
