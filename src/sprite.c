@@ -17,7 +17,8 @@ Sprite* sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDel
         *(newSprite->images + i) = images[i];
 
     newSprite->currentImage = *newSprite->images;
-
+    newSprite->size.x = newSprite->currentImage->width;
+    newSprite->size.y = newSprite->currentImage->height;
     return newSprite;
 }
 
@@ -35,7 +36,7 @@ Sprite* sprite_new(Image* image)
 
 void sprite_Draw(Sprite *sprite)
 {
-    DrawImage(sprite->currentImage, sprite->pos.x, sprite->pos.y, true);
+    DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
 
     if (sprite->animDelay == 0)
         return;

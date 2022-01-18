@@ -11,6 +11,7 @@ struct Sprite
     uint_32 animDelay;
 
     Vec2 pos;
+    Vec2 size;
 };
 
 typedef struct Sprite Sprite;

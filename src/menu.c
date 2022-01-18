@@ -22,7 +22,7 @@ struct MenuState menuState_new(void)
       imagePool_getImage(&menuState.imagePool, 3)};
 
   menuState.sprite = sprite_animated_new(frames, 3, 20);
-  menuState.sprite->pos.y = 85;
+  menuState.sprite->pos.y = 80;
   menuState.sprite->pos.x = 80;*/
 
   return menuState;
