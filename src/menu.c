@@ -24,7 +24,7 @@ struct MenuState menuState_new(void)
   menuState.sprite = sprite_animated_new(frames, 3, 20);
   menuState.sprite->pos.y = 80;
   menuState.sprite->pos.x = 80;
-
+  sprite_initBoundingVolume(menuState.sprite, SPHERE);
   return menuState;
 }
 
@@ -77,9 +77,7 @@ void menu_draw_logo(struct MenuState *state)
 // readonly gameState
 void menu_draw_options(struct MenuState *state, struct GameState *gameState)
 {
-  uint16_t colors = *DRAW_COLORS;
-
-  char *textContent = "none";
+   char *textContent = "none";
   switch (state->currentOption)
   {
   case 1:

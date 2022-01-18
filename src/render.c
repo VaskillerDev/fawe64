@@ -23,6 +23,18 @@ void DrawText(char *content, int_32 x, int_32 y, uint_16 colors[4])
     text(content, x, y);
 }
 
+void DrawBoundingVolume(BoundingVolume *bv)
+{
+    SetDrawColor_1(0);
+    SetDrawColor_2(2);
+
+    if (bv->shape == SPHERE)
+        oval(bv->position->x - bv->size.x, bv->position->y - bv->size.x, bv->size.x * 2, bv->size.x * 2);
+
+    if (bv->shape == BOX)
+        rect(bv->position->x - bv->size.x / 2, bv->position->y - bv->size.y / 2, bv->size.x , bv->size.y);
+}
+
 void SetPaletteColor_1(uint_32 newColor)
 {
     PALETTE[0] = newColor;

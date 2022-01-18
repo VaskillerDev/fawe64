@@ -3,7 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-Sprite* sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDelay)
+#define DEBUG_BOUNDING_VOLUME 1
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+Sprite *sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDelay)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
     newSprite->frameCounter = 0;
@@ -22,7 +26,7 @@ Sprite* sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDel
     return newSprite;
 }
 
-Sprite* sprite_new(Image* image)
+Sprite *sprite_new(Image *image)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
     newSprite->frameCounter = 0;
@@ -38,6 +42,9 @@ void sprite_Draw(Sprite *sprite)
 {
     DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
 
+    if (DEBUG_BOUNDING_VOLUME)
+        DrawBoundingVolume(&sprite->boundingVolume);
+
     if (sprite->animDelay == 0)
         return;
 
@@ -50,4 +57,21 @@ void sprite_Draw(Sprite *sprite)
 
         sprite->currentImage = *(sprite->images + sprite->currentImageIndex);
     }
+}
+
+void sprite_initBoundingVolume(Sprite *sprite, BoundingVolumeShape shape)
+{
+    sprite->boundingVolume.shape = shape;
+    sprite->boundingVolume.position = &sprite->pos;
+    if (shape == SPHERE)
+    {
+        sprite->boundingVolume.size.x = MAX(sprite->size.x / 2, sprite->size.y / 2);
+        sprite->boundingVolume.size.y = MIN(sprite->size.x / 2, sprite->size.y / 2);
+    }
+    else if (shape == BOX)
+    {
+        sprite->boundingVolume.size = sprite->size;
+    }
+    else
+        return;
 }
