@@ -11,7 +11,7 @@ void DrawImage(Image *img, int_32 x, int_32 y, bool defaultColors)
         SetDrawColor_4(img->colors[3]);
     }
 
-    blit(img->data, x, y, img->width, img->height, BLIT_2BPP);
+    blit(img->data, x, y, img->width, img->height, img->flags);
 }
 
 void SetPaletteColor_1(uint_32 newColor)
