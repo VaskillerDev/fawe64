@@ -33,7 +33,15 @@ typedef enum InGameTab {
     /**
      * Мы в главном меню
      */
-    IN_MENU
+    IN_MENU,
+    /**
+     * Мы в настройках
+     */
+     IN_MENU_SETTINGS,
+     /**
+      * Мы в "о авторах"
+      */
+      IN_MENU_CREDITS
 } InGameTab;
 
 /**
@@ -45,9 +53,9 @@ typedef struct GameState {
      */
     bool isCanContinue;
     /**
-     * Текущая игровая вкладка
+     * Текущая игровой экран
      */
-    InGameTab currentTab;
+    InGameTab currentScreen;
 
     EventEmitter *emitter;
 } GameState;
