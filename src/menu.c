@@ -65,11 +65,14 @@ void menu_processInput(struct MenuState *state)
 
 void menu_draw_logo(struct MenuState *state)
 {
+  uint_16 textColors[4] = {4, 0, 0, 0};
+  DrawText ("FAWE 64", 8, state->logoYPos,textColors);
   sprite_Draw(state->logo);
   sprite_Draw(state->sprite);
 
-  if (state->isDraw == true)
+  if (state->isDraw == true) {
     return;
+  }
   state->logoYPos = state->logoYPos >= logoYPosMax ? logoYPosMax : (state->logoYPos += 1);
   state->isDraw = state->logoYPos == logoYPosMax;
 }
@@ -77,8 +80,6 @@ void menu_draw_logo(struct MenuState *state)
 // readonly gameState
 void menu_draw_options(struct MenuState *state, struct GameState *gameState)
 {
-  uint16_t colors = *DRAW_COLORS;
-
   char *textContent = "none";
   switch (state->currentOption)
   {
