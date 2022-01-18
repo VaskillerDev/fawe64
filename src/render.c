@@ -14,6 +14,15 @@ void DrawImage(Image *img, int_32 x, int_32 y, bool defaultColors)
     blit(img->data, x, y, img->width, img->height, img->flags);
 }
 
+void DrawText(char *content, int_32 x, int_32 y, uint_16 colors[4])
+{
+    SetDrawColor_1(colors[0]);
+    SetDrawColor_2(colors[1]);
+    SetDrawColor_3(colors[2]);
+    SetDrawColor_4(colors[3]);
+    text(content, x, y);
+}
+
 void SetPaletteColor_1(uint_32 newColor)
 {
     PALETTE[0] = newColor;

@@ -4,7 +4,7 @@
 #ifndef FAWE64_MENU_H
 #define FAWE64_MENU_H
 #include "libs.h"
-#include "image.h"
+#include "image_pool.h"
 #include "sprite.h"
 /**
  * 
@@ -63,8 +63,9 @@ typedef struct MenuState {
      */
     EventEmitter *emitter;
 
-    Image* logoImage;
+    ImagePool imagePool;
     Sprite* sprite;
+    Sprite* logo;
 
 } MenuState;
 

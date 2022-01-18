@@ -15,5 +15,6 @@ struct Sprite
 
 typedef struct Sprite Sprite;
 
-Sprite* sprite_new(Image* images[], uint_32 imageCount, uint_32 animDelay);
+Sprite* sprite_animated_new(Image* images[], uint_32 imageCount, uint_32 animDelay);
+Sprite* sprite_new(Image* image);
 void sprite_Draw(Sprite* sprite);

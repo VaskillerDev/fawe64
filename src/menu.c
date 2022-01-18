@@ -9,15 +9,19 @@ struct MenuState menuState_new(void)
   struct MenuState menuState = {
       .logoYPos = 0,
       .isDraw = false,
-      .currentOption = NEW_GAME,
-      .logoImage = image_new((void *)menuImg, 160, 128, menuImgColors, BLIT_1BPP)};
+      .currentOption = NEW_GAME};
 
-  Image* frames[3] = {
-      image_new((void *)piligrim_idle_b_img_0, 16, 16, menuImgColors, BLIT_2BPP),
-      image_new((void *)piligrim_idle_b_img_1, 16, 16, menuImgColors, BLIT_2BPP),
-      image_new((void *)piligrim_idle_b_img_2, 16, 16, menuImgColors, BLIT_2BPP)};
+  imagePool_init(&menuState.imagePool);
 
-  menuState.sprite = sprite_new(frames, 3, 10);
+  menuState.logo = sprite_new(imagePool_getImage(&menuState.imagePool, 0));
+  menuState.logo->pos.y = 14;
+
+  Image *frames[3] = {
+      imagePool_getImage(&menuState.imagePool, 1),
+      imagePool_getImage(&menuState.imagePool, 2),
+      imagePool_getImage(&menuState.imagePool, 3)};
+
+  menuState.sprite = sprite_animated_new(frames, 3, 20);
   menuState.sprite->pos.y = 85;
   menuState.sprite->pos.x = 80;
 
@@ -61,10 +65,8 @@ void menu_processInput(struct MenuState *state)
 
 void menu_draw_logo(struct MenuState *state)
 {
-
-  DrawImage(state->logoImage, 0, 0, true);
-
- sprite_Draw(state->sprite);
+  sprite_Draw(state->logo);
+  sprite_Draw(state->sprite);
 
   if (state->isDraw == true)
     return;
@@ -76,7 +78,6 @@ void menu_draw_logo(struct MenuState *state)
 void menu_draw_options(struct MenuState *state, struct GameState *gameState)
 {
   uint16_t colors = *DRAW_COLORS;
-  *DRAW_COLORS = 0x4;
 
   char *textContent = "none";
   switch (state->currentOption)
@@ -94,8 +95,9 @@ void menu_draw_options(struct MenuState *state, struct GameState *gameState)
     textContent = "< CREDITS";
     break;
   }
-  text(textContent, optionXPos, optionYPos);
-  *DRAW_COLORS = colors;
+
+  uint_16 textColors[4] = {4, 0, 0, 0};
+  DrawText(textContent, optionXPos, optionYPos, textColors);
 }
 
 void menu_setEventEmitter(MenuState *state, EventEmitter *emitter)
