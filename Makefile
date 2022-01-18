@@ -56,12 +56,12 @@ endif
 
 # Compile C sources
 build/%.o: src/%.c
-	mkdir -p build
+#	mkdir -p build
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 # Compile C++ sources
 build/%.o: src/%.cpp
-	mkdir build
+#	mkdir build
 	$(CXX) -c $< -o $@ $(CFLAGS)
 
 .PHONY: clean
