@@ -2,7 +2,7 @@
 // Created by user on 17.01.2022.
 //
 #pragma once
-
+#include "libs.h"
 #define MAX_EVENTS 64
 
 typedef enum EventName {
@@ -53,3 +53,8 @@ void eventEmitter_on (EventEmitter *emitter, enum EventName name, void *lambda);
  * @param args
  */
 void eventEmitter_emit (EventEmitter *emitter, enum EventName name, void *args);
+
+typedef struct CurrentOptionChangedEvent {
+    GameState* gameState;
+    MenuOptionType currentOption;
+} CurrentOptionChangedEvent;
