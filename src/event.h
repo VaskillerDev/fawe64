@@ -1,9 +1,8 @@
 //
 // Created by user on 17.01.2022.
 //
-#ifndef _EVENT_H_
-#define _EVENT_H_
-
+#pragma once
+#include "libs.h"
 #define MAX_EVENTS 64
 
 typedef enum EventName {
@@ -15,18 +14,47 @@ typedef enum EventName {
     E_MENU_CURRENT_OPTION_CHANGED = 10
 } EventName;
 
+/**
+ * Пара ключ-значение
+ */
 typedef struct EventKeyValue {
-    int eventNameAsKey;
+    enum EventName eventNameAsKey;
     void *lambdaRefAsValue;
 } EventKeyValue;
 
+/**
+ * Эмиттер
+ */
 typedef struct EventEmitter {
-    EventKeyValue map[MAX_EVENTS];
+    /**
+     * Контейнер с прослушиваемыми событиями
+     */
+    EventKeyValue events[MAX_EVENTS];
+    /**
+     * Кол-во прослушиваемых событий в текущий момент
+     */
+    int listeningEventCount;
 } EventEmitter;
 
 EventEmitter eventEmitter_new (void);
 
+/**
+ * Подписаться на событие
+ * @param emitter
+ * @param name
+ * @param lambda
+ */
 void eventEmitter_on (EventEmitter *emitter, enum EventName name, void *lambda);
+
+/**
+ * Оповестить о событии
+ * @param emitter
+ * @param name
+ * @param args
+ */
 void eventEmitter_emit (EventEmitter *emitter, enum EventName name, void *args);
 
-#endif //_EVENT_H_
+typedef struct CurrentOptionChangedEvent {
+    GameState* gameState;
+    MenuOptionType currentOption;
+} CurrentOptionChangedEvent;

@@ -6,7 +6,8 @@
 EventEmitter eventEmitter_new (void)
 {
   struct EventEmitter emitter = {
-      .map = {},
+      .events = {},
+      .listeningEventCount = 0
   };
   return emitter;
 }
@@ -19,16 +20,28 @@ void eventEmitter_on (EventEmitter *emitter, enum EventName name, void *lambda)
       .lambdaRefAsValue = lambda
   };
 
-  emitter->map[name] = kv;
+  emitter->events[emitter->listeningEventCount] = kv;
+  ++emitter->listeningEventCount;
 }
 
 void eventEmitter_emit (EventEmitter *emitter, enum EventName name, void *args)
 {
-  void (*lambda) () = emitter->map[name].lambdaRefAsValue;
-  if (lambda == NULL)
-    {
-      tracef ("calling %d event: is NULL", name);
-      return;
-    }
-  args == NULL ? lambda () : lambda (args);
+  if (emitter->listeningEventCount == 0) {
+    return;
+  }
+
+  for (uint_8 i = 0; i < emitter->listeningEventCount; i++) {
+      if (emitter->events[i].eventNameAsKey != name) {
+        continue;
+      }
+
+      void (*lambda) () = emitter->events[i].lambdaRefAsValue;
+      if (lambda == NULL)
+        {
+          tracef ("calling %d event: is NULL", name);
+          return;
+        }
+      args == NULL ? lambda () : lambda (args);
+  }
+
 }
