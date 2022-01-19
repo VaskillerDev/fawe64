@@ -12,6 +12,7 @@
 #include "wasm4.h"
 
 #include "types.h"
+#include "tiled.h"
 #include "image_pool.h"
 #include "sprite.h"
 #include "assets.h"
