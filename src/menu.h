@@ -62,8 +62,6 @@ typedef struct MenuState {
 
     ImagePool imagePool;
     Sprite* logo;
-    Sprite* sprite;
-    Sprite* sprite2;
 
 } MenuState;
 

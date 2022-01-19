@@ -1,3 +1,4 @@
+#pragma once
 #include "libs.h"
 
 void DrawImage(Image *img, int_32 x, int_32 y, bool defaultColors);

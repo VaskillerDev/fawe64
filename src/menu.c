@@ -17,27 +17,7 @@ struct MenuState menuState_new(void)
 
   menuState.logo = sprite_new(imagePool_getImage(&menuState.imagePool, 0));
   menuState.logo->pos.y = 14;
-
-  Image *frames[3] = {
-      imagePool_getImage(&menuState.imagePool, 1),
-      imagePool_getImage(&menuState.imagePool, 2),
-      imagePool_getImage(&menuState.imagePool, 3)};
-
-  menuState.sprite = sprite_animated_new(frames, 3, 20);
-  menuState.sprite->pos.y = 96;
-  menuState.sprite->pos.x = 50;
- // menuState.sprite->size.x = 40;
-//menuState.sprite->size.y = 40;
-
-  sprite_initBoundingVolume(menuState.sprite, SPHERE);
-
-  menuState.sprite2 = sprite_animated_new(frames, 3, 20);
-  menuState.sprite2->pos.y = 87;
-  menuState.sprite2->pos.x = 98;
-  menuState.sprite2->size.x = 80;
-  // menuState.sprite2->size.y = 80;
-  sprite_initBoundingVolume(menuState.sprite2, BOX);
-
+  
   return menuState;
 }
 
@@ -81,15 +61,7 @@ void menu_processInput(struct MenuState *state, struct GameState *gameState)
 void menu_draw_logo(struct MenuState *state)
 {
   sprite_Draw(state->logo);
-  sprite_Draw(state->sprite);
-    sprite_Draw(state->sprite2);
-
-if(CheckCollision(&state->sprite->boundingVolume, &state->sprite2->boundingVolume))
-  {
-    tracef("yes");
-  }
-//printf("%d\n", CheckCollision(&state->sprite->boundingVolume, &state->sprite2->boundingVolume));
-
+  
   if (state->isDraw == true)
     return;
   state->logoYPos = state->logoYPos >= logoYPosMax ? logoYPosMax : (state->logoYPos += 1);
