@@ -3,8 +3,6 @@
 //
 #include "libs.h"
 #include "render.h"
-#include "game.h"
-#include "types.h"
 
 struct MenuState menuState_new(void)
 {
@@ -17,7 +15,7 @@ struct MenuState menuState_new(void)
 
   menuState.logo = sprite_new(imagePool_getImage(&menuState.imagePool, 0));
   menuState.logo->pos.y = 14;
-  
+
   return menuState;
 }
 
@@ -30,8 +28,6 @@ const uint8_t optionYPos = 146;
 
 void menu_processInput(struct MenuState *state, struct GameState *gameState)
 {
-  if(gameState)
-   gameState;
   uint8_t gamepad = *GAMEPAD1;
   uint8_t pressedThisFrame = gamepad & (gamepad ^ prevGamepad);
 
@@ -53,17 +49,26 @@ void menu_processInput(struct MenuState *state, struct GameState *gameState)
   if (clickedButton1 && prevCurrentOption != state->currentOption)
   {
     prevCurrentOption = state->currentOption;
-    eventEmitter_emit(state->emitter, E_MENU_CURRENT_OPTION_CHANGED, (void *)state->currentOption);
+
+    struct CurrentOptionChangedEvent event = {
+        .currentOption = state->currentOption,
+        .gameState = gameState,
+    };
+
+    eventEmitter_emit(state->emitter, E_MENU_CURRENT_OPTION_CHANGED, (void *) &event);
   }
   prevGamepad = gamepad;
 }
 
 void menu_draw_logo(struct MenuState *state)
 {
+  uint_16 textColors[4] = {4, 0, 0, 0};
+  DrawText ("FAWE 64", 8, state->logoYPos,textColors);
   sprite_Draw(state->logo);
-  
-  if (state->isDraw == true)
+
+  if (state->isDraw == true) {
     return;
+  }
   state->logoYPos = state->logoYPos >= logoYPosMax ? logoYPosMax : (state->logoYPos += 1);
   state->isDraw = state->logoYPos == logoYPosMax;
 }
@@ -71,9 +76,7 @@ void menu_draw_logo(struct MenuState *state)
 // readonly gameState
 void menu_draw_options(struct MenuState *state, bool isCanContinue)
 {
-  state;
-  isCanContinue;
-   char *textContent = "none";
+  char *textContent = "none";
   switch (state->currentOption)
   {
   case 1:
