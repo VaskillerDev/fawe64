@@ -1,7 +1,5 @@
 #pragma once
-#include "image.h"
-#include "vec2.h"
-#include "bounding_volume.h"
+#include "libs.h"
 
 struct Sprite
 {

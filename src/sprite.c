@@ -1,7 +1,4 @@
-#include "sprite.h"
-#include "render.h"
-#include <stdlib.h>
-#include <string.h>
+#include "libs.h"
 
 #define DEBUG_BOUNDING_VOLUME 1
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))

@@ -1,4 +1,4 @@
-#include "vec2.h"
+#include "libs.h"
 #include <math.h>
 
 Vec2 vec2_new(int_32 x, int_32 y)

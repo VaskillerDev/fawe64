@@ -1,7 +1,5 @@
 #pragma once
-#include "types.h"
-#include "vec2.h"
-#include <stdbool.h>
+#include"libs.h"
 
 typedef enum BoundingVolumeShape
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "types.h"
+#include "libs.h"
 
 struct Image* image_new(void* dataPtr, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags);
 
