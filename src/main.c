@@ -3,12 +3,19 @@
 EventEmitter emitter;
 MenuState menuState;
 GameState gameSate;
+//Test
+ImagePool imgPool;
+Level* level;
 
 void start ()
 {
   emitter = eventEmitter_new();
   gameSate = gameState_new ();
   menuState = menuState_new ();
+
+//Test
+  imagePool_init(&imgPool);
+  level = level_new();
 
   game_setEventEmitter (&gameSate, &emitter);
   menu_setEventEmitter (&menuState, &emitter);
@@ -37,7 +44,7 @@ void update ()
        * Входная точка экрана уровня
        */
       case IN_GAME_LEVEL: {
-
+          level_draw(level);
       }
       break;
       /**
