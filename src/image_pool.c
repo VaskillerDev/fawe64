@@ -1,7 +1,4 @@
-#include "image_pool.h"
-#include "assets.h"
-#include <stdlib.h>
-#include <string.h>
+#include"libs.h"
 
 void imagePool_init(ImagePool *pool)
 {

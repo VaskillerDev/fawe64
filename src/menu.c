@@ -16,15 +16,6 @@ struct MenuState menuState_new(void)
   menuState.logo = sprite_new(imagePool_getImage(&menuState.imagePool, 0));
   menuState.logo->pos.y = 14;
 
-/*  Image *frames[3] = {
-      imagePool_getImage(&menuState.imagePool, 1),
-      imagePool_getImage(&menuState.imagePool, 2),
-      imagePool_getImage(&menuState.imagePool, 3)};
-
-  menuState.sprite = sprite_animated_new(frames, 3, 20);
-  menuState.sprite->pos.y = 80;
-  menuState.sprite->pos.x = 80;*/
-
   return menuState;
 }
 

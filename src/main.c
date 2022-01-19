@@ -49,5 +49,5 @@ void update ()
       break;
     }
 
-  tracef ("currentScreen: %d", gameSate.currentScreen);
+  //tracef ("currentScreen: %d", gameSate.currentScreen);
 }

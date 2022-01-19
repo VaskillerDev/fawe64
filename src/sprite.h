@@ -1,5 +1,5 @@
-#include "image.h"
-#include "vec2.h"
+#pragma once
+#include "libs.h"
 
 struct Sprite
 {
@@ -12,10 +12,13 @@ struct Sprite
 
     Vec2 pos;
     Vec2 size;
+    BoundingVolume boundingVolume;
 };
 
 typedef struct Sprite Sprite;
 
 Sprite* sprite_animated_new(Image* images[], uint_32 imageCount, uint_32 animDelay);
 Sprite* sprite_new(Image* image);
+void sprite_initBoundingVolume(Sprite* sprite, BoundingVolumeShape shape);
+
 void sprite_Draw(Sprite* sprite);

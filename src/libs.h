@@ -11,10 +11,14 @@
 #include <stdbool.h>
 #include "wasm4.h"
 
+#include "vec2.h"
 #include "types.h"
+#include "image.h"
 #include "image_pool.h"
+#include "bounding_volume.h"
 #include "sprite.h"
 #include "assets.h"
 #include "game.h"
 #include "menu.h"
 #include "event.h"
+#include "render.h"
