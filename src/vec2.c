@@ -55,3 +55,34 @@ float vec2_getLength(Vec2 vec)
 {
     return sqrt(vec2_dot(vec, vec));
 }
+
+Vec2f vec2_normalize(Vec2 vec)
+{
+    float x = vec.x;
+    float y = vec.y;
+    float l = vec2_getLength(vec);
+    return vec2f_new(x / l, y /l);
+}
+
+Vec2 vec2_fromVec2f(Vec2f vec)
+{
+    Vec2 newVec;
+    newVec.x = vec.x;
+    newVec.y = vec.y;
+    return newVec;
+}
+
+Vec2f vec2f_new(float x, float y)
+{
+    Vec2f newVec;
+    newVec.x = x;
+    newVec.y = y;
+    return newVec;
+}
+
+Vec2f vec2f_mulScalar(Vec2f vec, float scalar)
+{
+    vec.x *= scalar;
+    vec.y *= scalar;
+    return vec;
+}

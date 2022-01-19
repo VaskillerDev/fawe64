@@ -3,6 +3,8 @@
 //
 #include "libs.h"
 #include "render.h"
+#include "game.h"
+#include "types.h"
 
 struct MenuState menuState_new(void)
 {
@@ -22,9 +24,20 @@ struct MenuState menuState_new(void)
       imagePool_getImage(&menuState.imagePool, 3)};
 
   menuState.sprite = sprite_animated_new(frames, 3, 20);
-  menuState.sprite->pos.y = 80;
-  menuState.sprite->pos.x = 80;
+  menuState.sprite->pos.y = 96;
+  menuState.sprite->pos.x = 50;
+ // menuState.sprite->size.x = 40;
+//menuState.sprite->size.y = 40;
+
   sprite_initBoundingVolume(menuState.sprite, SPHERE);
+
+  menuState.sprite2 = sprite_animated_new(frames, 3, 20);
+  menuState.sprite2->pos.y = 87;
+  menuState.sprite2->pos.x = 98;
+  menuState.sprite2->size.x = 80;
+  // menuState.sprite2->size.y = 80;
+  sprite_initBoundingVolume(menuState.sprite2, BOX);
+
   return menuState;
 }
 
@@ -35,8 +48,10 @@ uint8_t prevGamepad = 0;
 const uint8_t optionXPos = 34;
 const uint8_t optionYPos = 146;
 
-void menu_processInput(struct MenuState *state)
+void menu_processInput(struct MenuState *state, struct GameState *gameState)
 {
+  if(gameState)
+   gameState;
   uint8_t gamepad = *GAMEPAD1;
   uint8_t pressedThisFrame = gamepad & (gamepad ^ prevGamepad);
 
@@ -67,6 +82,13 @@ void menu_draw_logo(struct MenuState *state)
 {
   sprite_Draw(state->logo);
   sprite_Draw(state->sprite);
+    sprite_Draw(state->sprite2);
+
+if(CheckCollision(&state->sprite->boundingVolume, &state->sprite2->boundingVolume))
+  {
+    tracef("yes");
+  }
+//printf("%d\n", CheckCollision(&state->sprite->boundingVolume, &state->sprite2->boundingVolume));
 
   if (state->isDraw == true)
     return;
@@ -75,8 +97,10 @@ void menu_draw_logo(struct MenuState *state)
 }
 
 // readonly gameState
-void menu_draw_options(struct MenuState *state, struct GameState *gameState)
+void menu_draw_options(struct MenuState *state, bool isCanContinue)
 {
+  state;
+  isCanContinue;
    char *textContent = "none";
   switch (state->currentOption)
   {
@@ -84,7 +108,7 @@ void menu_draw_options(struct MenuState *state, struct GameState *gameState)
     textContent = "CONTINUE >";
     break;
   case 2:
-    textContent = gameState->isCanContinue ? "< NEW GAME >" : " NEW GAME >";
+    textContent = isCanContinue ? "< NEW GAME >" : " NEW GAME >";
     break;
   case 3:
     textContent = "< SETTINGS >";
