@@ -65,6 +65,9 @@ struct UT_array{
 typedef struct UT_array UT_array;
 
 #define utarray_init(a,_icd) do {                                             \
+  (a)->d = 0;                                                                 \
+  (a)->i = 0;                                                                 \
+  (a)->n = 0;                                                                 \
   (a)->icd = *(_icd);                                                         \
 } while(0)
 
@@ -97,7 +100,6 @@ typedef struct UT_array UT_array;
     while (((a)->i+(by)) > (a)->n) { (a)->n = ((a)->n ? (2*(a)->n) : 8); }    \
     utarray_tmp=(char*)realloc((a)->d, (a)->n*(a)->icd.sz);                   \
     if (utarray_tmp == NULL) {                                                \
-      utarray_oom();                                                          \
     }                                                                         \
     (a)->d=utarray_tmp;                                                       \
   }                                                                           \

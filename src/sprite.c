@@ -7,32 +7,42 @@
 Sprite *sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDelay)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
-    newSprite->frameCounter = 0;
-    newSprite->animDelay = animDelay;
-    newSprite->imageCount = imageCount;
-    newSprite->currentImageIndex = 0;
-
-    newSprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
-
-    for (uint_32 i = 0; i < imageCount; ++i)
-        *(newSprite->images + i) = images[i];
-
-    newSprite->currentImage = *newSprite->images;
-    newSprite->size.x = newSprite->currentImage->width;
-    newSprite->size.y = newSprite->currentImage->height;
-    return newSprite;
+    return sprite_animated_init(newSprite, images, imageCount, animDelay);
 }
 
 Sprite *sprite_new(Image *image)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
-    newSprite->frameCounter = 0;
-    newSprite->animDelay = 0;
-    newSprite->imageCount = 1;
-    newSprite->currentImageIndex = 0;
-    newSprite->currentImage = image;
+    return sprite_init(newSprite, image);
+}
 
-    return newSprite;
+Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount, uint_32 animDelay)
+{
+    sprite->frameCounter = 0;
+    sprite->animDelay = animDelay;
+    sprite->imageCount = imageCount;
+    sprite->currentImageIndex = 0;
+
+    sprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
+
+    for (uint_32 i = 0; i < imageCount; ++i)
+        *(sprite->images + i) = images[i];
+
+    sprite->currentImage = *sprite->images;
+    sprite->size.x = sprite->currentImage->width;
+    sprite->size.y = sprite->currentImage->height;
+    return sprite;
+}
+
+Sprite *sprite_init(Sprite *sprite, Image *image)
+{
+    sprite->frameCounter = 0;
+    sprite->animDelay = 0;
+    sprite->imageCount = 1;
+    sprite->currentImageIndex = 0;
+    sprite->currentImage = image;
+
+    return sprite;
 }
 
 void sprite_Draw(Sprite *sprite)
