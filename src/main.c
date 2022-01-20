@@ -22,12 +22,23 @@ void start()
       imagePool_getImage(&imgPool, 2),
       imagePool_getImage(&imgPool, 3)};
 
- // s = sprite_animated_init(level_spawnObject(level), frames, 3, 10 );
- //s = sprite_animated_new(frames, 3, 10);
- player.sprite = level_spawnObject(level);
- sprite_animated_init( player.sprite, frames, 3, 10);
-player.speed = 0.25;
-/*for(int i = 0; i < 10; i++)
+  // s = sprite_animated_init(level_spawnObject(level), frames, 3, 10 );
+  //s = sprite_animated_new(frames, 3, 10);
+  player.sprite = level_spawnObject(level);
+  sprite_animated_init(player.sprite, frames, 3, 10);
+  sprite_initBoundingVolume(player.sprite, BOX);
+  player.speed = 0.25;
+  player.level = level;
+
+
+  Sprite* s = level_spawnObject(level);
+  sprite_animated_init(s, frames, 3, 10);
+  sprite_initBoundingVolume(s, BOX);
+
+ s->pos.x = 80;
+ s->pos.y = 80;
+
+  /*for(int i = 0; i < 10; i++)
 for(int j = 0; j < 10; j++)
 { 
   Sprite* s1 = level_spawnObject(level);
@@ -43,9 +54,9 @@ for(int j = 0; j < 10; j++)
 void update()
 {
 
-//sprite_Draw(s);
-//player_move_down(&player);
-player_update(&player);
+  //sprite_Draw(s);
+  //player_move_down(&player);
+  player_update(&player);
 
   switch (gameSate.currentScreen)
   {
@@ -60,8 +71,8 @@ player_update(&player);
   {
     level_draw(level);
     menu_processInput(&menuState, &gameSate);
- //   menu_draw_logo(&menuState);
-  //  menu_draw_options(&menuState, gameSate.isCanContinue);
+    //   menu_draw_logo(&menuState);
+    //  menu_draw_options(&menuState, gameSate.isCanContinue);
   }
   break;
   case IN_MENU_SETTINGS:

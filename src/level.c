@@ -17,7 +17,6 @@ Sprite *level_spawnObject(Level *level)
 {
     Sprite* newObject = (Sprite *)malloc(sizeof(Sprite));
     utarray_push_back(level->objects, &newObject);
-    tracef("%d", (int)newObject);
     return newObject;
 }
 
