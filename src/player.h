@@ -6,6 +6,7 @@ struct Player
     Sprite* sprite;
     Level* level;
     float speed;
+    Vec2f speedDir;
 };
 
 typedef struct Player Player;

@@ -34,3 +34,5 @@ Vec2f vec2f_mulScalar(Vec2f vec, float scalar);
 float vec2f_dot(Vec2f v1, Vec2f v2);
 float vec2f_getLength(Vec2f vec);
 Vec2f vec2f_normalize(Vec2f vec);
+Vec2f vec2f_add(Vec2f p1, Vec2f p2);
+Vec2f vec2f_mul(Vec2f v1, Vec2f v2);

@@ -102,7 +102,7 @@ float vec2f_dot(Vec2f v1, Vec2f v2)
 
 float vec2f_getLength(Vec2f vec)
 {
-       return sqrt(vec2f_dot(vec, vec));
+    return sqrt(vec2f_dot(vec, vec));
 }
 
 Vec2f vec2f_normalize(Vec2f vec)
@@ -111,4 +111,20 @@ Vec2f vec2f_normalize(Vec2f vec)
     float y = vec.y;
     float l = vec2f_getLength(vec);
     return vec2f_new(x / l, y / l);
+}
+
+Vec2f vec2f_add(Vec2f p1, Vec2f p2)
+{
+    Vec2f newVec;
+    newVec.x = p1.x + p2.x;
+    newVec.y = p1.y + p2.y;
+    return newVec;
+}
+
+Vec2f vec2f_mul(Vec2f v1, Vec2f v2)
+{
+    Vec2f newVec;
+    newVec.x = v1.x * v2.x;
+    newVec.y = v1.y * v2.y;
+    return newVec;
 }

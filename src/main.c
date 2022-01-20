@@ -27,16 +27,27 @@ void start()
   player.sprite = level_spawnObject(level);
   sprite_animated_init(player.sprite, frames, 3, 10);
   sprite_initBoundingVolume(player.sprite, BOX);
-  player.speed = 0.25;
+  player.speed = 1;
   player.level = level;
 
 
   Sprite* s = level_spawnObject(level);
   sprite_animated_init(s, frames, 3, 10);
   sprite_initBoundingVolume(s, BOX);
-
  s->pos.x = 80;
  s->pos.y = 80;
+
+  s = level_spawnObject(level);
+  sprite_animated_init(s, frames, 3, 10);
+  sprite_initBoundingVolume(s, BOX);
+ s->pos.x = 90;
+ s->pos.y = 65;
+
+   s = level_spawnObject(level);
+  sprite_animated_init(s, frames, 3, 10);
+  sprite_initBoundingVolume(s, BOX);
+ s->pos.x = 45;
+ s->pos.y = 65;
 
   /*for(int i = 0; i < 10; i++)
 for(int j = 0; j < 10; j++)
