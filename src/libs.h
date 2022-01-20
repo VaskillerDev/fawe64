@@ -23,3 +23,4 @@
 #include "event.h"
 #include "render.h"
 #include "level.h"
+#include "player.h"
