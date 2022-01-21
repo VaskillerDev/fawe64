@@ -22,6 +22,7 @@
 #include "game.h"
 #include "menu.h"
 #include "event.h"
+#include "hp.h"
 #include "render.h"
 #include "level.h"
 #include "player.h"
