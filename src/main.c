@@ -106,6 +106,4 @@ void update()
   }
   break;
   }
-
-  //tracef ("currentScreen: %d", gameSate.currentScreen);
 }

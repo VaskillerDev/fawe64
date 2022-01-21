@@ -1,0 +1,13 @@
+{
+  "name": "compressjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "compress.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

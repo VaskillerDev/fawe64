@@ -20,4 +20,8 @@ extern const uint8_t menuImg[2560];
 extern const uint8_t piligrim_idle_b_img_0[64];
 extern const uint8_t piligrim_idle_b_img_1[64];
 extern const uint8_t piligrim_idle_b_img_2[64];
+
+
+extern const uint8_t PLAIN_LEVEL[8][8][64];
+
 #endif //_ASSETS_H_
