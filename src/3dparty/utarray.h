@@ -27,8 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define UTARRAY_H
 
 #define UTARRAY_VERSION 2.3.0
-
-#include <stddef.h>  /* size_t */
+#include <stddef.h>
 #include <string.h>  /* memset, etc */
 #include <stdlib.h>  /* exit */
 
@@ -57,14 +56,18 @@ typedef struct {
     dtor_f *dtor;
 } UT_icd;
 
-typedef struct {
+struct UT_array{
     unsigned i,n;/* i: index of next available slot, n: num slots */
     UT_icd icd;  /* initializer, copy and destructor functions */
     char *d;     /* n slots of size icd->sz*/
-} UT_array;
+} ;
+
+typedef struct UT_array UT_array;
 
 #define utarray_init(a,_icd) do {                                             \
-  memset(a,0,sizeof(UT_array));                                               \
+  (a)->d = 0;                                                                 \
+  (a)->i = 0;                                                                 \
+  (a)->n = 0;                                                                 \
   (a)->icd = *(_icd);                                                         \
 } while(0)
 
@@ -83,9 +86,6 @@ typedef struct {
 
 #define utarray_new(a,_icd) do {                                              \
   (a) = (UT_array*)malloc(sizeof(UT_array));                                  \
-  if ((a) == NULL) {                                                          \
-    utarray_oom();                                                            \
-  }                                                                           \
   utarray_init(a,_icd);                                                       \
 } while(0)
 
@@ -100,7 +100,6 @@ typedef struct {
     while (((a)->i+(by)) > (a)->n) { (a)->n = ((a)->n ? (2*(a)->n) : 8); }    \
     utarray_tmp=(char*)realloc((a)->d, (a)->n*(a)->icd.sz);                   \
     if (utarray_tmp == NULL) {                                                \
-      utarray_oom();                                                          \
     }                                                                         \
     (a)->d=utarray_tmp;                                                       \
   }                                                                           \

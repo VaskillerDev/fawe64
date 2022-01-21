@@ -1,6 +1,4 @@
-#include "image.h"
-#include <stdlib.h>
-#include <string.h>
+#include "libs.h"
 
 Image* image_new(void* dataPtr, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags)
 {

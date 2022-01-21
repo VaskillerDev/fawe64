@@ -1,8 +1,9 @@
-#include "image.h"
-#include <stdbool.h>
+#pragma once
+#include "libs.h"
 
 void DrawImage(Image *img, int_32 x, int_32 y, bool defaultColors);
 void DrawText(char* content, int_32 x, int_32 y, uint_16 colors[4]);
+void DrawBoundingVolume(BoundingVolume* bv);
 
 void SetPaletteColor_1(uint_32 newColor);
 uint_32 GetPaletteColor_1();
