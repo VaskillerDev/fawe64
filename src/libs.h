@@ -13,8 +13,8 @@
 
 #include "vec2.h"
 #include "types.h"
-#include "tiled.h"
 #include "image.h"
+#include "tiled.h"
 #include "image_pool.h"
 #include "bounding_volume.h"
 #include "sprite.h"
