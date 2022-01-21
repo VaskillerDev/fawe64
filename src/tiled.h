@@ -56,8 +56,9 @@ typedef struct TiledLevelChunk {
     /**
      * Тайлы чанка
      */
-    TileData *tiles [64];
+    TileData tiles [64];
 } TiledLevelChunk;
 
-struct TiledLevelChunk tiledLevelChunk_read(uint_8 x, uint_8 y);
+void tiledLevelChunk_read(TiledLevelChunk* chunk, uint_8 x, uint_8 y);
 
+void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool);
