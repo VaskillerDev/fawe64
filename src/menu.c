@@ -9,18 +9,20 @@ struct MenuState menuState_new(void)
   struct MenuState menuState = {
       .logoYPos = 0,
       .isDraw = false,
-      .currentOption = NEW_GAME};
-
-  imagePool_init(&menuState.imagePool);
-
-  menuState.logo = sprite_new(imagePool_getImage(&menuState.imagePool, 0));
-  menuState.logo->pos.y = 14;
+      .currentOption = NEW_GAME
+  };
 
   return menuState;
 }
 
+void menu_setImagePool(MenuState* menuState, ImagePool* imagePool) {
+  menuState->imagePool = imagePool;
+  menuState->logo = sprite_new(imagePool_getImage(menuState->imagePool, PoolIdx_MenuImage));
+  menuState->logo->pos.y = 14;
+}
+
 const uint8_t logoYPosMax = 4;
-MenuOptionType prevCurrentOption = NEW_GAME;
+MenuOptionType prevCurrentOption = 0;
 
 uint8_t prevGamepad = 0;
 const uint8_t optionXPos = 34;
