@@ -85,9 +85,7 @@ void tiledLevelChunk_read (TiledLevelChunk* chunk, uint_8 x, uint_8 y)
 
 void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool)
 {
-
   const uint_8 drawOffset = 16;
-
   uint_8 tileI = 0;
 
   for (uint_8 y = 0; y < 8 ; y++) {
@@ -101,18 +99,25 @@ void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool)
         img = imagePool_getImage (imagePool, PoolIdx_Tile0);
       } else if (data->id == 1) {
           img = imagePool_getImage (imagePool, PoolIdx_Tile1);
+          img->colors[1] = (uint16_t)0;
+          img->colors[0] = (uint16_t)4;
       } else if (data->id == 2) {
           img = imagePool_getImage (imagePool, PoolIdx_Tile2);
+          img->colors[1] = (uint16_t)2;
       } else if (data->id == 3) {
           img = imagePool_getImage (imagePool, PoolIdx_Tile3);
+          img->colors[1] = (uint16_t)2;
       } else if (data->id == 4) {
           img = imagePool_getImage (imagePool, PoolIdx_Tile4);
       } else if (data->id == 5) {
           img = imagePool_getImage (imagePool, PoolIdx_Tile5);
+          img->colors[0] = (uint16_t)2;
+          img->colors[1] = (uint16_t)1;
       } else if (data->id == 6) {
           img = imagePool_getImage (imagePool, PoolIdx_Tile6);
       } else if (data->id == 7) {
-          img = imagePool_getImage (imagePool, PoolIdx_Tile7);
+          tileI +=1; // ignore tile
+          continue;
       }
 
       uint32_t flag = BLIT_1BPP;

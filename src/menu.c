@@ -64,7 +64,7 @@ void menu_processInput(struct MenuState *state, struct GameState *gameState)
 
 void menu_draw_logo(struct MenuState *state)
 {
-  uint_16 textColors[4] = {4, 0, 0, 0};
+  uint_16 textColors[4] = {3, 0, 0, 0};
   DrawText ("FAWE 64", 8, state->logoYPos,textColors);
   sprite_Draw(state->logo);
 
@@ -95,7 +95,7 @@ void menu_draw_options(struct MenuState *state, bool isCanContinue)
     break;
   }
 
-  uint_16 textColors[4] = {4, 0, 0, 0};
+  uint_16 textColors[4] = {3, 0, 0, 0};
   DrawText(textContent, optionXPos, optionYPos, textColors);
 }
 

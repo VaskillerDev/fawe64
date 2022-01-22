@@ -11,6 +11,11 @@ TiledLevelChunk chunk = {};
 
 void start()
 {
+  SetPaletteColor_1 (0xa46422);
+  SetPaletteColor_2 (0xeb8931);
+  SetPaletteColor_3 (0xd8d3cd);
+  SetPaletteColor_4 (0x493c2b);
+
   emitter = eventEmitter_new();
   gameSate = gameState_new();
   menuState = menuState_new();
