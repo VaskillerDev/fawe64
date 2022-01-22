@@ -11,7 +11,11 @@ typedef enum EventName {
     /**
      * В меню была выбрана опция
      */
-    E_MENU_CURRENT_OPTION_CHANGED = 10
+    E_MENU_CURRENT_OPTION_CHANGED = 10,
+
+    E_HP_POINTS_CHANGED = 20,
+    E_HP_POINTS_FILLED  = 21,
+    E_HP_POINTS_OVER    = 22,
 } EventName;
 
 /**
@@ -58,3 +62,16 @@ typedef struct CurrentOptionChangedEvent {
     GameState* gameState;
     MenuOptionType currentOption;
 } CurrentOptionChangedEvent;
+
+typedef struct HpPointsChangedEvent {
+    uint8_t id;
+    uint8_t currentPoints;
+} HpPointsChangedEvent;
+
+typedef struct HpPointsOverEvent {
+    uint8_t id;
+} HpPointsOverEvent;
+
+typedef struct HpPointsFilledEvent {
+    uint8_t id;
+} HpPointsFilledEvent;
