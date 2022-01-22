@@ -1,6 +1,6 @@
 #include "libs.h"
 
-#define DEBUG_BOUNDING_VOLUME 1
+#define DEBUG_BOUNDING_VOLUME 0
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -47,7 +47,8 @@ Sprite *sprite_init(Sprite *sprite, Image *image)
 
 void sprite_Draw(Sprite *sprite)
 {
-    DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
+    if(sprite->currentImage)
+        DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
 
     if (DEBUG_BOUNDING_VOLUME)
         DrawBoundingVolume(&sprite->boundingVolume);

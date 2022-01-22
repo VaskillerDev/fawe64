@@ -1,5 +1,11 @@
 #include "libs.h"
 #include <math.h>
+
+#define BUTTON_LUP (BUTTON_LEFT + BUTTON_UP)
+#define BUTTON_LDOWN (BUTTON_LEFT + BUTTON_DOWN)
+#define BUTTON_RUP (BUTTON_RIGHT + BUTTON_UP)
+#define BUTTON_RDOWN (BUTTON_RIGHT + BUTTON_DOWN)
+
 bool player_checkCollision(Player *player, Vec2 dir)
 {
     Sprite **currentObject = NULL;
@@ -13,10 +19,13 @@ bool player_checkCollision(Player *player, Vec2 dir)
             continue;
 
         Vec2f rayDir = vec2_normalize(vec2_sub((*currentObject)->pos, player->sprite->pos));
+        if (fabsf(fabsf(rayDir.x) - fabsf(rayDir.y)) < 0.00000001)
+            continue;
+
         (fabsf(rayDir.x) > fabsf(rayDir.y)) ? (rayDir.y = 0) : (rayDir.x = 0);
         rayDir = vec2f_normalize(rayDir);
 
-        if (vec2f_dot(rayDir, vec2f_fromVec2(dir)) > 0.00001)
+        if (vec2f_dot(rayDir, vec2f_fromVec2(dir)) > 0)
             return true;
     }
 
@@ -41,7 +50,7 @@ Player player_new(Level *level)
         .sprite = playerSprite};
 
     sprite_initBoundingVolume(player.sprite, BOX);
-    player.speed = 1;
+    player.speed = 1.5f;
 
     return player;
 }
@@ -75,28 +84,31 @@ void player_update(Player *player)
     uint8_t gamepad = *GAMEPAD1;
     player->speedDir = vec2f_new(0, 0);
 
-    if (gamepad & BUTTON_LEFT)
+    bool button_1 = gamepad & BUTTON_1;
+    bool button_2 = gamepad & BUTTON_2;
+
+    if (button_1)
+        gamepad -= 1;
+    if (button_2)
+        gamepad -= 2;
+
+    if (gamepad == 16 || gamepad == 80 || gamepad == 144)
     {
         player_move_left(player);
-        goto movePlayer;
     }
-    if (gamepad & BUTTON_RIGHT)
+    if (gamepad == 32 || gamepad == 96 || gamepad == 160)
     {
         player_move_right(player);
-        goto movePlayer;
     }
-    if (gamepad & BUTTON_DOWN)
+    if (gamepad == 128 || gamepad == 144 || gamepad == 160)
     {
         player_move_down(player);
-        goto movePlayer;
     }
-    if (gamepad & BUTTON_UP)
+    if (gamepad == 64 || gamepad == 80 || gamepad == 96)
     {
         player_move_up(player);
-        goto movePlayer;
     }
 
-movePlayer:
     if (vec2f_getLength(player->speedDir) > 0)
     {
         player->speedDir = vec2f_normalize(player->speedDir);

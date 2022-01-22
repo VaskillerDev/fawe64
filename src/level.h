@@ -18,4 +18,6 @@ void level_setChunk(Level* level, TiledLevelChunk* chunk);
 void level_setImagePool(Level* level, ImagePool* pool);
 Sprite* level_spawnObject(Level *level);
 void level_draw(Level* level);
-struct Level level_create();
+Level level_create();
+
+void level_spawnCollisionByTiles(Level* level);
