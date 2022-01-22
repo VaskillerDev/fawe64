@@ -29,6 +29,12 @@ void menu_draw_logo (struct MenuState *state);
 void menu_draw_options (struct MenuState *state, bool isCanContinue);
 
 /**
+ *
+ * @param imagePool
+ */
+void menu_setImagePool(MenuState* menu, ImagePool* imagePool);
+
+/**
  * Опции меню
  */
 typedef enum {
@@ -60,7 +66,7 @@ typedef struct MenuState {
      */
     EventEmitter *emitter;
 
-    ImagePool imagePool;
+    ImagePool* imagePool;
     Sprite* logo;
 
 } MenuState;

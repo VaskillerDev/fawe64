@@ -10,6 +10,10 @@
  */
 typedef struct TileData {
     /**
+     * Ипсользовать 2BPP для изображения
+     */
+    bool isUse2BPP;
+    /**
      * Используется ли горизонтальный поворот
      */
     bool flip_horizontal;
@@ -17,6 +21,10 @@ typedef struct TileData {
      * Используется ли вертикальный поворот
      */
      bool flip_vertical;
+     /**
+      * Используется ли диагональный поворот
+      */
+     bool flip_diagonal;
      /**
       * id тайла
       */
@@ -33,15 +41,6 @@ TileData tileData_new(uint_8 data);
 void tileData_debug(TileData* tileData);
 
 /**
- * Тип уровня
- */
-typedef enum LevelType {
-    PLAIN,
-    FOREST,
-    DUNGEON
-}LevelType;
-
-/**
  * Чанк уровня
  */
 typedef struct TiledLevelChunk {
@@ -56,8 +55,9 @@ typedef struct TiledLevelChunk {
     /**
      * Тайлы чанка
      */
-    TileData *tiles [64];
+    TileData tiles [64];
 } TiledLevelChunk;
 
-struct TiledLevelChunk tiledLevelChunk_read(uint_8 x, uint_8 y);
+void tiledLevelChunk_read(TiledLevelChunk* chunk, uint_8 x, uint_8 y);
 
+void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool);

@@ -5,7 +5,7 @@ MenuState menuState;
 GameState gameSate;
 //Test
 ImagePool imgPool;
-Level *level;
+Level level;
 Player player;
 void start()
 {
@@ -13,41 +13,48 @@ void start()
   gameSate = gameState_new();
   menuState = menuState_new();
 
+
   //Test
   imagePool_init(&imgPool);
-  level = level_new();
+  menu_setImagePool (&menuState, &imgPool);
 
-  Image *frames[3] = {
-      imagePool_getImage(&imgPool, 1),
-      imagePool_getImage(&imgPool, 2),
-      imagePool_getImage(&imgPool, 3)};
+  TiledLevelChunk chunk = {};
+
+  level = level_create();
+  level_setImagePool (&level, &imgPool);
+  level_setChunk (&level, &chunk);
+
+/*  Image *frames[3] = {
+      imagePool_getImage(&imgPool, PoolIdx_PiligrimIdleBottom0),
+      imagePool_getImage(&imgPool, PoolIdx_PiligrimIdleBottom1),
+      imagePool_getImage(&imgPool, PoolIdx_PiligrimIdleBottom2)};*/
 
   // s = sprite_animated_init(level_spawnObject(level), frames, 3, 10 );
   //s = sprite_animated_new(frames, 3, 10);
-  player.sprite = level_spawnObject(level);
+/*  player.sprite = level_spawnObject(level);
   sprite_animated_init(player.sprite, frames, 3, 10);
   sprite_initBoundingVolume(player.sprite, BOX);
   player.speed = 1;
-  player.level = level;
+  player.level = level;*/
 
 
-  Sprite* s = level_spawnObject(level);
+/*  Sprite* s = level_spawnObject(level);
   sprite_animated_init(s, frames, 3, 10);
   sprite_initBoundingVolume(s, BOX);
  s->pos.x = 80;
- s->pos.y = 80;
+ s->pos.y = 80;*/
 
-  s = level_spawnObject(level);
+/*  s = level_spawnObject(level);
   sprite_animated_init(s, frames, 3, 10);
   sprite_initBoundingVolume(s, BOX);
  s->pos.x = 90;
- s->pos.y = 65;
+ s->pos.y = 65;*/
 
-   s = level_spawnObject(level);
+/*   s = level_spawnObject(level);
   sprite_animated_init(s, frames, 3, 10);
   sprite_initBoundingVolume(s, BOX);
  s->pos.x = 45;
- s->pos.y = 65;
+ s->pos.y = 65;*/
 
   /*for(int i = 0; i < 10; i++)
 for(int j = 0; j < 10; j++)
@@ -80,10 +87,9 @@ void update()
        */
   case IN_MENU:
   {
-    level_draw(level);
     menu_processInput(&menuState, &gameSate);
-    //   menu_draw_logo(&menuState);
-    //  menu_draw_options(&menuState, gameSate.isCanContinue);
+    menu_draw_logo(&menuState);
+    menu_draw_options(&menuState, gameSate.isCanContinue);
   }
   break;
   case IN_MENU_SETTINGS:
@@ -95,7 +101,7 @@ void update()
        */
   case IN_GAME_LEVEL:
   {
-    //level_draw(level);
+    level_draw(&level);
   }
   break;
   /**

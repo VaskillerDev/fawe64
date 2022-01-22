@@ -21,6 +21,14 @@ extern const uint8_t piligrim_idle_b_img_0[64];
 extern const uint8_t piligrim_idle_b_img_1[64];
 extern const uint8_t piligrim_idle_b_img_2[64];
 
+extern const uint8_t tile0[64];
+extern const uint8_t tile1[64];
+extern const uint8_t tile2[32];
+extern const uint8_t tile3[32];
+extern const uint8_t tile4[64];
+extern const uint8_t tile5[32];
+extern const uint8_t tile6[64];
+extern const uint8_t tile7[64];
 
 extern const uint8_t PLAIN_LEVEL[8][8][64];
 

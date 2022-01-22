@@ -1,6 +1,6 @@
 #include "libs.h"
 
-UT_icd object_icd = {sizeof(Sprite *), NULL, NULL, NULL};
+UT_icd object_icd = {sizeof (Sprite *), NULL, NULL, NULL};
 
 Level *level_new()
 {
@@ -13,16 +13,45 @@ Level *level_new()
     return newLevel;
 }
 
-Sprite *level_spawnObject(Level *level)
-{
-    Sprite* newObject = (Sprite *)malloc(sizeof(Sprite));
-    utarray_push_back(level->objects, &newObject);
-    return newObject;
+Level level_create() {
+  struct Level level = {
+      .levelName= "name"
+  };
+
+  return level;
 }
 
-void level_draw(Level *level)
+Sprite *level_spawnObject (Level *level)
 {
-    Sprite** currentObject = NULL;
-    while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
-       sprite_Draw(*currentObject);
+  Sprite *newObject = (Sprite *) malloc (sizeof (Sprite));
+  utarray_push_back(level->objects, &newObject);
+  return newObject;
+}
+
+void level_draw (Level *level)
+{
+  if (level->imagePool == NULL) {
+      trace ("imagePool not found!");
+      return;
+  }
+
+  if (level->levelChunk == NULL) {
+      trace ("levelChunk not found!");
+      return;
+  }
+
+  tiledLevelChunk_draw(level->levelChunk,level->imagePool);
+
+  Sprite **currentObject = NULL;
+  while ((currentObject = (Sprite **) utarray_next(level->objects, currentObject)))
+    sprite_Draw (*currentObject);
+}
+
+void level_setChunk(Level * level, TiledLevelChunk* levelChunk) {
+  tiledLevelChunk_read (levelChunk, 0, 0);
+  level->levelChunk = levelChunk;
+}
+
+void level_setImagePool(Level * level, ImagePool* pool) {
+  level->imagePool = pool;
 }
