@@ -10,6 +10,10 @@
  */
 typedef struct TileData {
     /**
+     * Ипсользовать 2BPP для изображения
+     */
+    bool isUse2BPP;
+    /**
      * Используется ли горизонтальный поворот
      */
     bool flip_horizontal;
@@ -17,6 +21,10 @@ typedef struct TileData {
      * Используется ли вертикальный поворот
      */
      bool flip_vertical;
+     /**
+      * Используется ли диагональный поворот
+      */
+     bool flip_diagonal;
      /**
       * id тайла
       */
@@ -31,15 +39,6 @@ typedef struct TileData {
 TileData tileData_new(uint_8 data);
 
 void tileData_debug(TileData* tileData);
-
-/**
- * Тип уровня
- */
-typedef enum LevelType {
-    PLAIN,
-    FOREST,
-    DUNGEON
-}LevelType;
 
 /**
  * Чанк уровня

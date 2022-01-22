@@ -7,20 +7,42 @@ TileData tileData_new (uint_8 data)
 {
   bool fh = 0;
   bool fv = 0;
+  bool fd = 0;
   uint_8 id = 0;
 
   if (data >= 100)
     { // есть horizontal
       fh = true;
-      fv = (data - 100) >= 10;
-      id = (data - (100 + fv * 10));
+
+      uint_8 f2 = (data - 100);
+      uint_8 f2r = f2 / 10;
+
+      if (f2r == 0) {
+         fv = false;
+          fd = false;
+      }
+      fv = f2r == 1;
+      fd = f2r == 2;
+      if (f2r == 3) {
+        fv = true;
+        fd = true;
+      }
+
+      id = (data - (100 + f2r * 10));
       goto returnTile;
     }
 
   if (data >= 10)
-    { // есть vertical
-      fv = 1;
-      id = data - 10;
+    { // есть (vertical,diagonal)
+      uint_8 f2r = data / 10;
+      fv = f2r == 1;
+      fd = f2r == 2;
+      if (f2r == 3) {
+          fv = true;
+          fd = true;
+        }
+
+      id = data - 10 * f2r;
 
       goto returnTile;
     }
@@ -33,7 +55,9 @@ TileData tileData_new (uint_8 data)
   struct TileData tileData = {
       .flip_horizontal = fh,
       .flip_vertical = fv,
-      .id = id
+      .flip_diagonal = fd,
+      .id = id,
+      .isUse2BPP = id == 0 || id == 1 || id == 4 || id == 6
   };
 
   return tileData;
@@ -91,13 +115,14 @@ void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool)
           img = imagePool_getImage (imagePool, PoolIdx_Tile7);
       }
 
-      /*if (data->flip_horizontal == true) {
-        img->flags &= BLIT_FLIP_X;
-      }
+      uint32_t flag = BLIT_1BPP;
 
-        if (data->flip_vertical == true) {
-            img->flags &= BLIT_FLIP_Y;
-        }*/
+      if (data->isUse2BPP == true) flag |= BLIT_2BPP;
+      if (data->flip_vertical == true)  flag |= BLIT_FLIP_Y;
+      if (data->flip_horizontal == true)  flag |= BLIT_FLIP_X;
+      if (data->flip_diagonal == true)  flag |= BLIT_ROTATE;
+
+      img->flags = flag;
 
       DrawImage (img, x * 16, y * 16, true);
       tileI +=1;
