@@ -7,6 +7,8 @@ GameState gameSate;
 ImagePool imgPool;
 Level* level;
 Player player;
+TiledLevelChunk chunk = {};
+
 void start()
 {
   emitter = eventEmitter_new();
@@ -17,14 +19,11 @@ void start()
   imagePool_init(&imgPool);
   menu_setImagePool (&menuState, &imgPool);
 
-  TiledLevelChunk chunk = {};
-
   level = level_new();
   level_setImagePool (level, &imgPool);
   level_setChunk (level, &chunk);
 
   player = player_new (level);
-
 
   game_setEventEmitter(&gameSate, &emitter);
   menu_setEventEmitter(&menuState, &emitter);

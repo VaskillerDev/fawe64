@@ -25,6 +25,7 @@ typedef struct TileData {
       * Используется ли диагональный поворот
       */
      bool flip_diagonal;
+     bool collision;
      /**
       * id тайла
       */
