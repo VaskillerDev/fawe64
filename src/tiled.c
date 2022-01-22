@@ -86,7 +86,7 @@ void tiledLevelChunk_read (TiledLevelChunk* chunk, uint_8 x, uint_8 y)
 void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool)
 {
 
-  //DrawImage (tile0Img, 0, 0, true);
+  const uint_8 drawOffset = 16;
 
   uint_8 tileI = 0;
 
@@ -124,7 +124,7 @@ void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool)
 
       img->flags = flag;
 
-      DrawImage (img, x * 16, y * 16, true);
+      DrawImage (img, drawOffset + x * 16, drawOffset + y * 16, true);
       tileI +=1;
     }
   }
