@@ -30,7 +30,7 @@ void DrawBoundingVolume(BoundingVolume *bv)
     if (bv->shape == SPHERE)
         oval(bv->position->x - bv->size.x, bv->position->y - bv->size.x, bv->size.x * 2, bv->size.x * 2);
 
-    if (bv->shape == BOX)
+    if (bv->shape == BOX || bv->shape == BOX_TRIGGER)
         rect(bv->position->x - bv->size.x / 2, bv->position->y - bv->size.y / 2, bv->size.x , bv->size.y);
 }
 

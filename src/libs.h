@@ -25,4 +25,5 @@
 #include "hp.h"
 #include "render.h"
 #include "level.h"
+#include "sword.h"
 #include "player.h"

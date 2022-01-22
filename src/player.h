@@ -8,6 +8,7 @@ struct Player
     float speed;
     Vec2f speedDir;
 
+    Sword sword;
     Hp heath;
     EventEmitter emitter;
 };

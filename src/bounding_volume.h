@@ -4,7 +4,8 @@
 typedef enum BoundingVolumeShape
 {
     SPHERE,
-    BOX
+    BOX,
+    BOX_TRIGGER
 } BoundingVolumeShape;
 
 struct BoundingVolume

@@ -47,7 +47,8 @@ Sprite *sprite_init(Sprite *sprite, Image *image)
 
 void sprite_Draw(Sprite *sprite)
 {
-    DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
+    if(sprite->currentImage)
+        DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
 
     if (DEBUG_BOUNDING_VOLUME)
         DrawBoundingVolume(&sprite->boundingVolume);
@@ -75,7 +76,7 @@ void sprite_initBoundingVolume(Sprite *sprite, BoundingVolumeShape shape)
         sprite->boundingVolume.size.x = MAX(sprite->size.x / 2, sprite->size.y / 2);
         sprite->boundingVolume.size.y = MIN(sprite->size.x / 2, sprite->size.y / 2);
     }
-    else if (shape == BOX)
+    else if (shape == BOX || shape == BOX_TRIGGER)
     {
         sprite->boundingVolume.size = sprite->size;
     }
