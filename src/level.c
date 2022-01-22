@@ -13,14 +13,6 @@ Level *level_new()
     return newLevel;
 }
 
-Level level_create() {
-  struct Level level = {
-      .levelName= "name"
-  };
-
-  return level;
-}
-
 Sprite *level_spawnObject (Level *level)
 {
   Sprite *newObject = (Sprite *) malloc (sizeof (Sprite));

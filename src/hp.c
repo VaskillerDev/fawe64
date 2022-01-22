@@ -12,6 +12,8 @@ Hp hp_new (uint8_t id, uint8_t maxPoints, uint8_t currentPoints)
   };
 
   hp.emitter = eventEmitter_new();
+
+  return hp;
 }
 
 void hp_substract(Hp* hp, uint8_t points) {

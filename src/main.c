@@ -5,7 +5,7 @@ MenuState menuState;
 GameState gameSate;
 //Test
 ImagePool imgPool;
-Level level;
+Level* level;
 Player player;
 void start()
 {
@@ -13,57 +13,18 @@ void start()
   gameSate = gameState_new();
   menuState = menuState_new();
 
-
   //Test
   imagePool_init(&imgPool);
   menu_setImagePool (&menuState, &imgPool);
 
   TiledLevelChunk chunk = {};
 
-  level = level_create();
-  level_setImagePool (&level, &imgPool);
-  level_setChunk (&level, &chunk);
+  level = level_new();
+  level_setImagePool (level, &imgPool);
+  level_setChunk (level, &chunk);
 
-/*  Image *frames[3] = {
-      imagePool_getImage(&imgPool, PoolIdx_PiligrimIdleBottom0),
-      imagePool_getImage(&imgPool, PoolIdx_PiligrimIdleBottom1),
-      imagePool_getImage(&imgPool, PoolIdx_PiligrimIdleBottom2)};*/
+  player = player_new (level);
 
-  // s = sprite_animated_init(level_spawnObject(level), frames, 3, 10 );
-  //s = sprite_animated_new(frames, 3, 10);
-/*  player.sprite = level_spawnObject(level);
-  sprite_animated_init(player.sprite, frames, 3, 10);
-  sprite_initBoundingVolume(player.sprite, BOX);
-  player.speed = 1;
-  player.level = level;*/
-
-
-/*  Sprite* s = level_spawnObject(level);
-  sprite_animated_init(s, frames, 3, 10);
-  sprite_initBoundingVolume(s, BOX);
- s->pos.x = 80;
- s->pos.y = 80;*/
-
-/*  s = level_spawnObject(level);
-  sprite_animated_init(s, frames, 3, 10);
-  sprite_initBoundingVolume(s, BOX);
- s->pos.x = 90;
- s->pos.y = 65;*/
-
-/*   s = level_spawnObject(level);
-  sprite_animated_init(s, frames, 3, 10);
-  sprite_initBoundingVolume(s, BOX);
- s->pos.x = 45;
- s->pos.y = 65;*/
-
-  /*for(int i = 0; i < 10; i++)
-for(int j = 0; j < 10; j++)
-{ 
-  Sprite* s1 = level_spawnObject(level);
- s1 = sprite_animated_init(s1, frames, 3, 10);
- s1->pos.x = 10 + i * 20;
- s1->pos.y = 10 + j * 20;
-}*/
 
   game_setEventEmitter(&gameSate, &emitter);
   menu_setEventEmitter(&menuState, &emitter);
@@ -72,8 +33,6 @@ for(int j = 0; j < 10; j++)
 void update()
 {
 
-  //sprite_Draw(s);
-  //player_move_down(&player);
   player_update(&player);
 
   switch (gameSate.currentScreen)
@@ -101,7 +60,7 @@ void update()
        */
   case IN_GAME_LEVEL:
   {
-    level_draw(&level);
+    level_draw(level);
   }
   break;
   /**
