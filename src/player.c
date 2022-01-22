@@ -14,6 +14,9 @@ bool player_checkCollision(Player *player, Vec2 dir)
         if (player->sprite == *currentObject)
             continue;
 
+        if ((*currentObject)->boundingVolume.shape == BOX_TRIGGER)
+            continue;
+
         bool isClash = CheckCollision(&player->sprite->boundingVolume, &(*currentObject)->boundingVolume);
         if (!isClash)
             continue;
@@ -51,6 +54,9 @@ Player player_new(Level *level)
 
     sprite_initBoundingVolume(player.sprite, BOX);
     player.speed = 1.5f;
+
+    player.sword = sword_new(level);
+    player.sword.damage = 1;
 
     return player;
 }
@@ -92,26 +98,37 @@ void player_update(Player *player)
     if (button_2)
         gamepad -= 2;
 
-    if (gamepad == 16 || gamepad == 80 || gamepad == 144)
+    if (gamepad == 16)
     {
         player_move_left(player);
+        player->sword.dir = vec2_new(-1, 0);
+        goto MOVE_PLAYER;
     }
-    if (gamepad == 32 || gamepad == 96 || gamepad == 160)
+    if (gamepad == 32)
     {
         player_move_right(player);
+        player->sword.dir = vec2_new(1, 0);
+        goto MOVE_PLAYER;
     }
-    if (gamepad == 128 || gamepad == 144 || gamepad == 160)
+    if (gamepad == 128)
     {
         player_move_down(player);
+        player->sword.dir = vec2_new(0, 1);
+        goto MOVE_PLAYER;
     }
-    if (gamepad == 64 || gamepad == 80 || gamepad == 96)
+    if (gamepad == 64)
     {
         player_move_up(player);
+        player->sword.dir = vec2_new(0, -1);
+        goto MOVE_PLAYER;
     }
 
+MOVE_PLAYER:
     if (vec2f_getLength(player->speedDir) > 0)
     {
         player->speedDir = vec2f_normalize(player->speedDir);
         player->sprite->pos = vec2_add(player->sprite->pos, vec2_fromVec2f(vec2f_mul(player->speedDir, vec2f_new(player->speed, player->speed))));
     }
+
+    sword_updatePosition(&player->sword, player->sprite);
 }

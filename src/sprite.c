@@ -1,6 +1,6 @@
 #include "libs.h"
 
-#define DEBUG_BOUNDING_VOLUME 0
+#define DEBUG_BOUNDING_VOLUME 1
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -76,7 +76,7 @@ void sprite_initBoundingVolume(Sprite *sprite, BoundingVolumeShape shape)
         sprite->boundingVolume.size.x = MAX(sprite->size.x / 2, sprite->size.y / 2);
         sprite->boundingVolume.size.y = MIN(sprite->size.x / 2, sprite->size.y / 2);
     }
-    else if (shape == BOX)
+    else if (shape == BOX || shape == BOX_TRIGGER)
     {
         sprite->boundingVolume.size = sprite->size;
     }
