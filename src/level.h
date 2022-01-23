@@ -6,7 +6,6 @@
  */
 typedef struct Level
 {
-    char* levelName;
     UT_array* objects;
     UT_array* enemys;
     TiledLevelChunk* levelChunk;

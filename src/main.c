@@ -25,7 +25,6 @@ void LoadLevel(Vec2 dir)
     player = player_new(level, &gameSate);
     player.sprite->pos = vec2_add(vec2_new (80, 80), vec2_mul(vec2_new(54, 54), dir));
   }
-  dir;
 }
 
 void start()
@@ -95,21 +94,25 @@ void update()
     if (player.sprite->pos.x <= 24)
     {
       LoadLevel(vec2_new(-1, 0));
+      return;
     }
 
     if (player.sprite->pos.x >= 136)
     {
       LoadLevel(vec2_new(1, 0));
+      return;
     }
 
     if (player.sprite->pos.y <= 24)
     {
       LoadLevel(vec2_new(0, 1));
+      return;
     }
 
     if (player.sprite->pos.y >= 136)
     {
       LoadLevel(vec2_new(0, -1));
+      return;
     }
   }
   break;

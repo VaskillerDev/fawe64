@@ -214,9 +214,6 @@ void player_update(Player *player, Level *level)
 
   player->actionState = vec2f_getLength (player->speedDir) > 0 ? PlayerAction_Go : PlayerAction_Idle;
 
-  //tracef ("actionState %d", player->actionState);
-  //tracef ("dir %d", player->movementDirection);
-
   if (player->actionState == PlayerAction_Go)
     {
       player->speedDir = vec2f_normalize (player->speedDir);

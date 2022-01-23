@@ -15,13 +15,16 @@ Sprite *sprite_new(Image *image)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
     newSprite->health = NULL;
+    newSprite->images = NULL;
     return sprite_init(newSprite, image);
 }
 
-void sprite_delete(Sprite* sprite)
+void sprite_delete(Sprite *sprite)
 {
-    if(sprite->images)
+    if (sprite->images)
+    {
         free(sprite->images);
+    }
     free(sprite);
 }
 
@@ -32,10 +35,13 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     sprite->imageCount = imageCount;
     sprite->currentImageIndex = 0;
 
-    sprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
+    if (sprite->imageCount > 0)
+    {
+        sprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
 
-    for (uint_32 i = 0; i < imageCount; ++i)
-        *(sprite->images + i) = images[i];
+        for (uint_32 i = 0; i < imageCount; ++i)
+            sprite->images[i] = images[i];
+    }
 
     sprite->currentImage = *sprite->images;
     sprite->size.x = sprite->currentImage->width;
@@ -43,8 +49,9 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     return sprite;
 }
 
-void sprite_setFlipH(Sprite* sprite, bool flip) {
-  sprite->flipH = flip? BLIT_FLIP_X : 0;
+void sprite_setFlipH(Sprite *sprite, bool flip)
+{
+    sprite->flipH = flip ? BLIT_FLIP_X : 0;
 }
 
 Sprite *sprite_init(Sprite *sprite, Image *image)
@@ -60,7 +67,8 @@ Sprite *sprite_init(Sprite *sprite, Image *image)
 
 void sprite_Draw(Sprite *sprite)
 {
-    if(sprite->currentImage) {
+    if (sprite->currentImage)
+    {
         sprite->currentImage->flags |= sprite->flipH;
         DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
     }

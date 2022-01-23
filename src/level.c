@@ -8,7 +8,6 @@ UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
 Level *level_new()
 {
   Level *newLevel = (Level *)malloc(sizeof(Level));
-  newLevel->levelName = "test";
   utarray_new(newLevel->objects, &object_icd);
   utarray_reserve(newLevel->objects, 100);
   utarray_new(newLevel->enemys, &enemy_icd);
@@ -16,6 +15,9 @@ Level *level_new()
   newLevel->objects->d = 0;
   newLevel->objects->i = 0;
   newLevel->objects->n = 0;
+
+  newLevel->imagePool = NULL;
+  newLevel->levelChunk = NULL;
   return newLevel;
 }
 
@@ -98,6 +100,8 @@ void level_spawnCollisionByTiles(Level *level)
       newCollisionBox->pos.x = i % 8 * 16 + level->levelChunk->x + 24;
       newCollisionBox->currentImage = NULL;
       newCollisionBox->animDelay = 0;
+      newCollisionBox->images = NULL;
+      newCollisionBox->imageCount = 0;
 
       sprite_initBoundingVolume(newCollisionBox, BOX);
     }
