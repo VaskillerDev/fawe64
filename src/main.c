@@ -13,10 +13,10 @@ EnemyType_1 enemy;
 TiledLevelChunk chunk = {};
 void start()
 {
-  SetPaletteColor_1 (0xa46422);
-  SetPaletteColor_2 (0xeb8931);
-  SetPaletteColor_3 (0xd8d3cd);
-  SetPaletteColor_4 (0x493c2b);
+  SetPaletteColor_1(0xa46422);
+  SetPaletteColor_2(0xeb8931);
+  SetPaletteColor_3(0xd8d3cd);
+  SetPaletteColor_4(0x493c2b);
 
   emitter = eventEmitter_new();
   gameSate = gameState_new();
@@ -30,7 +30,9 @@ void start()
   level_setImagePool(level, &imgPool);
   level_setChunk(level, &chunk);
 
-  player = player_new(level);
+  player = player_new(level, &gameSate);
+  player.health.parent = &player;
+  eventEmitter_on(&player.health.emitter, E_HP_POINTS_OVER, &player_death);
 
   game_setEventEmitter(&gameSate, &emitter);
   menu_setEventEmitter(&menuState, &emitter);
@@ -42,9 +44,6 @@ void start()
 
 void update()
 {
-
-  player_update(&player, level);
-
   switch (gameSate.currentScreen)
   {
   case UNKNOWN:
@@ -70,6 +69,7 @@ void update()
        */
   case IN_GAME_LEVEL:
   {
+    player_update(&player, level);
     level_update(level);
     level_draw(level);
   }

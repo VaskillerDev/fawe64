@@ -6,7 +6,7 @@
 #define BUTTON_RUP (BUTTON_RIGHT + BUTTON_UP)
 #define BUTTON_RDOWN (BUTTON_RIGHT + BUTTON_DOWN)
 
-bool player_checkCollision(Sprite *player, Level* level, Vec2 dir)
+bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
 {
     Sprite **currentObject = NULL;
     while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
@@ -35,7 +35,7 @@ bool player_checkCollision(Sprite *player, Level* level, Vec2 dir)
     return false;
 }
 
-Player player_new(Level *level)
+Player player_new(Level *level, GameState* gameState)
 {
 
     level->imagePool;
@@ -58,6 +58,9 @@ Player player_new(Level *level)
     player.sword = sword_new(level);
     player.sword.damage = 1;
     player.sword.attackDelay = 30;
+
+    player.health = hp_new(2, &player, 20, 20);
+    player.gameState = gameState;
     return player;
 }
 
@@ -85,7 +88,7 @@ void player_move_down(Player *player)
         player->speedDir = vec2f_add(player->speedDir, vec2f_new(0, 1));
 }
 
-void player_update(Player *player, Level* level)
+void player_update(Player *player, Level *level)
 {
     uint8_t gamepad = *GAMEPAD1;
     player->speedDir = vec2f_new(0, 0);
@@ -97,6 +100,10 @@ void player_update(Player *player, Level* level)
         gamepad -= 1;
     if (button_2)
         gamepad -= 2;
+
+    if (gamepad > 0)
+        if (player->sprite->frameCounter == player->sprite->animDelay - 1 && player->sprite->currentImageIndex == 2)
+            tone(1000, 1 | (10 << 8), 3, TONE_NOISE | TONE_MODE4);
 
     if (gamepad == 16)
     {
@@ -132,9 +139,21 @@ MOVE_PLAYER:
 
     sword_updatePosition(&player->sword, player->sprite);
     sword_update(&player->sword, player->sprite, level);
-    if(button_2)
+    if (button_2)
     {
         sword_attack(&player->sword);
     }
 
+    char lText[3];
+    lText[0] = player->health.currentPoints / 10 + '0';
+    lText[1] = player->health.currentPoints % 10 + '0';
+    lText[2] = '\0';
+    uint_16 textColors[4] = {4, 2, 0, 0};
+    DrawText(lText, 16, 150, textColors);
+}
+
+void player_death(HpPointsOverEvent eData)
+{
+    Player* player = (Player*)eData.parent;
+    player->gameState->currentScreen = IN_MENU;
 }
