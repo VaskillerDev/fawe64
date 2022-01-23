@@ -8,6 +8,26 @@
 
 bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
 {
+    if (player->pos.x <= 23 && dir.x == -1)
+    {
+        return true;
+    }
+
+    if (player->pos.x >= 137 && dir.x == 1)
+    {
+        return true;
+    }
+
+    if (player->pos.y <= 23 && dir.y == -1)
+    {
+       return true;
+    }
+
+    if (player->pos.y >= 137 && dir.y == 1)
+    {
+       return true;
+    }
+
     Sprite **currentObject = NULL;
     while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
     {
@@ -61,6 +81,7 @@ Player player_new(Level *level, GameState* gameState)
 
     player.health = hp_new(2, &player, 20, 20);
     player.gameState = gameState;
+
     return player;
 }
 

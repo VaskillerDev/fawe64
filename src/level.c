@@ -19,6 +19,18 @@ Level *level_new()
   return newLevel;
 }
 
+void level_delete(Level *level)
+{
+  Sprite **currentObject = NULL;
+  while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
+    sprite_delete(*currentObject);
+
+    utarray_free(level->objects);
+    utarray_free(level->enemys);
+
+    free(level);
+}
+
 Sprite *level_spawnObject(Level *level)
 {
   Sprite *newObject = (Sprite *)malloc(sizeof(Sprite));
@@ -59,11 +71,10 @@ void level_draw(Level *level)
     sprite_Draw(*currentObject);
 }
 
-void level_setChunk(Level *level, TiledLevelChunk *levelChunk)
+void level_setChunk(Level *level, Vec2 chunkCoords, TiledLevelChunk *levelChunk)
 {
-  tiledLevelChunk_read(levelChunk, 0, 0);
+  tiledLevelChunk_read(levelChunk, chunkCoords.x, chunkCoords.y);
   level->levelChunk = levelChunk;
-
   level_spawnCollisionByTiles(level);
 }
 
@@ -103,7 +114,7 @@ void level_deleteObject(Level *level, Sprite *object)
     if (*currentObject == object)
     {
       utarray_erase(level->objects, i, 1);
-      free(object);
+      sprite_delete(object);
       break;
     }
     ++i;
@@ -121,6 +132,7 @@ void level_deleteEnemy(Level *level, struct Enemy *enemy)
     {
       utarray_erase(level->enemys, i, 1);
       free(enemy);
+      level_deleteObject(level, enemy->sprite);
       break;
     }
     ++i;
@@ -132,4 +144,9 @@ void level_update(Level *level)
   Enemy **currentEnemy = NULL;
   while ((currentEnemy = (Enemy **)utarray_next(level->enemys, currentEnemy)))
     enemy_update(*currentEnemy);
+}
+
+bool level_isDone(Level* level)
+{
+  return utarray_len(level->enemys) == 0;
 }

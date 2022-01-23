@@ -11,6 +11,25 @@ Player player;
 EnemyType_1 enemy;
 
 TiledLevelChunk chunk = {};
+
+void LoadLevel(Vec2 dir)
+{
+  if (level_isDone(level))
+  {
+    level_delete(level);
+
+    level = level_new();
+    level_setImagePool(level, &imgPool);
+    level_setChunk(level, vec2_add(vec2_new(chunk.x, chunk.y), dir), &chunk);
+
+    player = player_new(level);
+
+    player.sprite->pos = vec2_add(player.sprite->pos, vec2_mul(vec2_new(54, 54), dir));
+
+  }
+  dir;
+}
+
 void start()
 {
   SetPaletteColor_1(0xa46422);
@@ -28,7 +47,7 @@ void start()
 
   level = level_new();
   level_setImagePool(level, &imgPool);
-  level_setChunk(level, &chunk);
+  level_setChunk(level, vec2_new(0, 0), &chunk);
 
   player = player_new(level, &gameSate);
   player.health.parent = &player;
@@ -72,6 +91,26 @@ void update()
     player_update(&player, level);
     level_update(level);
     level_draw(level);
+
+    if (player.sprite->pos.x <= 24)
+    {
+      LoadLevel(vec2_new(-1, 0));
+    }
+
+    if (player.sprite->pos.x >= 136)
+    {
+      LoadLevel(vec2_new(1, 0));
+    }
+
+    if (player.sprite->pos.y <= 24)
+    {
+      LoadLevel(vec2_new(0, 1));
+    }
+
+    if (player.sprite->pos.y >= 136)
+    {
+      LoadLevel(vec2_new(0, -1));
+    }
   }
   break;
   /**
