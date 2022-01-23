@@ -1,5 +1,7 @@
 #pragma once
 #include "libs.h"
+#include "event.h"
+#include "hp.h"
 
 struct Sprite
 {
@@ -13,6 +15,8 @@ struct Sprite
     Vec2 pos;
     Vec2 size;
     BoundingVolume boundingVolume;
+
+    Hp* health;
 };
 
 typedef struct Sprite Sprite;

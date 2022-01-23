@@ -6,22 +6,22 @@
 #define BUTTON_RUP (BUTTON_RIGHT + BUTTON_UP)
 #define BUTTON_RDOWN (BUTTON_RIGHT + BUTTON_DOWN)
 
-bool player_checkCollision(Player *player, Vec2 dir)
+bool player_checkCollision(Sprite *player, Level* level, Vec2 dir)
 {
     Sprite **currentObject = NULL;
-    while ((currentObject = (Sprite **)utarray_next(player->level->objects, currentObject)))
+    while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
     {
-        if (player->sprite == *currentObject)
+        if (player == *currentObject)
             continue;
 
         if ((*currentObject)->boundingVolume.shape == BOX_TRIGGER)
             continue;
 
-        bool isClash = CheckCollision(&player->sprite->boundingVolume, &(*currentObject)->boundingVolume);
+        bool isClash = CheckCollision(&player->boundingVolume, &(*currentObject)->boundingVolume);
         if (!isClash)
             continue;
 
-        Vec2f rayDir = vec2_normalize(vec2_sub((*currentObject)->pos, player->sprite->pos));
+        Vec2f rayDir = vec2_normalize(vec2_sub((*currentObject)->pos, player->pos));
         if (fabsf(fabsf(rayDir.x) - fabsf(rayDir.y)) < 0.00000001)
             continue;
 
@@ -57,35 +57,35 @@ Player player_new(Level *level)
 
     player.sword = sword_new(level);
     player.sword.damage = 1;
-
+    player.sword.attackDelay = 30;
     return player;
 }
 
 void player_move_left(Player *player)
 {
-    if (!player_checkCollision(player, vec2_new(-1, 0)))
+    if (!player_checkCollision(player->sprite, player->level, vec2_new(-1, 0)))
         player->speedDir = vec2f_add(player->speedDir, vec2f_new(-1, 0));
 }
 
 void player_move_right(Player *player)
 {
-    if (!player_checkCollision(player, vec2_new(1, 0)))
+    if (!player_checkCollision(player->sprite, player->level, vec2_new(1, 0)))
         player->speedDir = vec2f_add(player->speedDir, vec2f_new(1, 0));
 }
 
 void player_move_up(Player *player)
 {
-    if (!player_checkCollision(player, vec2_new(0, -1)))
+    if (!player_checkCollision(player->sprite, player->level, vec2_new(0, -1)))
         player->speedDir = vec2f_add(player->speedDir, vec2f_new(0, -1));
 }
 
 void player_move_down(Player *player)
 {
-    if (!player_checkCollision(player, vec2_new(0, 1)))
+    if (!player_checkCollision(player->sprite, player->level, vec2_new(0, 1)))
         player->speedDir = vec2f_add(player->speedDir, vec2f_new(0, 1));
 }
 
-void player_update(Player *player)
+void player_update(Player *player, Level* level)
 {
     uint8_t gamepad = *GAMEPAD1;
     player->speedDir = vec2f_new(0, 0);
@@ -131,4 +131,10 @@ MOVE_PLAYER:
     }
 
     sword_updatePosition(&player->sword, player->sprite);
+    sword_update(&player->sword, player->sprite, level);
+    if(button_2)
+    {
+        sword_attack(&player->sword);
+    }
+
 }

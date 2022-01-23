@@ -7,7 +7,7 @@
 typedef struct Hp {
 
     uint8_t id;
-
+    void* parent;
     EventEmitter emitter;
     /**
      * Текущее здоровье
@@ -20,7 +20,7 @@ typedef struct Hp {
      uint8_t maxPoints;
 } Hp;
 
-Hp hp_new(uint8_t id, uint8_t maxPoints, uint8_t currentPoints);
+Hp hp_new(uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints);
 
 /**
  * Отнять очки здоровья

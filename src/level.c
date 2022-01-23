@@ -1,6 +1,9 @@
 #include "libs.h"
+#include "enemy.h"
+#include "enemy_type_1.h"
 
 UT_icd object_icd = {sizeof(Sprite *), NULL, NULL, NULL};
+UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
 
 Level *level_new()
 {
@@ -8,6 +11,8 @@ Level *level_new()
   newLevel->levelName = "test";
   utarray_new(newLevel->objects, &object_icd);
   utarray_reserve(newLevel->objects, 100);
+  utarray_new(newLevel->enemys, &enemy_icd);
+  utarray_reserve(newLevel->enemys, 20);
   newLevel->objects->d = 0;
   newLevel->objects->i = 0;
   newLevel->objects->n = 0;
@@ -19,6 +24,18 @@ Sprite *level_spawnObject(Level *level)
   Sprite *newObject = (Sprite *)malloc(sizeof(Sprite));
   utarray_push_back(level->objects, &newObject);
   return newObject;
+}
+
+Enemy *level_spawnEnemy(Level *level)
+{
+  Enemy *newEnemy = new_enemy(level);
+  utarray_push_back(level->enemys, &newEnemy);
+  return newEnemy;
+}
+
+struct EnemyType_1 level_spawnEnemyType_1(Level *level)
+{
+  return EnemyType_1_new(level_spawnEnemy(level), level);
 }
 
 void level_draw(Level *level)
@@ -74,4 +91,45 @@ void level_spawnCollisionByTiles(Level *level)
       sprite_initBoundingVolume(newCollisionBox, BOX);
     }
   }
+}
+
+void level_deleteObject(Level *level, Sprite *object)
+{
+  uint_32 i = 0;
+  Sprite **currentObject = NULL;
+  while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
+  {
+
+    if (*currentObject == object)
+    {
+      utarray_erase(level->objects, i, 1);
+      free(object);
+      break;
+    }
+    ++i;
+  }
+}
+
+void level_deleteEnemy(Level *level, struct Enemy *enemy)
+{
+  uint_32 i = 0;
+  Enemy **currentObject = NULL;
+  while ((currentObject = (Enemy **)utarray_next(level->enemys, currentObject)))
+  {
+
+    if (*currentObject == enemy)
+    {
+      utarray_erase(level->enemys, i, 1);
+      free(enemy);
+      break;
+    }
+    ++i;
+  }
+}
+
+void level_update(Level *level)
+{
+  Enemy **currentEnemy = NULL;
+  while ((currentEnemy = (Enemy **)utarray_next(level->enemys, currentEnemy)))
+    enemy_update(*currentEnemy);
 }

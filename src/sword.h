@@ -3,7 +3,7 @@
 
 struct Sword
 {
-    Sprite* sprite;
+   struct Sprite* sprite;
 
     uint_8 attackDelay;
     uint_8 counter;
@@ -11,9 +11,12 @@ struct Sword
     Vec2 dir;
     Vec2f damageRange;
     bool usage;
+    bool hit;
 };
 
 typedef struct Sword Sword;
 
 Sword sword_new(Level* level);
-void sword_updatePosition(Sword* sword, Sprite* parent);
+void sword_updatePosition(Sword* sword, struct Sprite* parent);
+void sword_update(Sword* sword, struct Sprite* parent, Level* level);
+void sword_attack(Sword* sword);
