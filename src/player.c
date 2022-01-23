@@ -103,36 +103,36 @@ Player player_new (Level *level)
 
 void player_move_left (Player *player)
 {
+  player->movementDirection = PlayerDirLeft;
   if (!player_checkCollision (player->sprite, player->level, vec2_new (-1, 0))) {
       player->speedDir = vec2f_add (player->speedDir, vec2f_new (-1, 0));
-      player->movementDirection = PlayerDirLeft;
   }
 
 }
 
 void player_move_right (Player *player)
 {
+  player->movementDirection = PlayerDir_Right;
   if (!player_checkCollision (player->sprite, player->level, vec2_new (1, 0))) {
       player->speedDir = vec2f_add (player->speedDir, vec2f_new (1, 0));player->speedDir = vec2f_add (player->speedDir, vec2f_new (1, 0));
-      player->movementDirection = PlayerDir_Right;
   }
 
 }
 
 void player_move_up (Player *player)
 {
+  player->movementDirection = PlayerDir_Up;
   if (!player_checkCollision (player->sprite, player->level, vec2_new (0, -1))) {
       player->speedDir = vec2f_add (player->speedDir, vec2f_new (0, -1));
-      player->movementDirection = PlayerDir_Up;
   }
 
 }
 
 void player_move_down (Player *player)
 {
+  player->movementDirection = PlayerDir_Bottom;
   if (!player_checkCollision (player->sprite, player->level, vec2_new (0, 1))) {
       player->speedDir = vec2f_add (player->speedDir, vec2f_new (0, 1));
-      player->movementDirection = PlayerDir_Bottom;
   }
 }
 
@@ -237,15 +237,15 @@ void player_draw (Player *player, Level *level)
             {
               case PlayerDir_Right: {
 
-                };
+                }
               break;
               case PlayerDir_Up: {
 
-                };
+                }
               break;
               case PlayerDirLeft: {
 
-                };
+                }
               break;
               case PlayerDir_Bottom: {
 

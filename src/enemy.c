@@ -8,7 +8,7 @@ Enemy *new_enemy(Level *level)
 
     enemy->prevActionState = -1;
 
-    eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHAGED, &enemy_change_animation);
+    eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &enemy_change_animation);
     eventEmitter_on(&enemy->health.emitter, E_HP_POINTS_OVER, &enemy_death);
 
   return enemy;
@@ -47,7 +47,7 @@ void enemy_update(Enemy *enemy)
         .state = enemy->actionState
     };
 
-    eventEmitter_emit (&enemy->emitter, E_ENEMY_ACTION_STATE_CHAGED, &event);
+    eventEmitter_emit (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &event);
   }
 
     if(enemy->delay > 0)

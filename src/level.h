@@ -4,15 +4,15 @@
 /**
  * Класс, отвечающий за игровой уровень
  */
-struct Level
+typedef struct Level
 {
     char* levelName;
     UT_array* objects;
     UT_array* enemys;
     TiledLevelChunk* levelChunk;
     ImagePool* imagePool;
-};
-typedef struct Level Level;
+} Level;
+
 
 Level* level_new();
 void level_setChunk(Level* level, TiledLevelChunk* chunk);

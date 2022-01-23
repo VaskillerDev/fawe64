@@ -36,6 +36,10 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     return sprite;
 }
 
+void sprite_setFlipH(Sprite* sprite, bool flip) {
+  sprite->flipH = flip? BLIT_FLIP_X : 0;
+}
+
 Sprite *sprite_init(Sprite *sprite, Image *image)
 {
     sprite->frameCounter = 0;
@@ -49,8 +53,10 @@ Sprite *sprite_init(Sprite *sprite, Image *image)
 
 void sprite_Draw(Sprite *sprite)
 {
-    if(sprite->currentImage)
+    if(sprite->currentImage) {
+        sprite->currentImage->flags |= sprite->flipH;
         DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
+    }
 
     if (DEBUG_BOUNDING_VOLUME)
         DrawBoundingVolume(&sprite->boundingVolume);

@@ -17,6 +17,8 @@ struct Sprite
     BoundingVolume boundingVolume;
 
     Hp* health;
+
+    uint_8 flipH ;
 };
 
 typedef struct Sprite Sprite;
@@ -26,6 +28,7 @@ Sprite* sprite_new(Image* image);
 Sprite* sprite_animated_init(Sprite* sprite, Image* images[], uint_32 imageCount, uint_32 animDelay);
 Sprite* sprite_init(Sprite* sprite, Image* image);
 
+void sprite_setFlipH(Sprite* sprite, bool flip);
 
 void sprite_initBoundingVolume(Sprite* sprite, BoundingVolumeShape shape);
 
