@@ -53,10 +53,10 @@ void EnemyTactics_1(Enemy *enemy)
       enemy->actionState = EnemyAction_Go;
     } else if (enemy->movDist == 0)
     {
-        enemy->delay = 120;
-        enemy->movDist = RANDOMIZE(20, 30);
+        enemy->delay = 30;
+        enemy->movDist = RANDOMIZE(20, 60);
 
-        enemy->direction = (EnemyMovementDirection) RANDOMIZE(1, 4);
+        enemy->direction = (EnemyMovementDirection) RANDOMIZE(1, 5);
 
         switch (enemy->direction)
           {

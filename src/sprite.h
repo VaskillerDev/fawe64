@@ -25,6 +25,7 @@ typedef struct Sprite Sprite;
 
 Sprite* sprite_animated_new(Image* images[], uint_32 imageCount, uint_32 animDelay);
 Sprite* sprite_new(Image* image);
+void sprite_delete(Sprite* sprite);
 Sprite* sprite_animated_init(Sprite* sprite, Image* images[], uint_32 imageCount, uint_32 animDelay);
 Sprite* sprite_init(Sprite* sprite, Image* image);
 

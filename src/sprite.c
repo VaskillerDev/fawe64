@@ -18,6 +18,13 @@ Sprite *sprite_new(Image *image)
     return sprite_init(newSprite, image);
 }
 
+void sprite_delete(Sprite* sprite)
+{
+    if(sprite->images)
+        free(sprite->images);
+    free(sprite);
+}
+
 Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount, uint_32 animDelay)
 {
     sprite->frameCounter = 0;

@@ -40,6 +40,7 @@ void sword_update(Sword *sword, Sprite *parent, Level *level)
                 {
                     hp_substract((*currentObject)->health, sword->damage);
                     sword->hit = true;
+                    tone(150, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE1);
                     break;
                 }
             }

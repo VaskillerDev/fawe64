@@ -6,10 +6,30 @@
 #define BUTTON_RUP (BUTTON_RIGHT + BUTTON_UP)
 #define BUTTON_RDOWN (BUTTON_RIGHT + BUTTON_DOWN)
 
-bool player_checkCollision (Sprite *player, Level *level, Vec2 dir)
+bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
 {
-  Sprite **currentObject = NULL;
-  while ((currentObject = (Sprite **) utarray_next(level->objects, currentObject)))
+    if (player->pos.x <= 23 && dir.x == -1)
+    {
+        return true;
+    }
+
+    if (player->pos.x >= 137 && dir.x == 1)
+    {
+        return true;
+    }
+
+    if (player->pos.y <= 23 && dir.y == -1)
+    {
+       return true;
+    }
+
+    if (player->pos.y >= 137 && dir.y == 1)
+    {
+       return true;
+    }
+
+    Sprite **currentObject = NULL;
+    while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
     {
       if (player == *currentObject)
         continue;
@@ -35,7 +55,8 @@ bool player_checkCollision (Sprite *player, Level *level, Vec2 dir)
   return false;
 }
 
-Player player_new (Level *level)
+
+Player player_new(Level *level, GameState* gameState)
 {
 
   level->imagePool;
@@ -95,10 +116,14 @@ Player player_new (Level *level)
   sprite_initBoundingVolume (player.sprite, BOX);
   player.speed = 1.5f;
 
-  player.sword = sword_new (level);
-  player.sword.damage = 1;
-  player.sword.attackDelay = 30;
-  return player;
+    player.sword = sword_new(level);
+    player.sword.damage = 1;
+    player.sword.attackDelay = 30;
+
+    player.health = hp_new(2, &player, 20, 20);
+    player.gameState = gameState;
+
+    return player;
 }
 
 void player_move_left (Player *player)
@@ -136,7 +161,8 @@ void player_move_down (Player *player)
   }
 }
 
-void player_update (Player *player, Level *level)
+
+void player_update(Player *player, Level *level)
 {
   uint8_t gamepad = *GAMEPAD1;
   player->speedDir = vec2f_new (0, 0);
@@ -149,7 +175,11 @@ void player_update (Player *player, Level *level)
   if (button_2)
     gamepad -= 2;
 
-  if (gamepad == 16)
+    if (gamepad > 0)
+        if (player->sprite->frameCounter == player->sprite->animDelay - 1 && player->sprite->currentImageIndex == 2)
+            tone(1000, 1 | (10 << 8), 3, TONE_NOISE | TONE_MODE4);
+
+    if (gamepad == 16)
     {
       player_move_left (player);
       player->sword.dir = vec2_new (-1, 0);
@@ -187,13 +217,14 @@ void player_update (Player *player, Level *level)
       player->sprite->pos = vec2_add (player->sprite->pos, vec2_fromVec2f (vec2f_mul (player->speedDir, vec2f_new (player->speed, player->speed))));
     }
 
-  sword_updatePosition (&player->sword, player->sprite);
-  sword_update (&player->sword, player->sprite, level);
-  if (button_2)
+    sword_updatePosition(&player->sword, player->sprite);
+    sword_update(&player->sword, player->sprite, level);
+    if (button_2)
     {
       sword_attack (&player->sword);
     }
 }
+
 
 void player_draw (Player *player, Level *level)
 {
@@ -255,4 +286,17 @@ void player_draw (Player *player, Level *level)
         };
       break;
     }
+
+    char lText[3];
+    lText[0] = player->health.currentPoints / 10 + '0';
+    lText[1] = player->health.currentPoints % 10 + '0';
+    lText[2] = '\0';
+    uint_16 textColors[4] = {4, 2, 0, 0};
+    DrawText(lText, 16, 150, textColors);
+}
+
+void player_death(HpPointsOverEvent eData)
+{
+    Player* player = (Player*)eData.parent;
+    player->gameState->currentScreen = IN_MENU;
 }
