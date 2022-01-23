@@ -6,8 +6,28 @@
 #define BUTTON_RUP (BUTTON_RIGHT + BUTTON_UP)
 #define BUTTON_RDOWN (BUTTON_RIGHT + BUTTON_DOWN)
 
-bool player_checkCollision(Sprite *player, Level* level, Vec2 dir)
+bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
 {
+    if (player->pos.x <= 23 && dir.x == -1)
+    {
+        return true;
+    }
+
+    if (player->pos.x >= 137 && dir.x == 1)
+    {
+        return true;
+    }
+
+    if (player->pos.y <= 23 && dir.y == -1)
+    {
+       return true;
+    }
+
+    if (player->pos.y >= 137 && dir.y == 1)
+    {
+       return true;
+    }
+
     Sprite **currentObject = NULL;
     while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
     {
@@ -58,6 +78,9 @@ Player player_new(Level *level)
     player.sword = sword_new(level);
     player.sword.damage = 1;
     player.sword.attackDelay = 30;
+
+    player.sprite->pos = vec2_new(80, 80);
+
     return player;
 }
 
@@ -85,7 +108,7 @@ void player_move_down(Player *player)
         player->speedDir = vec2f_add(player->speedDir, vec2f_new(0, 1));
 }
 
-void player_update(Player *player, Level* level)
+void player_update(Player *player, Level *level)
 {
     uint8_t gamepad = *GAMEPAD1;
     player->speedDir = vec2f_new(0, 0);
@@ -132,9 +155,8 @@ MOVE_PLAYER:
 
     sword_updatePosition(&player->sword, player->sprite);
     sword_update(&player->sword, player->sprite, level);
-    if(button_2)
+    if (button_2)
     {
         sword_attack(&player->sword);
     }
-
 }
