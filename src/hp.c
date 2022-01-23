@@ -3,12 +3,13 @@
 //
 #include "libs.h"
 
-Hp hp_new (uint8_t id, uint8_t maxPoints, uint8_t currentPoints)
+Hp hp_new (uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints)
 {
   struct Hp hp = {
       .maxPoints = maxPoints,
       .currentPoints = currentPoints,
-      .id = id
+      .id = id,
+      .parent = parent
   };
 
   hp.emitter = eventEmitter_new();
@@ -17,12 +18,15 @@ Hp hp_new (uint8_t id, uint8_t maxPoints, uint8_t currentPoints)
 }
 
 void hp_substract(Hp* hp, uint8_t points) {
-
-  if (hp->currentPoints >= points) {
+  tracef("%d", hp->currentPoints);
+                    tracef("hit %d!", points);
+  if (points >= hp->currentPoints) {
       hp->currentPoints = 0;
   } else {
     hp->currentPoints -= points;
   }
+
+tracef("%d!", hp->currentPoints);
 
   struct HpPointsChangedEvent changedEvent = {
       .id = hp->id,
@@ -34,6 +38,7 @@ void hp_substract(Hp* hp, uint8_t points) {
   if (hp->currentPoints == 0) {
 
       struct HpPointsOverEvent event = {
+          .parent = hp->parent,
           .id = hp->id
       };
 

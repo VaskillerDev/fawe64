@@ -7,12 +7,14 @@
 Sprite *sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDelay)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
+    newSprite->health = NULL;
     return sprite_animated_init(newSprite, images, imageCount, animDelay);
 }
 
 Sprite *sprite_new(Image *image)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
+    newSprite->health = NULL;
     return sprite_init(newSprite, image);
 }
 

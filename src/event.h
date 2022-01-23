@@ -70,6 +70,7 @@ typedef struct HpPointsChangedEvent {
 
 typedef struct HpPointsOverEvent {
     uint8_t id;
+    void* parent;
 } HpPointsOverEvent;
 
 typedef struct HpPointsFilledEvent {

@@ -18,3 +18,4 @@ struct BoundingVolume
 typedef struct BoundingVolume BoundingVolume;
 
 bool CheckCollision(BoundingVolume* bv1, BoundingVolume* bv2);
+bool IsBox(BoundingVolume* bv);

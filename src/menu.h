@@ -44,6 +44,8 @@ typedef enum {
     CREDITS
 } MenuOptionType;
 
+struct Sprite;
+
 /**
  * Состояние меню
  */
@@ -67,7 +69,7 @@ typedef struct MenuState {
     EventEmitter *emitter;
 
     ImagePool* imagePool;
-    Sprite* logo;
+   struct Sprite* logo;
 
 } MenuState;
 

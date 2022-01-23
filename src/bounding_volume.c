@@ -1,5 +1,10 @@
 #include"libs.h"
 
+bool IsBox(BoundingVolume* bv)
+{
+    return bv->shape == BOX || bv->shape == BOX_TRIGGER;
+}
+
 bool CheckCollision(BoundingVolume *bv1, BoundingVolume *bv2)
 {
     if (bv1->shape == SPHERE && bv2->shape == SPHERE)
@@ -12,7 +17,7 @@ bool CheckCollision(BoundingVolume *bv1, BoundingVolume *bv2)
             return true;
         }
     }
-    else if (bv1->shape == BOX && bv2->shape == BOX)
+    else if (IsBox(bv1) && IsBox(bv2))
     {
         Vec2 pos1 = *bv1->position;
         Vec2 hSize1 = vec2_div(bv1->size, vec2_new(2, 2));

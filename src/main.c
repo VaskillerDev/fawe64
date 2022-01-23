@@ -1,14 +1,16 @@
 #include "libs.h"
+#include "enemy_type_1.h"
 
 EventEmitter emitter;
 MenuState menuState;
 GameState gameSate;
 //Test
 ImagePool imgPool;
-Level* level;
+Level *level;
 Player player;
-TiledLevelChunk chunk = {};
+EnemyType_1 enemy;
 
+TiledLevelChunk chunk = {};
 void start()
 {
   SetPaletteColor_1 (0xa46422);
@@ -22,22 +24,26 @@ void start()
 
   //Test
   imagePool_init(&imgPool);
-  menu_setImagePool (&menuState, &imgPool);
+  menu_setImagePool(&menuState, &imgPool);
 
   level = level_new();
-  level_setImagePool (level, &imgPool);
-  level_setChunk (level, &chunk);
+  level_setImagePool(level, &imgPool);
+  level_setChunk(level, &chunk);
 
-  player = player_new (level);
+  player = player_new(level);
 
   game_setEventEmitter(&gameSate, &emitter);
   menu_setEventEmitter(&menuState, &emitter);
+
+  enemy = level_spawnEnemyType_1(level);
+  enemy.enemy->movDist = 100;
+  enemy.enemy->moveDir = vec2_new(0, -1);
 }
 
 void update()
 {
 
-  player_update(&player);
+  player_update(&player, level);
 
   switch (gameSate.currentScreen)
   {
@@ -64,6 +70,7 @@ void update()
        */
   case IN_GAME_LEVEL:
   {
+    level_update(level);
     level_draw(level);
   }
   break;
