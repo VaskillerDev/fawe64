@@ -55,7 +55,7 @@ bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
     return false;
 }
 
-Player player_new(Level *level)
+Player player_new(Level *level, GameState* gameState)
 {
 
     level->imagePool;
@@ -79,7 +79,8 @@ Player player_new(Level *level)
     player.sword.damage = 1;
     player.sword.attackDelay = 30;
 
-    player.sprite->pos = vec2_new(80, 80);
+    player.health = hp_new(2, &player, 20, 20);
+    player.gameState = gameState;
 
     return player;
 }
@@ -121,6 +122,10 @@ void player_update(Player *player, Level *level)
     if (button_2)
         gamepad -= 2;
 
+    if (gamepad > 0)
+        if (player->sprite->frameCounter == player->sprite->animDelay - 1 && player->sprite->currentImageIndex == 2)
+            tone(1000, 1 | (10 << 8), 3, TONE_NOISE | TONE_MODE4);
+
     if (gamepad == 16)
     {
         player_move_left(player);
@@ -159,4 +164,17 @@ MOVE_PLAYER:
     {
         sword_attack(&player->sword);
     }
+
+    char lText[3];
+    lText[0] = player->health.currentPoints / 10 + '0';
+    lText[1] = player->health.currentPoints % 10 + '0';
+    lText[2] = '\0';
+    uint_16 textColors[4] = {4, 2, 0, 0};
+    DrawText(lText, 16, 150, textColors);
+}
+
+void player_death(HpPointsOverEvent eData)
+{
+    Player* player = (Player*)eData.parent;
+    player->gameState->currentScreen = IN_MENU;
 }

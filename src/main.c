@@ -49,7 +49,9 @@ void start()
   level_setImagePool(level, &imgPool);
   level_setChunk(level, vec2_new(0, 0), &chunk);
 
-  player = player_new(level);
+  player = player_new(level, &gameSate);
+  player.health.parent = &player;
+  eventEmitter_on(&player.health.emitter, E_HP_POINTS_OVER, &player_death);
 
   game_setEventEmitter(&gameSate, &emitter);
   menu_setEventEmitter(&menuState, &emitter);
@@ -61,9 +63,6 @@ void start()
 
 void update()
 {
-
-  player_update(&player, level);
-
   switch (gameSate.currentScreen)
   {
   case UNKNOWN:
@@ -89,6 +88,7 @@ void update()
        */
   case IN_GAME_LEVEL:
   {
+    player_update(&player, level);
     level_update(level);
     level_draw(level);
 
