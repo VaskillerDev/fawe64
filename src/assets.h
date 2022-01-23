@@ -32,4 +32,53 @@ extern const uint8_t tile7[64];
 
 extern const uint8_t PLAIN_LEVEL[8][8][64];
 
+extern const uint8_t piligrim_go_b_img_0[64];
+extern const uint8_t piligrim_go_b_img_1[64];
+extern const uint8_t piligrim_go_b_img_2[64];
+
+extern const uint8_t piligrim_attack_b_img[64];
+
+extern const uint8_t pligrim_idle_l_img_0[64];
+extern const uint8_t pligrim_idle_l_img_1[64];
+extern const uint8_t pligrim_idle_l_img_2[64];
+
+extern const uint8_t pligrim_go_l_img_0[64];
+extern const uint8_t pligrim_go_l_img_1[64];
+extern const uint8_t pligrim_go_l_img_2[64];
+
+extern const uint8_t piligrim_attack_l_img[64];
+
+extern const uint8_t piligrim_idle_r_img_0[64];
+extern const uint8_t piligrim_idle_r_img_1[64];
+extern const uint8_t piligrim_idle_r_img_2[64];
+
+extern const uint8_t piligrim_go_r_img_0[64];
+extern const uint8_t piligrim_go_r_img_1[64];
+extern const uint8_t piligrim_go_r_img_2[64];
+
+extern const uint8_t piligrim_attack_r_img[64];
+
+extern const uint8_t piligrim_idle_u_img_0[64];
+extern const uint8_t piligrim_idle_u_img_1[64];
+extern const uint8_t piligrim_idle_u_img_2[64];
+
+extern const uint8_t piligrim_go_u_img_0[64];
+extern const uint8_t piligrim_go_u_img_1[64];
+extern const uint8_t piligrim_go_u_img_2[64];
+
+extern const uint8_t piligrim_attack_u_img[64];
+
+extern const uint8_t sword_b_img[32];
+extern const uint8_t sword_lr_img[32];
+extern const uint8_t sword_u_img[32];
+
+extern const uint8_t enmy0_go_img_0[64];
+extern const uint8_t enmy0_go_img_1[64];
+extern const uint8_t enmy0_go_img_2[64];
+extern const uint8_t enmy0_attack_img[64];
+
+extern const uint8_t enmy1_go_img_0[64];
+extern const uint8_t enmy1_go_img_1[64];
+extern const uint8_t enmy1_go_img_2[64];
+
 #endif //_ASSETS_H_

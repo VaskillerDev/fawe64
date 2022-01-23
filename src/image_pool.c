@@ -2,8 +2,8 @@
 
 void imagePool_init(ImagePool *pool)
 {
-    pool->imageCount = 5;
-    pool->data = malloc(sizeof(uint8_t) * (32 * 3 + 64 * 8 + 2560));
+    pool->imageCount = 47;
+    pool->data = malloc(sizeof(uint8_t) * (32 * 6 + 64 * 40 + 2560));
     pool->images = (Image **)malloc(sizeof(Image) * pool->imageCount);
     pool->offset = 0;
 
@@ -20,6 +20,56 @@ void imagePool_init(ImagePool *pool)
     *(pool->images + 9) = imagePool_addImage (pool, (void*)tile5, 32, 16, 16, menuImgColors, BLIT_1BPP);
     *(pool->images + 10) = imagePool_addImage (pool, (void*)tile6, 64, 16, 16, menuImgColors, BLIT_2BPP);
     *(pool->images + 11) = imagePool_addImage (pool, (void*)tile7, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+    *(pool->images + 12) = imagePool_addImage (pool, (void*)piligrim_go_b_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+    *(pool->images + 13) = imagePool_addImage (pool, (void*)piligrim_go_b_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+    *(pool->images + 14) = imagePool_addImage (pool, (void*)piligrim_go_b_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 15) = imagePool_addImage (pool, (void*)piligrim_attack_b_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 16) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 17) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 18) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 19) = imagePool_addImage (pool, (void*)pligrim_go_l_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 20) = imagePool_addImage (pool, (void*)pligrim_go_l_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 21) = imagePool_addImage (pool, (void*)pligrim_go_l_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 22) = imagePool_addImage (pool, (void*)piligrim_attack_l_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 23) = imagePool_addImage (pool, (void*)piligrim_idle_r_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 24) = imagePool_addImage (pool, (void*)piligrim_idle_r_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 25) = imagePool_addImage (pool, (void*)piligrim_idle_r_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 26) = imagePool_addImage (pool, (void*)piligrim_go_r_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 27) = imagePool_addImage (pool, (void*)piligrim_go_r_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 28) = imagePool_addImage (pool, (void*)piligrim_go_r_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 29) = imagePool_addImage (pool, (void*)piligrim_attack_r_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 30) = imagePool_addImage (pool, (void*)piligrim_idle_u_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 31) = imagePool_addImage (pool, (void*)piligrim_idle_u_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 32) = imagePool_addImage (pool, (void*)piligrim_idle_u_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 33) = imagePool_addImage (pool, (void*)piligrim_go_u_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 34) = imagePool_addImage (pool, (void*)piligrim_go_u_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 35) = imagePool_addImage (pool, (void*)piligrim_go_u_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 36) = imagePool_addImage (pool, (void*)piligrim_attack_u_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 37) = imagePool_addImage (pool, (void*)sword_b_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 38) = imagePool_addImage (pool, (void*)sword_lr_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 39) = imagePool_addImage (pool, (void*)sword_u_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 40) = imagePool_addImage (pool, (void*)enmy0_go_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 41) = imagePool_addImage (pool, (void*)enmy0_go_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 42) = imagePool_addImage (pool, (void*)enmy0_go_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 43) = imagePool_addImage (pool, (void*)enmy0_attack_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
+  *(pool->images + 44) = imagePool_addImage (pool, (void*)enmy1_go_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 45) = imagePool_addImage (pool, (void*)enmy1_go_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 46) = imagePool_addImage (pool, (void*)enmy1_go_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+
 }
 
 Image *imagePool_addImage(ImagePool *pool, void *dataPtr, uint_32 size, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags)
