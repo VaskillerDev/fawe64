@@ -23,9 +23,7 @@ void LoadLevel(Vec2 dir)
     level_setChunk(level, vec2_add(vec2_new(chunk.x, chunk.y), dir), &chunk);
 
     player = player_new(level, &gameSate);
-
-    player.sprite->pos = vec2_add(player.sprite->pos, vec2_mul(vec2_new(54, 54), dir));
-
+    player.sprite->pos = vec2_add(vec2_new (80, 80), vec2_mul(vec2_new(54, 54), dir));
   }
   dir;
 }
