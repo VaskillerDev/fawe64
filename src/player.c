@@ -170,14 +170,20 @@ void player_update(Player *player, Level *level)
   bool button_1 = gamepad & BUTTON_1;
   bool button_2 = gamepad & BUTTON_2;
 
-  if (button_1)
-    gamepad -= 1;
-  if (button_2)
-    gamepad -= 2;
+  if (button_1) {
+      gamepad -= 1;
+  }
+
+  if (button_2) {
+      gamepad -= 2;
+  }
+
 
     if (gamepad > 0)
+      {
         if (player->sprite->frameCounter == player->sprite->animDelay - 1 && player->sprite->currentImageIndex == 2)
-            tone(1000, 1 | (10 << 8), 3, TONE_NOISE | TONE_MODE4);
+          tone (1000, 1 | (10 << 8), 3, TONE_NOISE | TONE_MODE4);
+      }
 
     if (gamepad == 16)
     {
