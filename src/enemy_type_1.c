@@ -1,11 +1,8 @@
 #include "enemy_type_1.h"
 
-#define RANDOMIZE(a, b) (a) + ((float)rand() / (float)RAND_MAX * (b - a))
-
 EnemyType_1 EnemyType_1_new(Enemy *enemy, Level *level)
 {
     enemy->sprite = level_spawnObject(level);
-    enemy->sprite->health = &enemy->health;
     enemy->direction = EnemyDir_Right;
     enemy->actionState = EnemyAction_Idle;
 
@@ -32,6 +29,7 @@ EnemyType_1 EnemyType_1_new(Enemy *enemy, Level *level)
     sprite_animated_init(enemy->sprite, enemy->goFrames, 3, 10);
     sprite_initBoundingVolume(enemy->sprite, BOX);
 
+    enemy->sprite->health = &enemy->health;
     enemy->sprite->pos = vec2_new(80, 100);
     EnemyType_1 newEnemy;
     newEnemy.enemy = enemy;

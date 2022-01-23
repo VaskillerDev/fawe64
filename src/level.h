@@ -30,3 +30,5 @@ void level_deleteEnemy(Level* level, struct Enemy* enemy);
 void level_spawnCollisionByTiles(Level* level);
 
 bool level_isDone(Level* level);
+
+void level_spawnEnemys(Level* level);

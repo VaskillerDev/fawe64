@@ -5,7 +5,7 @@ Enemy *new_enemy(Level *level)
     Enemy *enemy = (Enemy *)malloc(sizeof(Enemy));
     enemy->level = level;
     enemy->health = hp_new(1, enemy, 10, 10);
-
+    enemy->sprite = NULL;
     enemy->prevActionState = -1;
 
     eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &enemy_change_animation);

@@ -1,6 +1,7 @@
 #pragma once
 #include "libs.h"
 #include "hp.h"
+#define RANDOMIZE(a, b) (a) + ((float)rand() / (float)RAND_MAX * (b - a))
 
 typedef enum EnemyMovementDirection {
     EnemyDir_Bottom = 1,

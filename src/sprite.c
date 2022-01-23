@@ -1,6 +1,6 @@
 #include "libs.h"
 
-#define DEBUG_BOUNDING_VOLUME 1
+#define DEBUG_BOUNDING_VOLUME 0
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -16,6 +16,7 @@ Sprite *sprite_new(Image *image)
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
     newSprite->health = NULL;
     newSprite->images = NULL;
+    newSprite->flipH = 0;
     return sprite_init(newSprite, image);
 }
 
@@ -25,6 +26,12 @@ void sprite_delete(Sprite *sprite)
     {
         free(sprite->images);
     }
+
+    if (sprite->health)
+    {
+        free(sprite->health);
+    }
+
     free(sprite);
 }
 
@@ -34,7 +41,8 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     sprite->animDelay = animDelay;
     sprite->imageCount = imageCount;
     sprite->currentImageIndex = 0;
-
+    sprite->flipH = 0;
+    sprite->health = NULL;
     if (sprite->imageCount > 0)
     {
         sprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
@@ -61,6 +69,7 @@ Sprite *sprite_init(Sprite *sprite, Image *image)
     sprite->imageCount = 1;
     sprite->currentImageIndex = 0;
     sprite->currentImage = image;
+    sprite->health = NULL;
 
     return sprite;
 }

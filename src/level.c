@@ -27,15 +27,23 @@ void level_delete(Level *level)
   while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
     sprite_delete(*currentObject);
 
-    utarray_free(level->objects);
-    utarray_free(level->enemys);
+  utarray_free(level->objects);
+  utarray_free(level->enemys);
 
-    free(level);
+  free(level);
 }
 
 Sprite *level_spawnObject(Level *level)
 {
   Sprite *newObject = (Sprite *)malloc(sizeof(Sprite));
+  newObject->animDelay = 0;
+  newObject->currentImage = NULL;
+  newObject->currentImageIndex = 0;
+  newObject->flipH = 0;
+  newObject->frameCounter = 0;
+  newObject->health = NULL;
+  newObject->imageCount = 0;
+  newObject->images = NULL;
   utarray_push_back(level->objects, &newObject);
   return newObject;
 }
@@ -102,6 +110,7 @@ void level_spawnCollisionByTiles(Level *level)
       newCollisionBox->animDelay = 0;
       newCollisionBox->images = NULL;
       newCollisionBox->imageCount = 0;
+      newCollisionBox->health = NULL;
 
       sprite_initBoundingVolume(newCollisionBox, BOX);
     }
@@ -150,7 +159,37 @@ void level_update(Level *level)
     enemy_update(*currentEnemy);
 }
 
-bool level_isDone(Level* level)
+bool level_isDone(Level *level)
 {
   return utarray_len(level->enemys) == 0;
+}
+
+void level_spawnEnemys(Level *level)
+{
+  uint_32 enemyCount = RANDOMIZE(3, 6);
+
+  for (uint_32 i = 0; i < enemyCount; i++)
+  {
+    EnemyType_1 newEnemy = level_spawnEnemyType_1(level);
+
+    newEnemy.enemy->sprite->pos.x = RANDOMIZE(30, 60);
+    newEnemy.enemy->sprite->pos.y = RANDOMIZE(30, 130);
+    uint_32 tryCount = 0;
+    while (tryCount < 10 && (player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(1, 0)) ||
+           player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(-1, 0)) ||
+           player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(0, 1)) ||
+           player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(0, -1))))
+    {
+      newEnemy.enemy->sprite->pos.x = RANDOMIZE(25, 135);
+      newEnemy.enemy->sprite->pos.y = RANDOMIZE(25, 135);
+      tryCount++;
+    }
+
+    if (tryCount >= 9)
+    {
+      HpPointsOverEvent e;
+      e.parent = newEnemy.enemy;
+      enemy_death(e);
+    }
+  }
 }

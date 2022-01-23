@@ -23,7 +23,9 @@ void LoadLevel(Vec2 dir)
     level_setChunk(level, vec2_add(vec2_new(chunk.x, chunk.y), dir), &chunk);
 
     player = player_new(level, &gameSate);
-    player.sprite->pos = vec2_add(vec2_new (80, 80), vec2_mul(vec2_new(54, 54), dir));
+    player.sprite->pos = vec2_add(vec2_new(80, 80), vec2_mul(vec2_new(54, 54), dir));
+
+    level_spawnEnemys(level);
   }
 }
 
@@ -53,9 +55,7 @@ void start()
   game_setEventEmitter(&gameSate, &emitter);
   menu_setEventEmitter(&menuState, &emitter);
 
-  enemy = level_spawnEnemyType_1(level);
-  enemy.enemy->movDist = 100;
-  enemy.enemy->moveDir = vec2_new(0, -1);
+  //level_spawnEnemys(level);
 }
 
 void update()
@@ -86,7 +86,7 @@ void update()
   case IN_GAME_LEVEL:
   {
     player_update(&player, level);
-    player_draw (&player, level);
+    player_draw(&player, level);
 
     level_update(level);
     level_draw(level);
