@@ -61,10 +61,10 @@ void imagePool_init(ImagePool *pool)
   *(pool->images + 38) = imagePool_addImage (pool, (void*)sword_lr_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
   *(pool->images + 39) = imagePool_addImage (pool, (void*)sword_u_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
 
-  *(pool->images + 40) = imagePool_addImage (pool, (void*)enmy0_go_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 41) = imagePool_addImage (pool, (void*)enmy0_go_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 42) = imagePool_addImage (pool, (void*)enmy0_go_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 43) = imagePool_addImage (pool, (void*)enmy0_attack_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 40) = imagePool_addImage (pool, (void*)enmy0_go_img_0, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
+  *(pool->images + 41) = imagePool_addImage (pool, (void*)enmy0_go_img_1, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
+  *(pool->images + 42) = imagePool_addImage (pool, (void*)enmy0_go_img_2, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
+  *(pool->images + 43) = imagePool_addImage (pool, (void*)enmy0_attack_img, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
 
   *(pool->images + 44) = imagePool_addImage (pool, (void*)enmy1_go_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
   *(pool->images + 45) = imagePool_addImage (pool, (void*)enmy1_go_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);

@@ -9,3 +9,5 @@ typedef struct MenuState MenuState;
 typedef struct GameState GameState;
 typedef struct EventEmitter EventEmitter;
 typedef struct ImagePool ImagePool;
+typedef struct Level Level;
+typedef struct Enemy Enemy;

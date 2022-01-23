@@ -89,6 +89,8 @@ void update()
   case IN_GAME_LEVEL:
   {
     player_update(&player, level);
+    player_draw (&player, level);
+
     level_update(level);
     level_draw(level);
 
