@@ -12,11 +12,15 @@ struct Sword
     Vec2f damageRange;
     bool usage;
     bool hit;
+
+    EventEmitter* playerEmitter;
 };
 
 typedef struct Sword Sword;
 
-Sword sword_new(Level* level);
+Sword sword_new(Level* level, EventEmitter* emitter);
+Sword sword_empty();
 void sword_updatePosition(Sword* sword, struct Sprite* parent);
 void sword_update(Sword* sword, struct Sprite* parent, Level* level);
 void sword_attack(Sword* sword);
+void sword_hit(EnemySwordAttackHitEvent event);

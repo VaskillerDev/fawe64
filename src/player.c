@@ -66,6 +66,8 @@ Player player_new(Level *level, GameState* gameState)
       .movementDirection = PlayerDir_Bottom,
       .level = level,
       .sprite = NULL,
+      .emitter = eventEmitter_new(),
+      .sword = sword_empty(),
 
       .idleRightFrames = {
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimIdleRight0),
@@ -116,7 +118,7 @@ Player player_new(Level *level, GameState* gameState)
   sprite_initBoundingVolume (player.sprite, BOX);
   player.speed = 1.5f;
 
-    player.sword = sword_new(level);
+    player.sword = sword_new(level, &player.emitter);
     player.sword.damage = 1;
     player.sword.attackDelay = 30;
 

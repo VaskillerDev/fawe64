@@ -18,6 +18,7 @@ typedef enum EventName {
     E_HP_POINTS_OVER    = 22,
 
     E_ENEMY_ACTION_STATE_CHANGED = 30,
+    E_SWORD_ATTACK_HIT = 31
 } EventName;
 
 /**
@@ -83,3 +84,8 @@ typedef struct EnemyActionStateChangedEvent {
     Enemy* enemy;
     uint_8 state;
 } EnemyActionStateChangedEvent;
+
+typedef struct EnemySwordAttackHitEvent {
+    Sword* sword;
+    Sprite* target;
+} EnemySwordAttackHitEvent;

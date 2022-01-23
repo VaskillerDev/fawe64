@@ -11,3 +11,5 @@ typedef struct EventEmitter EventEmitter;
 typedef struct ImagePool ImagePool;
 typedef struct Level Level;
 typedef struct Enemy Enemy;
+typedef struct Sword Sword;
+typedef struct Sprite Sprite;

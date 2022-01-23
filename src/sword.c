@@ -1,9 +1,28 @@
 #include "libs.h"
 #include <math.h>
 
-Sword sword_new(Level *level)
+
+
+Sword sword_empty() {
+
+  struct Sword sword = {
+  .sprite = NULL,
+  .counter = 0,
+  .hit = false,
+  .usage = false,
+  .damage = 0,
+  .playerEmitter = NULL,
+  .attackDelay = 0,
+  .dir = vec2_new (0,0),
+  .damageRange = vec2f_new (0,0)
+  };
+
+  return sword;
+}
+
+Sword sword_new(Level *level, EventEmitter* emitter)
 {
-    Sword sword;
+    Sword sword = sword_empty();
     sword.damage = 1;
     sword.sprite = level_spawnObject(level);
     sword.sprite->boundingVolume.position = &sword.sprite->pos;
@@ -11,7 +30,17 @@ Sword sword_new(Level *level)
     sword.sprite->animDelay = 0;
     sword.sprite->currentImage = NULL;
     sword.hit = false;
+
+    sword.playerEmitter = emitter;
+    eventEmitter_on (emitter, E_SWORD_ATTACK_HIT, &sword_hit);
+
     return sword;
+}
+
+void sword_hit(EnemySwordAttackHitEvent event) {
+  hp_substract(event.target->health, event.sword->damage);
+  event.sword->hit = true;
+  tone(150, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE1);
 }
 
 void sword_updatePosition(Sword *sword, Sprite *parent)
@@ -38,9 +67,13 @@ void sword_update(Sword *sword, Sprite *parent, Level *level)
 
                 if (CheckCollision(&sword->sprite->boundingVolume, &(*currentObject)->boundingVolume) && (*currentObject)->health)
                 {
-                    hp_substract((*currentObject)->health, sword->damage);
-                    sword->hit = true;
-                    tone(150, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE1);
+                    struct EnemySwordAttackHitEvent event = {
+                        .sword = sword,
+                        .target = *currentObject
+                    };
+
+                    eventEmitter_emit(sword->playerEmitter, E_SWORD_ATTACK_HIT, &event);
+
                     break;
                 }
             }
