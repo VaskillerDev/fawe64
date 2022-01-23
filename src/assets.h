@@ -12,6 +12,7 @@
 #define menuImgHeight 128
 #define menuImgFlags BLIT_1BPP
 extern uint_16 menuImgColors[4];
+extern uint16_t enemy0ImgColors[4];
 extern const uint8_t menuImg[2560];
 
 #define piligrimWidth 16
