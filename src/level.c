@@ -8,14 +8,16 @@ UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
 Level *level_new()
 {
   Level *newLevel = (Level *)malloc(sizeof(Level));
-  newLevel->levelName = "test";
   utarray_new(newLevel->objects, &object_icd);
   utarray_reserve(newLevel->objects, 100);
-  utarray_new(newLevel->enemys, &enemy_icd);
-  utarray_reserve(newLevel->enemys, 20);
+  utarray_new(newLevel->enemies, &enemy_icd);
+  utarray_reserve(newLevel->enemies, 20);
   newLevel->objects->d = 0;
   newLevel->objects->i = 0;
   newLevel->objects->n = 0;
+
+  newLevel->imagePool = NULL;
+  newLevel->levelChunk = NULL;
   return newLevel;
 }
 
@@ -25,15 +27,24 @@ void level_delete(Level *level)
   while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
     sprite_delete(*currentObject);
 
-    utarray_free(level->objects);
-    utarray_free(level->enemys);
+  utarray_free(level->objects);
+  utarray_free(level->enemies);
 
-    free(level);
+  free(level);
 }
 
 Sprite *level_spawnObject(Level *level)
 {
   Sprite *newObject = (Sprite *)malloc(sizeof(Sprite));
+  newObject->animDelay = 0;
+  newObject->currentImage = NULL;
+  newObject->currentImageIndex = 0;
+  newObject->isCollisionBox = false;
+  newObject->flipH = 0;
+  newObject->frameCounter = 0;
+  newObject->health = NULL;
+  newObject->imageCount = 0;
+  newObject->images = NULL;
   utarray_push_back(level->objects, &newObject);
   return newObject;
 }
@@ -41,7 +52,7 @@ Sprite *level_spawnObject(Level *level)
 Enemy *level_spawnEnemy(Level *level)
 {
   Enemy *newEnemy = new_enemy(level);
-  utarray_push_back(level->enemys, &newEnemy);
+  utarray_push_back(level->enemies, &newEnemy);
   return newEnemy;
 }
 
@@ -67,8 +78,12 @@ void level_draw(Level *level)
   tiledLevelChunk_draw(level->levelChunk, level->imagePool);
 
   Sprite **currentObject = NULL;
-  while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
-    sprite_Draw(*currentObject);
+  while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject))) {
+      sprite_Draw(*currentObject);
+      if ((*currentObject)->imageCount == 0 && (*currentObject)->size.x > 16) {
+          trace ("a");
+      }
+  }
 }
 
 void level_setChunk(Level *level, Vec2 chunkCoords, TiledLevelChunk *levelChunk)
@@ -94,10 +109,14 @@ void level_spawnCollisionByTiles(Level *level)
     {
       Sprite *newCollisionBox = level_spawnObject(level);
       newCollisionBox->size = vec2_new(16, 16);
-      newCollisionBox->pos.y = i / 8 * 16 + level->levelChunk->y + 24;
-      newCollisionBox->pos.x = i % 8 * 16 + level->levelChunk->x + 24;
+      newCollisionBox->position.y = i / 8 * 16 + level->levelChunk->y + 24;
+      newCollisionBox->position.x = i % 8 * 16 + level->levelChunk->x + 24;
       newCollisionBox->currentImage = NULL;
       newCollisionBox->animDelay = 0;
+      newCollisionBox->images = NULL;
+      newCollisionBox->imageCount = 0;
+      newCollisionBox->health = NULL;
+      newCollisionBox->isCollisionBox = true;
 
       sprite_initBoundingVolume(newCollisionBox, BOX);
     }
@@ -125,12 +144,12 @@ void level_deleteEnemy(Level *level, struct Enemy *enemy)
 {
   uint_32 i = 0;
   Enemy **currentObject = NULL;
-  while ((currentObject = (Enemy **)utarray_next(level->enemys, currentObject)))
+  while ((currentObject = (Enemy **)utarray_next(level->enemies, currentObject)))
   {
 
     if (*currentObject == enemy)
     {
-      utarray_erase(level->enemys, i, 1);
+      utarray_erase(level->enemies, i, 1);
       free(enemy);
       level_deleteObject(level, enemy->sprite);
       break;
@@ -139,14 +158,93 @@ void level_deleteEnemy(Level *level, struct Enemy *enemy)
   }
 }
 
+
 void level_update(Level *level)
 {
   Enemy **currentEnemy = NULL;
-  while ((currentEnemy = (Enemy **)utarray_next(level->enemys, currentEnemy)))
+  while ((currentEnemy = (Enemy **)utarray_next(level->enemies, currentEnemy)))
     enemy_update(*currentEnemy);
 }
 
-bool level_isDone(Level* level)
+bool level_isDone(Level *level)
 {
-  return utarray_len(level->enemys) == 0;
+  return utarray_len(level->enemies) == 0;
+}
+
+void level_processChunkMoving(LoadLevelArgs args, Player* player) {
+  if (player->sprite->position.x <= 24)
+    {
+      level_moveAndLoadLevel(args,vec2_new (-1, 0));
+      return;
+    }
+
+  if (player->sprite->position.x >= 136)
+    {
+      level_moveAndLoadLevel(args,vec2_new (1, 0));
+      return;
+    }
+
+  if (player->sprite->position.y <= 24)
+    {
+      level_moveAndLoadLevel(args,vec2_new (0, 1));
+      return;
+    }
+
+  if (player->sprite->position.y >= 136)
+    {
+      level_moveAndLoadLevel(args,vec2_new (0, -1));
+      return;
+    }
+}
+
+void level_spawnEnemies(Level *level)
+{
+  uint_32 enemyCount = RANDOMIZE(3, 6);
+
+  for (uint_32 i = 0; i < enemyCount; i++)
+  {
+    EnemyType_1 newEnemy = level_spawnEnemyType_1(level);
+
+    newEnemy.enemy->sprite->position.x = RANDOMIZE(30, 60);
+    newEnemy.enemy->sprite->position.y = RANDOMIZE(30, 130);
+    uint_32 tryCount = 0;
+    while (tryCount < 10 && (player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(1, 0)) ||
+           player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(-1, 0)) ||
+           player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(0, 1)) ||
+           player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(0, -1))))
+    {
+      newEnemy.enemy->sprite->position.x = RANDOMIZE(25, 135);
+      newEnemy.enemy->sprite->position.y = RANDOMIZE(25, 135);
+      tryCount++;
+    }
+
+    if (tryCount >= 9)
+    {
+      HpPointsOverEvent e;
+      e.parent = newEnemy.enemy;
+      enemy_death(e);
+    }
+  }
+}
+
+void level_loadLevel(LoadLevelArgs args) {
+  if (!level_isDone(args.level)) return;
+
+  level_delete (args.level);
+  args.level = level_new();
+  level_setImagePool (args.level, args.imagePool);
+
+  level_setChunk (args.level, args.newChunkPosition, args.newChunk);
+  level_spawnEnemies (args.level);
+}
+
+void level_moveAndLoadLevel(LoadLevelArgs args, Vec2 to) {
+  int_32 chunkX = (int_32) args.level->levelChunk->x;
+  int_32 chunkY = (int_32) args.level->levelChunk->y;
+
+  Vec2 from = vec2_new (chunkX, chunkY);
+  Vec2 newMovingPosition = vec2_add (from, to);
+
+  args.newChunkPosition = newMovingPosition;
+  level_loadLevel(args);
 }

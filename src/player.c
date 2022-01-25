@@ -1,29 +1,27 @@
 #include "libs.h"
 #include <math.h>
 
-#define BUTTON_LUP (BUTTON_LEFT + BUTTON_UP)
-#define BUTTON_LDOWN (BUTTON_LEFT + BUTTON_DOWN)
-#define BUTTON_RUP (BUTTON_RIGHT + BUTTON_UP)
-#define BUTTON_RDOWN (BUTTON_RIGHT + BUTTON_DOWN)
+static Player* globalPlayerRef = NULL;
+static Player globalPlayer = {};
 
 bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
 {
-    if (player->pos.x <= 23 && dir.x == -1)
+    if (player->position.x <= 23 && dir.x == -1)
     {
         return true;
     }
 
-    if (player->pos.x >= 137 && dir.x == 1)
+    if (player->position.x >= 137 && dir.x == 1)
     {
         return true;
     }
 
-    if (player->pos.y <= 23 && dir.y == -1)
+    if (player->position.y <= 23 && dir.y == -1)
     {
        return true;
     }
 
-    if (player->pos.y >= 137 && dir.y == 1)
+    if (player->position.y >= 137 && dir.y == 1)
     {
        return true;
     }
@@ -41,7 +39,7 @@ bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
       if (!isClash)
         continue;
 
-      Vec2f rayDir = vec2_normalize (vec2_sub ((*currentObject)->pos, player->pos));
+      Vec2f rayDir = vec2_normalize (vec2_sub ((*currentObject)->position, player->position));
       if (fabsf (fabsf (rayDir.x) - fabsf (rayDir.y)) < 0.00000001)
         continue;
 
@@ -55,19 +53,35 @@ bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
   return false;
 }
 
+Player* player_getInstance() {
+  if (globalPlayerRef == NULL) {
+      trace ("Player instance reference not found");
+  }
+  return globalPlayerRef;
+}
 
-Player player_new(Level *level, GameState* gameState)
+Player* player_initInstance(PlayerInitInstanceArgs args)
 {
+  if (globalPlayerRef == NULL)
+    {
+      globalPlayer = player_new (args.level, args.gameState, args.spawnPosition);
+      globalPlayerRef = &globalPlayer;
+    }
 
-  level->imagePool;
+  return globalPlayerRef;
+}
+
+Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
+{
 
   struct Player player = {
       .actionState = PlayerAction_Idle,
       .movementDirection = PlayerDir_Bottom,
-      .level = level,
       .sprite = NULL,
+      .gameState = gameState,
+      .level = level,
+      .speed = 1.5f,
       .emitter = eventEmitter_new(),
-      .sword = sword_empty(),
 
       .idleRightFrames = {
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimIdleRight0),
@@ -109,23 +123,26 @@ Player player_new(Level *level, GameState* gameState)
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimGoBottom1),
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimGoBottom2)
       },
+      .attackLeft = imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackLeft),
+      .sword = sword_new(level)
   };
 
   Sprite *playerSprite = level_spawnObject(level);
   sprite_animated_init(playerSprite, player.idleBottomFrames, 3, 10);
   player.sprite = playerSprite;
+  player.sprite->position = spawnPosition;
 
   sprite_initBoundingVolume (player.sprite, BOX);
-  player.speed = 1.5f;
+  player.health = hp_new(2, &player, 20, 20);
 
-    player.sword = sword_new(level, &player.emitter);
-    player.sword.damage = 1;
-    player.sword.attackDelay = 30;
+  eventEmitter_on (&player.health.emitter, E_HP_POINTS_OVER, &player_death);
+  eventEmitter_on (&player.sword.emitter, E_SWORD_ATTACK_HIT, &on_player_attack);
 
-    player.health = hp_new(2, &player, 20, 20);
-    player.gameState = gameState;
+  return player;
+}
 
-    return player;
+void on_player_attack(EnemySwordAttackHitEvent e) {
+
 }
 
 void player_move_left (Player *player)
@@ -222,7 +239,7 @@ void player_update(Player *player, Level *level)
   if (player->actionState == PlayerAction_Go)
     {
       player->speedDir = vec2f_normalize (player->speedDir);
-      player->sprite->pos = vec2_add (player->sprite->pos, vec2_fromVec2f (vec2f_mul (player->speedDir, vec2f_new (player->speed, player->speed))));
+      player->sprite->position = vec2_add (player->sprite->position, vec2_fromVec2f (vec2f_mul (player->speedDir, vec2f_new (player->speed, player->speed))));
     }
 
     sword_updatePosition(&player->sword, player->sprite);
@@ -303,8 +320,8 @@ void player_draw (Player *player, Level *level)
     DrawText(lText, 16, 150, textColors);
 }
 
-void player_death(HpPointsOverEvent eData)
+void player_death(HpPointsOverEvent event)
 {
-    Player* player = (Player*)eData.parent;
+    Player* player = (Player*)event.parent;
     player->gameState->currentScreen = IN_MENU;
 }

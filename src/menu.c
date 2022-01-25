@@ -18,7 +18,7 @@ struct MenuState menuState_new(void)
 void menu_setImagePool(MenuState* menuState, ImagePool* imagePool) {
   menuState->imagePool = imagePool;
   menuState->logo = sprite_new(imagePool_getImage(menuState->imagePool, PoolIdx_MenuImage));
-  menuState->logo->pos.y = 14;
+  menuState->logo->position.y = 14;
 }
 
 const uint8_t logoYPosMax = 4;

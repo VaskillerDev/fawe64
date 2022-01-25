@@ -11,7 +11,7 @@ Sword sword_empty() {
   .hit = false,
   .usage = false,
   .damage = 0,
-  .playerEmitter = NULL,
+  .emitter = {},
   .attackDelay = 0,
   .dir = vec2_new (0,0),
   .damageRange = vec2f_new (0,0)
@@ -20,19 +20,21 @@ Sword sword_empty() {
   return sword;
 }
 
-Sword sword_new(Level *level, EventEmitter* emitter)
+Sword sword_new(Level *level)
 {
-    Sword sword = sword_empty();
-    sword.damage = 1;
-    sword.sprite = level_spawnObject(level);
-    sword.sprite->boundingVolume.position = &sword.sprite->pos;
+    struct Sword sword = {
+        .damage = 1,
+        .sprite = level_spawnObject(level),
+        .hit = false
+    };
+
+    sword.sprite->boundingVolume.position = &sword.sprite->position;
     sword.sprite->boundingVolume.shape = BOX_TRIGGER;
     sword.sprite->animDelay = 0;
     sword.sprite->currentImage = NULL;
-    sword.hit = false;
 
-    sword.playerEmitter = emitter;
-    eventEmitter_on (emitter, E_SWORD_ATTACK_HIT, &sword_hit);
+    sword.emitter = eventEmitter_new();
+    eventEmitter_on (&sword.emitter, E_SWORD_ATTACK_HIT, &sword_hit);
 
     return sword;
 }
@@ -49,8 +51,8 @@ void sword_updatePosition(Sword *sword, Sprite *parent)
     sword->sprite->boundingVolume.shape = BOX_TRIGGER;
     sword->sprite->boundingVolume.size = vec2_add(vec2_new(4, 4), vec2_mul(vec2_new(abs(dir.x), abs(dir.y)), vec2_new(4, 4)));
 
-    sword->sprite->pos = vec2_add(parent->pos, vec2_mul(dir,
-                                                        vec2_new((parent->size.x + sword->sprite->boundingVolume.size.x) / 2, (parent->size.y + sword->sprite->boundingVolume.size.y) / 2)));
+    sword->sprite->position = vec2_add(parent->position, vec2_mul(dir,
+                                                                  vec2_new((parent->size.x + sword->sprite->boundingVolume.size.x) / 2, (parent->size.y + sword->sprite->boundingVolume.size.y) / 2)));
 }
 
 void sword_update(Sword *sword, Sprite *parent, Level *level)
@@ -72,7 +74,7 @@ void sword_update(Sword *sword, Sprite *parent, Level *level)
                         .target = *currentObject
                     };
 
-                    eventEmitter_emit(sword->playerEmitter, E_SWORD_ATTACK_HIT, &event);
+                    eventEmitter_emit(&sword->emitter, E_SWORD_ATTACK_HIT, &event);
 
                     break;
                 }

@@ -13,12 +13,12 @@ struct Sword
     bool usage;
     bool hit;
 
-    EventEmitter* playerEmitter;
+    EventEmitter emitter;
 };
 
 typedef struct Sword Sword;
 
-Sword sword_new(Level* level, EventEmitter* emitter);
+Sword sword_new(Level* level);
 Sword sword_empty();
 void sword_updatePosition(Sword* sword, struct Sprite* parent);
 void sword_update(Sword* sword, struct Sprite* parent, Level* level);

@@ -1,2 +1,2 @@
 make
-.\w4.exe  run .\build\cart.wasm
+.\w4.exe  watch .\build\cart.wasm

@@ -86,6 +86,7 @@ typedef struct EnemyActionStateChangedEvent {
 } EnemyActionStateChangedEvent;
 
 typedef struct EnemySwordAttackHitEvent {
+    Player* player;
     Sword* sword;
     Sprite* target;
 } EnemySwordAttackHitEvent;

@@ -11,9 +11,10 @@
 #include <stdbool.h>
 #include "wasm4.h"
 
+#include "types.h"
+#include "event.h"
 
 #include "vec2.h"
-#include "types.h"
 #include "image.h"
 #include "tiled.h"
 #include "image_pool.h"
@@ -23,9 +24,8 @@
 #include "game.h"
 #include "hp.h"
 #include "enemy.h"
-#include "event.h"
 #include "render.h"
-#include "level.h"
 #include "sword.h"
 #include "player.h"
+#include "level.h"
 #include "assets.h"

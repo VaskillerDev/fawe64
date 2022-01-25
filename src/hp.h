@@ -7,7 +7,9 @@
 typedef struct Hp {
 
     uint8_t id;
+
     void* parent;
+
     EventEmitter emitter;
     /**
      * Текущее здоровье

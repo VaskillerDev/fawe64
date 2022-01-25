@@ -6,6 +6,7 @@ typedef uint16_t uint_16;
 typedef uint8_t uint_8;
 
 typedef struct MenuState MenuState;
+typedef enum MenuOptionType MenuOptionType;
 typedef struct GameState GameState;
 typedef struct EventEmitter EventEmitter;
 typedef struct ImagePool ImagePool;
@@ -13,3 +14,4 @@ typedef struct Level Level;
 typedef struct Enemy Enemy;
 typedef struct Sword Sword;
 typedef struct Sprite Sprite;
+typedef struct Player Player;
