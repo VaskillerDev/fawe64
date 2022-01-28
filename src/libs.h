@@ -12,7 +12,6 @@
 #include "wasm4.h"
 
 #include "types.h"
-#include "event.h"
 
 #include "vec2.h"
 #include "image.h"
@@ -29,3 +28,5 @@
 #include "player.h"
 #include "level.h"
 #include "assets.h"
+
+#include "event.h"

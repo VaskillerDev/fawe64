@@ -37,7 +37,7 @@ void menu_setImagePool(MenuState* menu, ImagePool* imagePool);
 /**
  * Опции меню
  */
-typedef enum {
+typedef enum MenuOptionType {
     CONTINUE_GAME = 1,
     NEW_GAME,
     SETTINGS,

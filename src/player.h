@@ -27,7 +27,7 @@ struct Player
     Image* idleBottomFrames[3];
     Image* goBottomFrames[3];
 
-    Image* attackLeft;
+    Image* attackLeft[3];
 
     Level *level;
     float speed;

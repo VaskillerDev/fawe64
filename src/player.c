@@ -123,7 +123,11 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimGoBottom1),
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimGoBottom2)
       },
-      .attackLeft = imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackLeft),
+      .attackLeft = {
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackLeft),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackLeft),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackLeft),
+          },
       .sword = sword_new(level)
   };
 
@@ -142,7 +146,7 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
 }
 
 void on_player_attack(EnemySwordAttackHitEvent e) {
-
+  e.player->actionState = PlayerAction_Attack;
 }
 
 void player_move_left (Player *player)
@@ -231,6 +235,10 @@ void player_update(Player *player, Level *level)
 
   MOVE_PLAYER:
 
+  if (player->actionState == PlayerAction_Attack) {
+      return;
+  }
+
   player->actionState = vec2f_getLength (player->speedDir) > 0 ? PlayerAction_Go : PlayerAction_Idle;
 
   //tracef ("actionState %d", player->actionState);
@@ -299,9 +307,7 @@ void player_draw (Player *player, Level *level)
 
                 }
               break;
-              case PlayerDirLeft: {
-
-                }
+              case PlayerDirLeft: player->sprite->images = player->attackLeft;
               break;
               case PlayerDir_Bottom: {
 
