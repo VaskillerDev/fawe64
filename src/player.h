@@ -27,7 +27,10 @@ struct Player
     Image* idleBottomFrames[3];
     Image* goBottomFrames[3];
 
+    Image* attackUp[3];
+    Image* attackBottom[3];
     Image* attackLeft[3];
+    Image* attackRight[3];
 
     Level *level;
     float speed;
@@ -49,6 +52,8 @@ struct Player
     EventEmitter emitter;
 
     GameState* gameState;
+
+    uint_8 attackAnimationTimeout;
 };
 
 typedef struct Player Player;
@@ -83,5 +88,7 @@ void player_move_down(Player *player);
 
 void player_update(Player *player, Level *level);
 void player_draw(Player *player, Level *level);
-void player_death(HpPointsOverEvent eData);
+void player_postUpdate(Player *player, Level *level);
+void on_player_death(HpPointsOverEvent eData);
 void on_player_attack(EnemySwordAttackHitEvent e);
+void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e);

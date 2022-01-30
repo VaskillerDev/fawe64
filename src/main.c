@@ -76,6 +76,7 @@ void update ()
           Player* player = player_getInstance();
           player_update (player, level);
           player_draw (player, level);
+          player_postUpdate(player, level);
 
           const struct LoadLevelArgs chunkMovingArgs = {
               .level = level,

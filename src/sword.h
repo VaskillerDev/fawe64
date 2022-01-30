@@ -21,6 +21,6 @@ typedef struct Sword Sword;
 Sword sword_new(Level* level);
 Sword sword_empty();
 void sword_updatePosition(Sword* sword, struct Sprite* parent);
-void sword_update(Sword* sword, struct Sprite* parent, Level* level);
+void sword_update(Player* player , Level* level);
 void sword_attack(Sword* sword);
 void sword_hit(EnemySwordAttackHitEvent event);

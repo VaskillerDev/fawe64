@@ -55,8 +55,11 @@ void sword_updatePosition(Sword *sword, Sprite *parent)
                                                                   vec2_new((parent->size.x + sword->sprite->boundingVolume.size.x) / 2, (parent->size.y + sword->sprite->boundingVolume.size.y) / 2)));
 }
 
-void sword_update(Sword *sword, Sprite *parent, Level *level)
+void sword_update(Player* player , Level* level)
 {
+  Sword* sword = &player->sword;
+  Sprite* parent = player->sprite;
+
     if (sword->usage)
     {
         if (!sword->hit && sword->damageRange.x >= sword->counter && sword->counter <= sword->damageRange.y)
@@ -70,12 +73,12 @@ void sword_update(Sword *sword, Sprite *parent, Level *level)
                 if (CheckCollision(&sword->sprite->boundingVolume, &(*currentObject)->boundingVolume) && (*currentObject)->health)
                 {
                     struct EnemySwordAttackHitEvent event = {
+                        .player = player,
                         .sword = sword,
                         .target = *currentObject
                     };
 
                     eventEmitter_emit(&sword->emitter, E_SWORD_ATTACK_HIT, &event);
-
                     break;
                 }
             }

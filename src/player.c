@@ -128,7 +128,23 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackLeft),
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackLeft),
           },
-      .sword = sword_new(level)
+      .attackRight = {
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackRight),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackRight),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackRight),
+      },
+      .attackUp = {
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackUp),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackUp),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackUp),
+      },
+      .attackBottom = {
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackBottom),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackBottom),
+          imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackBottom),
+      },
+      .sword = sword_new(level),
+      .attackAnimationTimeout = 100
   };
 
   Sprite *playerSprite = level_spawnObject(level);
@@ -139,8 +155,9 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
   sprite_initBoundingVolume (player.sprite, BOX);
   player.health = hp_new(2, &player, 20, 20);
 
-  eventEmitter_on (&player.health.emitter, E_HP_POINTS_OVER, &player_death);
+  eventEmitter_on (&player.health.emitter, E_HP_POINTS_OVER, &on_player_death);
   eventEmitter_on (&player.sword.emitter, E_SWORD_ATTACK_HIT, &on_player_attack);
+  eventEmitter_on (&player.emitter, E_PLAYER_ATTACK_ANIMATION_TIMEOUT, &on_player_attack_animation_timeout);
 
   return player;
 }
@@ -251,7 +268,7 @@ void player_update(Player *player, Level *level)
     }
 
     sword_updatePosition(&player->sword, player->sprite);
-    sword_update(&player->sword, player->sprite, level);
+    sword_update(player, level);
     if (button_2)
     {
       sword_attack (&player->sword);
@@ -299,19 +316,13 @@ void player_draw (Player *player, Level *level)
         {
           switch (player->movementDirection)
             {
-              case PlayerDir_Right: {
-
-                }
+              case PlayerDir_Right: player->sprite->images = player->attackRight;
               break;
-              case PlayerDir_Up: {
-
-                }
+              case PlayerDir_Up: player->sprite->images = player->attackUp;
               break;
               case PlayerDirLeft: player->sprite->images = player->attackLeft;
               break;
-              case PlayerDir_Bottom: {
-
-                }
+              case PlayerDir_Bottom: player->sprite->images = player->attackBottom;
               break;
             }
         };
@@ -326,8 +337,31 @@ void player_draw (Player *player, Level *level)
     DrawText(lText, 16, 150, textColors);
 }
 
-void player_death(HpPointsOverEvent event)
+void player_postUpdate(Player *player, Level *level) {
+  level; // unused
+  if (player->actionState == PlayerAction_Attack) {
+
+      uint_8 *  timeout = &player->attackAnimationTimeout;
+      *timeout -= 1;
+      if (*timeout <= 0) {
+
+          PlayerAttackAnimationTimeoutEvent event = {
+              .timeout = 8
+          };
+          eventEmitter_emit (&player->emitter, E_PLAYER_ATTACK_ANIMATION_TIMEOUT, &event);
+        }
+
+  }
+}
+
+void on_player_death(HpPointsOverEvent eData)
 {
-    Player* player = (Player*)event.parent;
+    Player* player = (Player*)eData.parent;
     player->gameState->currentScreen = IN_MENU;
+}
+
+void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e) {
+  Player* player = player_getInstance();
+  player->actionState = PlayerAction_Idle;
+  player->attackAnimationTimeout = e->timeout;
 }
