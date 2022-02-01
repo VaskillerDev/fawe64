@@ -65,3 +65,4 @@ void level_loadLevel(LoadLevelArgs args);
  */
 void level_moveAndLoadLevel(LoadLevelArgs args, Vec2 direction);
 
+

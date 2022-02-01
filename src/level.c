@@ -28,6 +28,7 @@ void level_delete(Level *level)
     sprite_delete(*currentObject);
 
   utarray_free(level->objects);
+
   utarray_free(level->enemies);
 
   free(level);
@@ -117,6 +118,7 @@ void level_spawnCollisionByTiles(Level *level)
       newCollisionBox->imageCount = 0;
       newCollisionBox->health = NULL;
       newCollisionBox->isCollisionBox = true;
+
 
       sprite_initBoundingVolume(newCollisionBox, BOX);
     }
@@ -226,6 +228,8 @@ void level_spawnEnemies(Level *level)
     }
   }
 }
+
+
 
 void level_loadLevel(LoadLevelArgs args) {
   if (!level_isDone(args.level)) return;
