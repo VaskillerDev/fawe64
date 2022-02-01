@@ -177,6 +177,8 @@ const uint8_t menuImg[2560] = {0x00, 0x00, 0x03, 0xff, 0xff, 0xff, 0xff, 0xff, 0
                                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 uint_16 menuImgColors[4] = {0, 4, 2, 3};
+uint_16 pliligrimLeftColors[4] = {0, 4, 3, 2 };
+uint_16 pliligrimUpAttackColors[4] = {4,0,2,3};
 uint16_t enemy0ImgColors[4] = {0, 2, 4, 3};
 
 // piligrim

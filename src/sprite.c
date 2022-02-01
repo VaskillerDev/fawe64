@@ -14,9 +14,17 @@ Sprite *sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDel
 Sprite *sprite_new(Image *image)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
-    newSprite->health = NULL;
-    newSprite->images = NULL;
+
+    newSprite->animDelay = 0;
+    newSprite->currentImage = NULL;
+    newSprite->currentImageIndex = 0;
+    newSprite->isCollisionBox = false;
     newSprite->flipH = 0;
+    newSprite->frameCounter = 0;
+    newSprite->health = NULL;
+    newSprite->imageCount = 0;
+    newSprite->images = NULL;
+
     return sprite_init(newSprite, image);
 }
 
@@ -43,6 +51,7 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     sprite->currentImageIndex = 0;
     sprite->flipH = 0;
     sprite->health = NULL;
+    sprite->isCollisionBox = false;
     if (sprite->imageCount > 0)
     {
         sprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
@@ -79,7 +88,7 @@ void sprite_Draw(Sprite *sprite)
     if (sprite->currentImage)
     {
         sprite->currentImage->flags |= sprite->flipH;
-        DrawImage(sprite->currentImage, sprite->pos.x - sprite->size.x / 2, sprite->pos.y - sprite->size.y / 2, true);
+        DrawImage(sprite->currentImage, sprite->position.x - sprite->size.x / 2, sprite->position.y - sprite->size.y / 2, true);
     }
 
     if (DEBUG_BOUNDING_VOLUME)
@@ -90,9 +99,10 @@ void sprite_Draw(Sprite *sprite)
 
     ++sprite->frameCounter;
 
-    if (sprite->frameCounter >= sprite->animDelay)
+    if (sprite->frameCounter >= sprite->animDelay && sprite->imageCount > 0)
     {
-        sprite->currentImageIndex = ++sprite->currentImageIndex % sprite->imageCount;
+        sprite->currentImageIndex +=1;
+        sprite->currentImageIndex = sprite->currentImageIndex % sprite->imageCount;
         sprite->frameCounter = 0;
 
         sprite->currentImage = *(sprite->images + sprite->currentImageIndex);
@@ -102,7 +112,7 @@ void sprite_Draw(Sprite *sprite)
 void sprite_initBoundingVolume(Sprite *sprite, BoundingVolumeShape shape)
 {
     sprite->boundingVolume.shape = shape;
-    sprite->boundingVolume.position = &sprite->pos;
+    sprite->boundingVolume.position = &sprite->position;
     if (shape == SPHERE)
     {
         sprite->boundingVolume.size.x = MAX(sprite->size.x / 2, sprite->size.y / 2);

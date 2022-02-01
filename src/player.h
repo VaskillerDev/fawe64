@@ -27,6 +27,10 @@ struct Player
     Image* idleBottomFrames[3];
     Image* goBottomFrames[3];
 
+    Image* attackUp[3];
+    Image* attackBottom[3];
+    Image* attackLeft[3];
+    Image* attackRight[3];
 
     Level *level;
     float speed;
@@ -48,11 +52,33 @@ struct Player
     EventEmitter emitter;
 
     GameState* gameState;
+
+    uint_8 attackAnimationTimeout;
 };
 
 typedef struct Player Player;
 
-Player player_new(Level *level, GameState* gameState);
+/**
+ * Сигнатура взятия инстанса игрока при первом создании
+ */
+typedef struct PlayerInitInstanceArgs {
+    Level* level;
+    GameState* gameState;
+    Vec2 spawnPosition;
+} PlayerInitInstanceArgs;
+
+Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition);
+/**
+ * Получить инстанс игрока
+ * @return
+ */
+Player* player_getInstance();
+/**
+ * Инициализировать инстанс игрока на старте
+ * @param args
+ * @return
+ */
+Player* player_initInstance(PlayerInitInstanceArgs args);
 
 bool player_checkCollision(struct Sprite *player, Level* level, Vec2 dir);
 void player_move_left(Player *player);
@@ -62,4 +88,7 @@ void player_move_down(Player *player);
 
 void player_update(Player *player, Level *level);
 void player_draw(Player *player, Level *level);
-void player_death(HpPointsOverEvent eData);
+void player_postUpdate(Player *player, Level *level);
+void on_player_death(HpPointsOverEvent eData);
+void on_player_attack(EnemySwordAttackHitEvent e);
+void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e);

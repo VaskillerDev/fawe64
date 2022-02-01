@@ -11,8 +11,9 @@ struct Sprite
     uint_32 imageCount;
     uint_32 frameCounter;
     uint_32 animDelay;
+    bool isCollisionBox;
 
-    Vec2 pos;
+    Vec2 position;
     Vec2 size;
     BoundingVolume boundingVolume;
 

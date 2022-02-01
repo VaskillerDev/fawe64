@@ -1,17 +1,51 @@
 #include "libs.h"
 #include <math.h>
 
+
+
+Sword sword_empty() {
+
+  struct Sword sword = {
+  .sprite = NULL,
+  .counter = 0,
+  .hit = false,
+  .usage = false,
+  .damage = 0,
+  .emitter = {},
+  .attackDelay = 0,
+  .dir = vec2_new (0,0),
+  .damageRange = vec2f_new (0,0)
+  };
+
+  return sword;
+}
+
 Sword sword_new(Level *level)
 {
-    Sword sword;
-    sword.damage = 1;
-    sword.sprite = level_spawnObject(level);
-    sword.sprite->boundingVolume.position = &sword.sprite->pos;
+    struct Sword sword = {
+        .damage = 1,
+        .sprite = level_spawnObject(level),
+        .hit = false,
+        .attackDelay = 30
+    };
+
+    sword.sprite->boundingVolume.position = &sword.sprite->position;
     sword.sprite->boundingVolume.shape = BOX_TRIGGER;
     sword.sprite->animDelay = 0;
     sword.sprite->currentImage = NULL;
-    sword.hit = false;
+
+    sword.emitter = eventEmitter_new();
+    eventEmitter_on (&sword.emitter, E_SWORD_ATTACK_HIT, &sword_hit);
+
     return sword;
+}
+
+void sword_hit(EnemySwordAttackHitEvent event) {
+  event.sword->hit = true;
+  if (event.target == NULL) return;
+
+  hp_substract(event.target->health, event.sword->damage);
+  tone(150, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE1);
 }
 
 void sword_updatePosition(Sword *sword, Sprite *parent)
@@ -20,39 +54,52 @@ void sword_updatePosition(Sword *sword, Sprite *parent)
     sword->sprite->boundingVolume.shape = BOX_TRIGGER;
     sword->sprite->boundingVolume.size = vec2_add(vec2_new(4, 4), vec2_mul(vec2_new(abs(dir.x), abs(dir.y)), vec2_new(4, 4)));
 
-    sword->sprite->pos = vec2_add(parent->pos, vec2_mul(dir,
-                                                        vec2_new((parent->size.x + sword->sprite->boundingVolume.size.x) / 2, (parent->size.y + sword->sprite->boundingVolume.size.y) / 2)));
+    sword->sprite->position = vec2_add(parent->position, vec2_mul(dir,
+                                                                  vec2_new((parent->size.x + sword->sprite->boundingVolume.size.x) / 2, (parent->size.y + sword->sprite->boundingVolume.size.y) / 2)));
 }
 
-void sword_update(Sword *sword, Sprite *parent, Level *level)
+void sword_update(Player* player , Level* level)
 {
-    if (sword->usage)
-    {
-        if (!sword->hit && sword->damageRange.x >= sword->counter && sword->counter <= sword->damageRange.y)
-        {
-            Sprite **currentObject = NULL;
-            while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
-            {
-                if (*currentObject == parent || *currentObject == sword->sprite)
-                    continue;
+  Sword* sword = &player->sword;
+  Sprite* parent = player->sprite;
 
-                if (CheckCollision(&sword->sprite->boundingVolume, &(*currentObject)->boundingVolume) && (*currentObject)->health)
-                {
-                    hp_substract((*currentObject)->health, sword->damage);
-                    sword->hit = true;
-                    tone(150, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE1);
-                    break;
-                }
-            }
-        }
+  if (!sword->usage) return;
 
-        ++sword->counter;
-        if (sword->counter >= sword->attackDelay)
-        {
-            sword->usage = false;
-            sword->hit = false;
-        }
-    }
+  struct EnemySwordAttackHitEvent event = {
+      .player = player,
+      .sword = sword,
+  };
+
+  bool isCanAttack = !sword->hit
+      && sword->damageRange.x >= (float) sword->counter
+      && (float) sword->counter <= sword->damageRange.y;
+
+  if (isCanAttack)
+  {
+      Sprite **currentObject = NULL;
+      while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
+      {
+          if (*currentObject == parent || *currentObject == sword->sprite)
+              continue;
+
+          if (CheckCollision(&sword->sprite->boundingVolume, &(*currentObject)->boundingVolume) && (*currentObject)->health)
+          {
+              event.target = *currentObject; // 'отловили' объект, который получит урон
+              break;
+          }
+      }
+
+      // отсюда начнется вся цепочка обратных вызовов, связанных с анимацией атаки
+      eventEmitter_emit(&sword->emitter, E_SWORD_ATTACK_HIT, &event);
+  }
+
+  sword->counter += 1;
+  if (sword->counter >= sword->attackDelay)
+  {
+      sword->usage = false;
+      sword->hit = false;
+  }
+
 }
 
 void sword_attack(Sword *sword)

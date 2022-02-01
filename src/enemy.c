@@ -60,7 +60,7 @@ void enemy_update(Enemy *enemy)
     {
         if (!player_checkCollision(enemy->sprite, enemy->level, enemy->moveDir))
         {
-            enemy->sprite->pos = vec2_add(enemy->sprite->pos, enemy->moveDir);
+            enemy->sprite->position = vec2_add(enemy->sprite->position, enemy->moveDir);
             --enemy->movDist;
         }
         else

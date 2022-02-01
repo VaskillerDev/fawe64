@@ -18,15 +18,11 @@ Hp hp_new (uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints)
 }
 
 void hp_substract(Hp* hp, uint8_t points) {
-  tracef("%d", hp->currentPoints);
-                    tracef("hit %d!", points);
   if (points >= hp->currentPoints) {
       hp->currentPoints = 0;
   } else {
     hp->currentPoints -= points;
   }
-
-tracef("%d!", hp->currentPoints);
 
   struct HpPointsChangedEvent changedEvent = {
       .id = hp->id,

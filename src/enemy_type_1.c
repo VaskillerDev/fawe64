@@ -30,7 +30,7 @@ EnemyType_1 EnemyType_1_new(Enemy *enemy, Level *level)
     sprite_initBoundingVolume(enemy->sprite, BOX);
 
     enemy->sprite->health = &enemy->health;
-    enemy->sprite->pos = vec2_new(80, 100);
+    enemy->sprite->position = vec2_new(80, 100);
     EnemyType_1 newEnemy;
     newEnemy.enemy = enemy;
 
