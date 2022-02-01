@@ -25,7 +25,8 @@ Sword sword_new(Level *level)
     struct Sword sword = {
         .damage = 1,
         .sprite = level_spawnObject(level),
-        .hit = false
+        .hit = false,
+        .attackDelay = 30
     };
 
     sword.sprite->boundingVolume.position = &sword.sprite->position;
@@ -40,8 +41,10 @@ Sword sword_new(Level *level)
 }
 
 void sword_hit(EnemySwordAttackHitEvent event) {
-  hp_substract(event.target->health, event.sword->damage);
   event.sword->hit = true;
+  if (event.target == NULL) return;
+
+  hp_substract(event.target->health, event.sword->damage);
   tone(150, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE1);
 }
 
@@ -60,37 +63,43 @@ void sword_update(Player* player , Level* level)
   Sword* sword = &player->sword;
   Sprite* parent = player->sprite;
 
-    if (sword->usage)
-    {
-        if (!sword->hit && sword->damageRange.x >= sword->counter && sword->counter <= sword->damageRange.y)
-        {
-            Sprite **currentObject = NULL;
-            while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
-            {
-                if (*currentObject == parent || *currentObject == sword->sprite)
-                    continue;
+  if (!sword->usage) return;
 
-                if (CheckCollision(&sword->sprite->boundingVolume, &(*currentObject)->boundingVolume) && (*currentObject)->health)
-                {
-                    struct EnemySwordAttackHitEvent event = {
-                        .player = player,
-                        .sword = sword,
-                        .target = *currentObject
-                    };
+  struct EnemySwordAttackHitEvent event = {
+      .player = player,
+      .sword = sword,
+  };
 
-                    eventEmitter_emit(&sword->emitter, E_SWORD_ATTACK_HIT, &event);
-                    break;
-                }
-            }
-        }
+  bool isCanAttack = !sword->hit
+      && sword->damageRange.x >= (float) sword->counter
+      && (float) sword->counter <= sword->damageRange.y;
 
-        ++sword->counter;
-        if (sword->counter >= sword->attackDelay)
-        {
-            sword->usage = false;
-            sword->hit = false;
-        }
-    }
+  if (isCanAttack)
+  {
+      Sprite **currentObject = NULL;
+      while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
+      {
+          if (*currentObject == parent || *currentObject == sword->sprite)
+              continue;
+
+          if (CheckCollision(&sword->sprite->boundingVolume, &(*currentObject)->boundingVolume) && (*currentObject)->health)
+          {
+              event.target = *currentObject; // 'отловили' объект, который получит урон
+              break;
+          }
+      }
+
+      // отсюда начнется вся цепочка обратных вызовов, связанных с анимацией атаки
+      eventEmitter_emit(&sword->emitter, E_SWORD_ATTACK_HIT, &event);
+  }
+
+  sword->counter += 1;
+  if (sword->counter >= sword->attackDelay)
+  {
+      sword->usage = false;
+      sword->hit = false;
+  }
+
 }
 
 void sword_attack(Sword *sword)

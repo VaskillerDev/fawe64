@@ -94,4 +94,5 @@ typedef struct EnemySwordAttackHitEvent {
 
 typedef struct PlayerAttackAnimationTimeoutEvent {
     uint_8 timeout;
+    Player* player;
 } PlayerAttackAnimationTimeoutEvent;

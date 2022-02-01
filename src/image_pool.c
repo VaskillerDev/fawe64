@@ -27,15 +27,15 @@ void imagePool_init(ImagePool *pool)
 
   *(pool->images + 15) = imagePool_addImage (pool, (void*)piligrim_attack_b_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
 
-  *(pool->images + 16) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 17) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 18) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 16) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_0, 64, 16, 16, pliligrimLeftColors, BLIT_2BPP);
+  *(pool->images + 17) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_1, 64, 16, 16, pliligrimLeftColors, BLIT_2BPP);
+  *(pool->images + 18) = imagePool_addImage (pool, (void*)pligrim_idle_l_img_2, 64, 16, 16, pliligrimLeftColors, BLIT_2BPP);
 
-  *(pool->images + 19) = imagePool_addImage (pool, (void*)pligrim_go_l_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 20) = imagePool_addImage (pool, (void*)pligrim_go_l_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 21) = imagePool_addImage (pool, (void*)pligrim_go_l_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 19) = imagePool_addImage (pool, (void*)pligrim_go_l_img_0, 64, 16, 16, pliligrimLeftColors, BLIT_2BPP);
+  *(pool->images + 20) = imagePool_addImage (pool, (void*)pligrim_go_l_img_1, 64, 16, 16, pliligrimLeftColors, BLIT_2BPP);
+  *(pool->images + 21) = imagePool_addImage (pool, (void*)pligrim_go_l_img_2, 64, 16, 16, pliligrimLeftColors, BLIT_2BPP);
 
-  *(pool->images + 22) = imagePool_addImage (pool, (void*)piligrim_attack_l_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 22) = imagePool_addImage (pool, (void*)piligrim_attack_l_img, 64, 16, 16, pliligrimLeftColors, BLIT_2BPP);
 
   *(pool->images + 23) = imagePool_addImage (pool, (void*)piligrim_idle_r_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
   *(pool->images + 24) = imagePool_addImage (pool, (void*)piligrim_idle_r_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
@@ -55,7 +55,7 @@ void imagePool_init(ImagePool *pool)
   *(pool->images + 34) = imagePool_addImage (pool, (void*)piligrim_go_u_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
   *(pool->images + 35) = imagePool_addImage (pool, (void*)piligrim_go_u_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
 
-  *(pool->images + 36) = imagePool_addImage (pool, (void*)piligrim_attack_u_img, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 36) = imagePool_addImage (pool, (void*)piligrim_attack_u_img, 64, 16, 16, pliligrimUpAttackColors, BLIT_2BPP);
 
   *(pool->images + 37) = imagePool_addImage (pool, (void*)sword_b_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
   *(pool->images + 38) = imagePool_addImage (pool, (void*)sword_lr_img, 32, 16, 16, menuImgColors, BLIT_2BPP);

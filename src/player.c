@@ -1,6 +1,8 @@
 #include "libs.h"
 #include <math.h>
 
+#define ATTACK_ANIMATION_TIMEOUT_VALUE 30
+
 static Player* globalPlayerRef = NULL;
 static Player globalPlayer = {};
 
@@ -144,7 +146,7 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimAttackBottom),
       },
       .sword = sword_new(level),
-      .attackAnimationTimeout = 100
+      .attackAnimationTimeout = ATTACK_ANIMATION_TIMEOUT_VALUE
   };
 
   Sprite *playerSprite = level_spawnObject(level);
@@ -346,7 +348,8 @@ void player_postUpdate(Player *player, Level *level) {
       if (*timeout <= 0) {
 
           PlayerAttackAnimationTimeoutEvent event = {
-              .timeout = 8
+              .timeout = ATTACK_ANIMATION_TIMEOUT_VALUE,
+              .player = player
           };
           eventEmitter_emit (&player->emitter, E_PLAYER_ATTACK_ANIMATION_TIMEOUT, &event);
         }
@@ -361,7 +364,6 @@ void on_player_death(HpPointsOverEvent eData)
 }
 
 void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e) {
-  Player* player = player_getInstance();
-  player->actionState = PlayerAction_Idle;
-  player->attackAnimationTimeout = e->timeout;
+  e->player->actionState = PlayerAction_Idle;
+  e->player->attackAnimationTimeout = e->timeout;
 }
