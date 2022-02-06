@@ -4,7 +4,7 @@
 typedef enum PlayerMovementDirection {
     PlayerDir_Right,
     PlayerDir_Up,
-    PlayerDirLeft,
+    PlayerDir_Left,
     PlayerDir_Bottom
 } PlayerMovementState;
 

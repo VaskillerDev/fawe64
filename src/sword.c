@@ -22,11 +22,34 @@ Sword sword_empty() {
 
 Sword sword_new(Level *level)
 {
+  Image* lSwordImage = imagePool_getImage (level->imagePool, PoolIdx_SwordLeft);
+  Image* rSwordImage = imagePool_getImage (level->imagePool, PoolIdx_SwordRight);
+
     struct Sword sword = {
         .damage = 1,
         .sprite = level_spawnObject(level),
         .hit = false,
-        .attackDelay = 30
+        .attackDelay = 30,
+        .lSwordFrames = {
+            lSwordImage,
+            lSwordImage,
+            lSwordImage
+        },
+        .rSwordFrames = {
+            rSwordImage,
+            rSwordImage,
+            rSwordImage
+        },
+        .upSwordFrames = {
+            imagePool_getImage (level->imagePool, PoolIdx_SwordUp),
+            imagePool_getImage (level->imagePool, PoolIdx_SwordUp),
+            imagePool_getImage (level->imagePool, PoolIdx_SwordUp)
+        },
+        .bottomSwordFrames = {
+            imagePool_getImage (level->imagePool, PoolIdx_SwordBottom),
+            imagePool_getImage (level->imagePool, PoolIdx_SwordBottom),
+            imagePool_getImage (level->imagePool, PoolIdx_SwordBottom)
+        }
     };
 
     sword.sprite->boundingVolume.position = &sword.sprite->position;

@@ -65,7 +65,8 @@ typedef enum ImagePoolIndex {
     PoolIdx_PiligrimAttackUp,
 
     PoolIdx_SwordBottom,
-    PoolIdx_SwordLeftRight,
+    PoolIdx_SwordLeft,
+    PoolIdx_SwordRight,
     PoolIdx_SwordUp,
 
     PoolIdx_Enemy0Go0,

@@ -3,7 +3,7 @@
 void imagePool_init(ImagePool *pool)
 {
     pool->imageCount = 47;
-    pool->data = malloc(sizeof(uint8_t) * (32 * 6 + 64 * 40 + 2560));
+    pool->data = malloc(sizeof(uint8_t) * (32 * 7 + 64 * 40 + 2560));
     pool->images = (Image **)malloc(sizeof(Image) * pool->imageCount);
     pool->offset = 0;
 
@@ -57,18 +57,19 @@ void imagePool_init(ImagePool *pool)
 
   *(pool->images + 36) = imagePool_addImage (pool, (void*)piligrim_attack_u_img, 64, 16, 16, pliligrimUpAttackColors, BLIT_2BPP);
 
-  *(pool->images + 37) = imagePool_addImage (pool, (void*)sword_b_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 38) = imagePool_addImage (pool, (void*)sword_lr_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 39) = imagePool_addImage (pool, (void*)sword_u_img, 32, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 37) = imagePool_addImage (pool, (void*)sword_b_img, 32, 16, 16, menuImgColors, BLIT_1BPP);
+  *(pool->images + 38) = imagePool_addImage (pool, (void*)sword_lr_img, 32, 16, 16, menuImgColors, BLIT_1BPP);
+  *(pool->images + 39) = imagePool_addImage (pool, (void*)sword_lr_img, 32, 16, 16, menuImgColors, BLIT_1BPP | BLIT_FLIP_X);
+  *(pool->images + 40) = imagePool_addImage (pool, (void*)sword_u_img, 32, 16, 16, menuImgColors, BLIT_1BPP);
 
-  *(pool->images + 40) = imagePool_addImage (pool, (void*)enmy0_go_img_0, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
-  *(pool->images + 41) = imagePool_addImage (pool, (void*)enmy0_go_img_1, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
-  *(pool->images + 42) = imagePool_addImage (pool, (void*)enmy0_go_img_2, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
-  *(pool->images + 43) = imagePool_addImage (pool, (void*)enmy0_attack_img, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
+  *(pool->images + 41) = imagePool_addImage (pool, (void*)enmy0_go_img_0, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
+  *(pool->images + 42) = imagePool_addImage (pool, (void*)enmy0_go_img_1, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
+  *(pool->images + 43) = imagePool_addImage (pool, (void*)enmy0_go_img_2, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
+  *(pool->images + 44) = imagePool_addImage (pool, (void*)enmy0_attack_img, 64, 16, 16, enemy0ImgColors, BLIT_2BPP);
 
-  *(pool->images + 44) = imagePool_addImage (pool, (void*)enmy1_go_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 45) = imagePool_addImage (pool, (void*)enmy1_go_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
-  *(pool->images + 46) = imagePool_addImage (pool, (void*)enmy1_go_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 45) = imagePool_addImage (pool, (void*)enmy1_go_img_0, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 46) = imagePool_addImage (pool, (void*)enmy1_go_img_1, 64, 16, 16, menuImgColors, BLIT_2BPP);
+  *(pool->images + 47) = imagePool_addImage (pool, (void*)enmy1_go_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
 
 }
 

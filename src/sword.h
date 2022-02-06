@@ -13,6 +13,12 @@ struct Sword
     bool usage;
     bool hit;
 
+    // фреймы для спрайта
+    Image* lSwordFrames[3];
+    Image* rSwordFrames[3];
+    Image* upSwordFrames[3];
+    Image* bottomSwordFrames[3];
+
     EventEmitter emitter;
 };
 

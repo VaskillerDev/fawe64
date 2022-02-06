@@ -24,6 +24,7 @@ Sprite *sprite_new(Image *image)
     newSprite->health = NULL;
     newSprite->imageCount = 0;
     newSprite->images = NULL;
+    newSprite->isHide = false;
 
     return sprite_init(newSprite, image);
 }
@@ -52,6 +53,7 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     sprite->flipH = 0;
     sprite->health = NULL;
     sprite->isCollisionBox = false;
+    sprite->isHide = false;
     if (sprite->imageCount > 0)
     {
         sprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
@@ -79,12 +81,15 @@ Sprite *sprite_init(Sprite *sprite, Image *image)
     sprite->currentImageIndex = 0;
     sprite->currentImage = image;
     sprite->health = NULL;
+    sprite->isHide = false;
 
     return sprite;
 }
 
 void sprite_Draw(Sprite *sprite)
 {
+    if (sprite->isHide == true) return;
+
     if (sprite->currentImage)
     {
         sprite->currentImage->flags |= sprite->flipH;

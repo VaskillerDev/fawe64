@@ -165,12 +165,34 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
 }
 
 void on_player_attack(EnemySwordAttackHitEvent e) {
+
+
+  switch (e.player->movementDirection)
+ {
+      case PlayerDir_Left: {
+          sprite_animated_init(e.sword->sprite, e.sword->lSwordFrames, 3, 10);
+      }
+      break;
+      case PlayerDir_Right: {
+          sprite_animated_init(e.sword->sprite, e.sword->rSwordFrames, 3, 10);
+      }
+      break;
+      case PlayerDir_Bottom: {
+          sprite_animated_init(e.sword->sprite, e.sword->bottomSwordFrames, 3, 10);
+      }
+      break;
+      case PlayerDir_Up: {
+          sprite_animated_init(e.sword->sprite, e.sword->upSwordFrames, 3, 10);
+      }
+     break;
+ }
+
   e.player->actionState = PlayerAction_Attack;
 }
 
 void player_move_left (Player *player)
 {
-  player->movementDirection = PlayerDirLeft;
+  player->movementDirection = PlayerDir_Left;
   if (!player_checkCollision (player->sprite, player->level, vec2_new (-1, 0))) {
       player->speedDir = vec2f_add (player->speedDir, vec2f_new (-1, 0));
   }
@@ -291,7 +313,7 @@ void player_draw (Player *player, Level *level)
               break;
               case PlayerDir_Up: player->sprite->images = player->idleUpFrames;
               break;
-              case PlayerDirLeft: player->sprite->images = player->idleLeftFrames;
+              case PlayerDir_Left: player->sprite->images = player->idleLeftFrames;
               break;
               case PlayerDir_Bottom: player->sprite->images = player->idleBottomFrames;
               break;
@@ -307,7 +329,7 @@ void player_draw (Player *player, Level *level)
               break;
               case PlayerDir_Up: player->sprite->images = player->goUpFrames;
               break;
-              case PlayerDirLeft: player->sprite->images = player->goLeftFrames;
+              case PlayerDir_Left: player->sprite->images = player->goLeftFrames;
               break;
               case PlayerDir_Bottom: player->sprite->images = player->goBottomFrames;
               break;
@@ -322,7 +344,7 @@ void player_draw (Player *player, Level *level)
               break;
               case PlayerDir_Up: player->sprite->images = player->attackUp;
               break;
-              case PlayerDirLeft: player->sprite->images = player->attackLeft;
+              case PlayerDir_Left: player->sprite->images = player->attackLeft;
               break;
               case PlayerDir_Bottom: player->sprite->images = player->attackBottom;
               break;
@@ -343,7 +365,7 @@ void player_postUpdate(Player *player, Level *level) {
   level; // unused
   if (player->actionState == PlayerAction_Attack) {
 
-      uint_8 *  timeout = &player->attackAnimationTimeout;
+      uint_8 * timeout = &player->attackAnimationTimeout;
       *timeout -= 1;
       if (*timeout <= 0) {
 
@@ -364,6 +386,7 @@ void on_player_death(HpPointsOverEvent eData)
 }
 
 void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e) {
+  e->player->sword.sprite->isHide = true;
   e->player->actionState = PlayerAction_Idle;
   e->player->attackAnimationTimeout = e->timeout;
 }

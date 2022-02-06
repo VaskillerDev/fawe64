@@ -19,6 +19,7 @@ struct Sprite
 
     Hp* health;
 
+    bool isHide;
     uint_8 flipH ;
 };
 
