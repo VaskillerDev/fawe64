@@ -78,14 +78,14 @@ void update ()
           player_draw (player, level);
           player_postUpdate(player, level);
 
-          const struct LoadLevelArgs chunkMovingArgs = {
+          struct LoadLevelArgs chunkMovingArgs = {
               .level = level,
               .newChunk = &chunk,
               .imagePool = &imgPool,
               .newChunkPosition = vec2_new (chunk.x, chunk.y)
           };
 
-          level_processChunkMoving(chunkMovingArgs, player);
+          level_processChunkMoving(&chunkMovingArgs, player);
           level_update (level);
           level_draw (level);
         }

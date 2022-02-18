@@ -29,6 +29,7 @@ typedef struct ChunkMovingArgs {
 } ChunkMovingArgs;
 
 Level* level_new();
+void level_clear(Level* level);
 void level_delete(Level* level);
 void level_setChunk(Level* level, Vec2 chunkCoords, TiledLevelChunk* chunk);
 void level_setImagePool(Level* level, ImagePool* pool);
@@ -41,7 +42,7 @@ void level_draw(Level* level);
  * @param args
  * @param player
  */
-void level_processChunkMoving(LoadLevelArgs args, Player* player);
+bool level_processChunkMoving(LoadLevelArgs* args, Player* player);
 void level_update(Level* level);
 
 void level_deleteObject(Level* level, struct Sprite* object);
@@ -57,12 +58,12 @@ void level_spawnEnemies(Level* level);
  * Загрузить уровень (тайлы, противников, героя)
  * @param args
  */
-void level_loadLevel(LoadLevelArgs args);
+void level_loadLevel(LoadLevelArgs* args);
 
 /**
  * Сдвинуться на указанный вектор и загрузить уровень
  * @param direction
  */
-void level_moveAndLoadLevel(LoadLevelArgs args, Vec2 direction);
+void level_moveAndLoadLevel(LoadLevelArgs* args, Vec2 direction);
 
 

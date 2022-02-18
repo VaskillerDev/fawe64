@@ -164,29 +164,38 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
   return player;
 }
 
+/**
+ * Вызывается в момент начала атаки игроком
+ * @param e
+ */
 void on_player_attack(EnemySwordAttackHitEvent e) {
 
+  Vec2 offsetPosition = {0,0};
 
   switch (e.player->movementDirection)
  {
       case PlayerDir_Left: {
-          sprite_animated_init(e.sword->sprite, e.sword->lSwordFrames, 3, 10);
+        offsetPosition = vec2_new(-4,0);
+        sprite_animated_init(e.sword->sprite, e.sword->lSwordFrames, 3, 10);
       }
       break;
       case PlayerDir_Right: {
+          offsetPosition = vec2_new(4,0);
           sprite_animated_init(e.sword->sprite, e.sword->rSwordFrames, 3, 10);
       }
       break;
       case PlayerDir_Bottom: {
+          offsetPosition = vec2_new(0,4);
           sprite_animated_init(e.sword->sprite, e.sword->bottomSwordFrames, 3, 10);
       }
       break;
       case PlayerDir_Up: {
+          offsetPosition = vec2_new(0,-4);
           sprite_animated_init(e.sword->sprite, e.sword->upSwordFrames, 3, 10);
       }
      break;
  }
-
+  e.sword->sprite->position = vec2_add (e.sword->sprite->position, offsetPosition);
   e.player->actionState = PlayerAction_Attack;
 }
 
@@ -291,12 +300,10 @@ void player_update(Player *player, Level *level)
       player->sprite->position = vec2_add (player->sprite->position, vec2_fromVec2f (vec2f_mul (player->speedDir, vec2f_new (player->speed, player->speed))));
     }
 
-    sword_updatePosition(&player->sword, player->sprite);
-    sword_update(player, level);
-    if (button_2)
-    {
-      sword_attack (&player->sword);
-    }
+  if (button_2) { sword_attack (&player->sword); }
+
+  sword_updatePosition(&player->sword, player->sprite);
+  sword_update(player, level);
 }
 
 

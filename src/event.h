@@ -20,6 +20,7 @@ typedef enum EventName {
     E_ENEMY_ACTION_STATE_CHANGED = 30,
     E_SWORD_ATTACK_HIT = 31,
     E_PLAYER_ATTACK_ANIMATION_TIMEOUT = 32,
+    E_LEVEL_CHUNK_MOVED = 33
 } EventName;
 
 /**

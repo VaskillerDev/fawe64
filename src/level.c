@@ -8,17 +8,21 @@ UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
 Level *level_new()
 {
   Level *newLevel = (Level *)malloc(sizeof(Level));
-  utarray_new(newLevel->objects, &object_icd);
-  utarray_reserve(newLevel->objects, 100);
-  utarray_new(newLevel->enemies, &enemy_icd);
-  utarray_reserve(newLevel->enemies, 20);
-  newLevel->objects->d = 0;
-  newLevel->objects->i = 0;
-  newLevel->objects->n = 0;
-
-  newLevel->imagePool = NULL;
-  newLevel->levelChunk = NULL;
+  level_clear(newLevel);
   return newLevel;
+}
+
+void level_clear(Level* level) {
+  utarray_new(level->objects, &object_icd);
+  utarray_reserve(level->objects, 100);
+  utarray_new(level->enemies, &enemy_icd);
+  utarray_reserve(level->enemies, 20);
+  level->objects->d = 0;
+  level->objects->i = 0;
+  level->objects->n = 0;
+
+  level->imagePool = NULL;
+  level->levelChunk = NULL;
 }
 
 void level_delete(Level *level)
@@ -59,7 +63,9 @@ Enemy *level_spawnEnemy(Level *level)
 
 struct EnemyType_1 level_spawnEnemyType_1(Level *level)
 {
-  return EnemyType_1_new(level_spawnEnemy(level), level);
+  Enemy* enemy = level_spawnEnemy(level);
+  EnemyType_1 enemyType1 = EnemyType_1_new(enemy, level);
+  return enemyType1;
 }
 
 void level_draw(Level *level)
@@ -173,35 +179,36 @@ bool level_isDone(Level *level)
   return utarray_len(level->enemies) == 0;
 }
 
-void level_processChunkMoving(LoadLevelArgs args, Player* player) {
+bool level_processChunkMoving(LoadLevelArgs* args, Player* player) {
   if (player->sprite->position.x <= 24)
     {
       level_moveAndLoadLevel(args,vec2_new (-1, 0));
-      return;
+      return true;
     }
 
   if (player->sprite->position.x >= 136)
     {
       level_moveAndLoadLevel(args,vec2_new (1, 0));
-      return;
+      return true;
     }
 
   if (player->sprite->position.y <= 24)
     {
       level_moveAndLoadLevel(args,vec2_new (0, 1));
-      return;
+      return true;
     }
 
   if (player->sprite->position.y >= 136)
     {
       level_moveAndLoadLevel(args,vec2_new (0, -1));
-      return;
+      return true;
     }
+  return false;
 }
 
 void level_spawnEnemies(Level *level)
 {
-  uint_32 enemyCount = RANDOMIZE(3, 6);
+  uint_32 enemyCount = RANDOMIZE(1, 1);
 
   for (uint_32 i = 0; i < enemyCount; i++)
   {
@@ -231,24 +238,25 @@ void level_spawnEnemies(Level *level)
 
 
 
-void level_loadLevel(LoadLevelArgs args) {
-  if (!level_isDone(args.level)) return;
+void level_loadLevel(LoadLevelArgs* args) {
+  if (!level_isDone(args->level)) return;
 
-  level_delete (args.level);
-  args.level = level_new();
-  level_setImagePool (args.level, args.imagePool);
+  level_delete (args->level);
+  level_clear (args->level);
+  level_setImagePool (args->level, args->imagePool);
 
-  level_setChunk (args.level, args.newChunkPosition, args.newChunk);
-  level_spawnEnemies (args.level);
+  level_setChunk (args->level, args->newChunkPosition, args->newChunk);
+  level_spawnEnemies (args->level);
 }
 
-void level_moveAndLoadLevel(LoadLevelArgs args, Vec2 to) {
-  int_32 chunkX = (int_32) args.level->levelChunk->x;
-  int_32 chunkY = (int_32) args.level->levelChunk->y;
+void level_moveAndLoadLevel(LoadLevelArgs* args, Vec2 to) {
+  int_32 chunkX = (int_32) args->level->levelChunk->x;
+  int_32 chunkY = (int_32) args->level->levelChunk->y;
 
   Vec2 from = vec2_new (chunkX, chunkY);
   Vec2 newMovingPosition = vec2_add (from, to);
 
-  args.newChunkPosition = newMovingPosition;
+  args->newChunkPosition = newMovingPosition;
   level_loadLevel(args);
+  eventEmitter_emit (&player_getInstance()->emitter, E_LEVEL_CHUNK_MOVED, (void*) &to);
 }
