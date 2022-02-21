@@ -31,10 +31,8 @@ void level_delete(Level *level)
   while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
     sprite_delete(*currentObject);
 
-  utarray_free(level->objects);
-  utarray_free(level->enemies);
-
-  free(level);
+  utarray_clear(level->objects);
+  utarray_clear(level->enemies);
 }
 
 Sprite *level_spawnObject(Level *level)
