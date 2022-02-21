@@ -32,7 +32,6 @@ void level_delete(Level *level)
     sprite_delete(*currentObject);
 
   utarray_free(level->objects);
-
   utarray_free(level->enemies);
 
   free(level);
@@ -182,25 +181,25 @@ bool level_isDone(Level *level)
 bool level_processChunkMoving(LoadLevelArgs* args, Player* player) {
   if (player->sprite->position.x <= 24)
     {
-      level_moveAndLoadLevel(args,vec2_new (-1, 0));
+      level_moveAndLoadLevel(args,ChunkMovingDirection_Left);
       return true;
     }
 
   if (player->sprite->position.x >= 136)
     {
-      level_moveAndLoadLevel(args,vec2_new (1, 0));
+      level_moveAndLoadLevel(args, ChunkMovingDirection_Right);
       return true;
     }
 
   if (player->sprite->position.y <= 24)
     {
-      level_moveAndLoadLevel(args,vec2_new (0, 1));
+      level_moveAndLoadLevel(args,ChunkMovingDirection_Up);
       return true;
     }
 
   if (player->sprite->position.y >= 136)
     {
-      level_moveAndLoadLevel(args,vec2_new (0, -1));
+      level_moveAndLoadLevel(args,ChunkMovingDirection_Bottom);
       return true;
     }
   return false;
@@ -238,25 +237,51 @@ void level_spawnEnemies(Level *level)
 
 
 
-void level_loadLevel(LoadLevelArgs* args) {
-  if (!level_isDone(args->level)) return;
-
+void level_loadLevel(LoadLevelArgs* args, ChunkMovingDirection to) {
   level_delete (args->level);
+
   level_clear (args->level);
   level_setImagePool (args->level, args->imagePool);
-
   level_setChunk (args->level, args->newChunkPosition, args->newChunk);
   level_spawnEnemies (args->level);
+
+
+  Vec2 startPosition;
+  switch (to) {
+    case ChunkMovingDirection_Right: startPosition = vec2_new (144,64); break;
+    case ChunkMovingDirection_Up: startPosition = vec2_new (64, 144); break;
+    case ChunkMovingDirection_Left: startPosition = vec2_new (16, 64); break;
+    case ChunkMovingDirection_Bottom: startPosition = vec2_new (64,16); break;
+    default: startPosition = vec2_new (0,0); break;
+  }
+
+  struct PlayerLevelChunkMovedEvent event = {
+      .level = args->level,
+      .startPosition = startPosition
+  };
+
+  eventEmitter_emit (&player_getInstance()->emitter, E_LEVEL_CHUNK_MOVED, (void*) &event);
 }
 
-void level_moveAndLoadLevel(LoadLevelArgs* args, Vec2 to) {
+void level_moveAndLoadLevel(LoadLevelArgs* args, ChunkMovingDirection to) {
+  if (!level_isDone(args->level)) return;
   int_32 chunkX = (int_32) args->level->levelChunk->x;
   int_32 chunkY = (int_32) args->level->levelChunk->y;
 
   Vec2 from = vec2_new (chunkX, chunkY);
-  Vec2 newMovingPosition = vec2_add (from, to);
+  Vec2 addingTo = level_directionAsStartPosition(to);
+  Vec2 newMovingPosition = vec2_add (from, addingTo);
 
   args->newChunkPosition = newMovingPosition;
-  level_loadLevel(args);
-  eventEmitter_emit (&player_getInstance()->emitter, E_LEVEL_CHUNK_MOVED, (void*) &to);
+  level_loadLevel(args, to);
+}
+
+Vec2 level_directionAsStartPosition(ChunkMovingDirection direction) {
+  switch(direction) {
+      case ChunkMovingDirection_Right: return vec2_new (1,0);
+      case ChunkMovingDirection_Up: return vec2_new (0,1);
+      case ChunkMovingDirection_Left: return vec2_new (-1,0);
+      case ChunkMovingDirection_Bottom: return vec2_new (0,-1);
+      default:return vec2_new (0,0);
+  }
 }

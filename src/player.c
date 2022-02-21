@@ -62,6 +62,10 @@ Player* player_getInstance() {
   return globalPlayerRef;
 }
 
+void player_removeInstance() {
+  globalPlayerRef = NULL;
+}
+
 Player* player_initInstance(PlayerInitInstanceArgs args)
 {
   if (globalPlayerRef == NULL)
@@ -160,6 +164,7 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
   eventEmitter_on (&player.health.emitter, E_HP_POINTS_OVER, &on_player_death);
   eventEmitter_on (&player.sword.emitter, E_SWORD_ATTACK_HIT, &on_player_attack);
   eventEmitter_on (&player.emitter, E_PLAYER_ATTACK_ANIMATION_TIMEOUT, &on_player_attack_animation_timeout);
+  eventEmitter_on (&player.emitter, E_LEVEL_CHUNK_MOVED, &on_player_level_chunk_moved);
 
   return player;
 }
@@ -396,4 +401,16 @@ void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e) {
   e->player->sword.sprite->isHide = true;
   e->player->actionState = PlayerAction_Idle;
   e->player->attackAnimationTimeout = e->timeout;
+}
+
+void on_player_level_chunk_moved(PlayerLevelChunkMovedEvent* e) {
+  GameState* gs = player_getInstance()->gameState;
+  const struct PlayerInitInstanceArgs initArgs = {
+      .spawnPosition = e->startPosition,
+      .gameState = gs,
+      .level = e->level
+  };
+
+  player_removeInstance();
+  player_initInstance (initArgs);
 }

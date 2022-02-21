@@ -4,7 +4,8 @@ Enemy *new_enemy(Level *level)
 {
     Enemy *enemy = (Enemy *)malloc(sizeof(Enemy));
     enemy->level = level;
-    enemy->health = hp_new(1, enemy, 10, 10);
+    // todo: hp only for test. rm later
+    enemy->health = hp_new(1, enemy, 2, 1);
     enemy->sprite = NULL;
     enemy->prevActionState = -1;
 

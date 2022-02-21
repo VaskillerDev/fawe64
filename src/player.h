@@ -68,6 +68,10 @@ typedef struct PlayerInitInstanceArgs {
 } PlayerInitInstanceArgs;
 
 Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition);
+
+
+void player_removeInstance();
+
 /**
  * Получить инстанс игрока
  * @return
@@ -92,3 +96,4 @@ void player_postUpdate(Player *player, Level *level);
 void on_player_death(HpPointsOverEvent eData);
 void on_player_attack(EnemySwordAttackHitEvent e);
 void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e);
+void on_player_level_chunk_moved(PlayerLevelChunkMovedEvent* e);

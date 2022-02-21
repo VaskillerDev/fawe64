@@ -97,3 +97,8 @@ typedef struct PlayerAttackAnimationTimeoutEvent {
     uint_8 timeout;
     Player* player;
 } PlayerAttackAnimationTimeoutEvent;
+
+typedef struct PlayerLevelChunkMovedEvent {
+    Level* level;
+    Vec2 startPosition;
+} PlayerLevelChunkMovedEvent;

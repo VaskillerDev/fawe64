@@ -28,6 +28,13 @@ typedef struct ChunkMovingArgs {
     TiledLevelChunk* newChunk;
 } ChunkMovingArgs;
 
+enum ChunkMovingDirection {
+    ChunkMovingDirection_Right,
+    ChunkMovingDirection_Up,
+    ChunkMovingDirection_Left,
+    ChunkMovingDirection_Bottom
+};
+
 Level* level_new();
 void level_clear(Level* level);
 void level_delete(Level* level);
@@ -58,12 +65,13 @@ void level_spawnEnemies(Level* level);
  * Загрузить уровень (тайлы, противников, героя)
  * @param args
  */
-void level_loadLevel(LoadLevelArgs* args);
+void level_loadLevel(LoadLevelArgs* args, ChunkMovingDirection direction);
 
 /**
  * Сдвинуться на указанный вектор и загрузить уровень
  * @param direction
  */
-void level_moveAndLoadLevel(LoadLevelArgs* args, Vec2 direction);
+void level_moveAndLoadLevel(LoadLevelArgs* args, ChunkMovingDirection direction);
 
+Vec2 level_directionAsStartPosition(ChunkMovingDirection direction);
 
