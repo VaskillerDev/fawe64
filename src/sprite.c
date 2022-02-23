@@ -4,13 +4,6 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-Sprite *sprite_animated_new(Image *images[], uint_32 imageCount, uint_32 animDelay)
-{
-    Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
-    newSprite->health = NULL;
-    return sprite_animated_init(newSprite, images, imageCount, animDelay);
-}
-
 Sprite *sprite_new(Image *image)
 {
     Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
@@ -86,7 +79,7 @@ Sprite *sprite_init(Sprite *sprite, Image *image)
     return sprite;
 }
 
-void sprite_Draw(Sprite *sprite)
+void sprite_draw(Sprite *sprite)
 {
     if (sprite->isHide == true) return;
 

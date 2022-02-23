@@ -373,8 +373,7 @@ void player_draw (Player *player, Level *level)
     DrawText(lText, 16, 150, textColors);
 }
 
-void player_postUpdate(Player *player, Level *level) {
-  level; // unused
+void player_postUpdate(Player *player) {
   if (player->actionState == PlayerAction_Attack) {
 
       uint_8 * timeout = &player->attackAnimationTimeout;
