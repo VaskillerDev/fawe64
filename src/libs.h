@@ -26,6 +26,7 @@
 #include "render.h"
 #include "sword.h"
 #include "player.h"
+#include "bullet.h"
 #include "level.h"
 #include "assets.h"
 
