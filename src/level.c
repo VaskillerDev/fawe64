@@ -7,17 +7,27 @@ UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
 
 Level *level_new()
 {
-  Level *newLevel = (Level *)malloc(sizeof(Level));
+  Level *level = (Level *)malloc(sizeof(Level));
 
-  utarray_new(newLevel->objects, &object_icd);
-  utarray_reserve(newLevel->objects, 100);
-  utarray_new(newLevel->enemies, &enemy_icd);
-  utarray_reserve(newLevel->enemies, 20);
-  newLevel->objects->d = 0;
-  newLevel->objects->i = 0;
-  newLevel->objects->n = 0;
+  utarray_new(level->objects, &object_icd);
+  utarray_reserve(level->objects, 100);
+  utarray_new(level->enemies, &enemy_icd);
+  utarray_reserve(level->enemies, 20);
+  level->objects->d = 0;
+  level->objects->i = 0;
+  level->objects->n = 0;
+  level->bulletManager = bulletManager_new();
 
-  return newLevel;
+  level->emitter = eventEmitter_new();
+  eventEmitter_on (&level->emitter, E_ENEMY_ATTACK_BULLET, &on_level_enemy_attack_bullet);
+
+  return level;
+}
+
+void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event) {
+  BulletManager* bm = &event->enemy->level->bulletManager;
+  Vec2 startPosition = event->enemy->sprite->position;
+  bulletManager_createBullet (bm, startPosition);
 }
 
 void level_clear(Level* level) {
@@ -71,11 +81,13 @@ void level_draw(Level *level)
 
   Sprite **currentObject = NULL;
   while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject))) {
+      if (*currentObject == NULL) continue;
       sprite_draw (*currentObject);
       if ((*currentObject)->imageCount == 0 && (*currentObject)->size.x > 16) {
           trace ("a");
       }
   }
+  bulletManager_draw(&level->bulletManager);
 }
 
 void level_setChunk(Level *level, Vec2 chunkCoords, TiledLevelChunk *levelChunk)
@@ -155,8 +167,10 @@ void level_deleteEnemy(Level *level, struct Enemy *enemy)
 void level_update(Level *level)
 {
   Enemy **currentEnemy = NULL;
-  while ((currentEnemy = (Enemy **)utarray_next(level->enemies, currentEnemy)))
-    enemy_update(*currentEnemy);
+  while ((currentEnemy = (Enemy **)utarray_next(level->enemies, currentEnemy))) {
+      enemy_update(*currentEnemy);
+  }
+  bulletManager_update (&level->bulletManager);
 }
 
 bool level_isDone(Level *level)

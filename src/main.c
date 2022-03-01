@@ -8,7 +8,6 @@ GameState gameSate;
 ImagePool imgPool;
 Level *level = NULL;
 EnemyType_1 enemy;
-BulletManager bulletManager;
 
 TiledLevelChunk chunk = {};
 
@@ -24,7 +23,6 @@ void start ()
   emitter = eventEmitter_new ();
   gameSate = gameState_new ();
   menuState = menuState_new ();
-  bulletManager = bulletManager_new ();
 
   imagePool_init (&imgPool);
   menu_setImagePool (&menuState, &imgPool);
@@ -75,7 +73,6 @@ void update ()
               };
 
               player_initInstance(args);
-              bulletManager_createBullet (&bulletManager, vec2_new (0,64));
           }
 
 
@@ -94,8 +91,6 @@ void update ()
           level_processChunkMoving(&chunkMovingArgs, player);
           level_update (level);
           level_draw (level);
-
-          bulletManager_update(&bulletManager);
         }
       break;
       /**

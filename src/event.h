@@ -18,9 +18,10 @@ typedef enum EventName {
     E_HP_POINTS_OVER    = 22,
 
     E_ENEMY_ACTION_STATE_CHANGED = 30,
-    E_SWORD_ATTACK_HIT = 31,
-    E_PLAYER_ATTACK_ANIMATION_TIMEOUT = 32,
-    E_LEVEL_CHUNK_MOVED = 33
+    E_ENEMY_ATTACK_BULLET = 31,
+    E_SWORD_ATTACK_HIT = 35,
+    E_PLAYER_ATTACK_ANIMATION_TIMEOUT = 36,
+    E_LEVEL_CHUNK_MOVED = 37
 } EventName;
 
 /**
@@ -102,3 +103,12 @@ typedef struct PlayerLevelChunkMovedEvent {
     Level* level;
     Vec2 startPosition;
 } PlayerLevelChunkMovedEvent;
+
+typedef struct EnemyAttackBulletEvent {
+    Level* level;
+    Enemy* enemy;
+} EnemyAttackBulletEvent;
+
+typedef struct LevelEnemyAttackBulletEvent {
+    Enemy* enemy;
+} LevelEnemyAttackBulletEvent;

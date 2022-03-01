@@ -2,6 +2,8 @@
 
 UT_icd bullet_icd = {sizeof(Bullet ), NULL, NULL, NULL};
 
+static const struct Bullet EMPTY_BULLET_TEMPLATE;
+
 void bullet_new(Bullet* bullet, Vec2 startPosition) {
   bullet->speed = 2;
   bullet->position = vec2f_fromVec2 (startPosition);
@@ -56,7 +58,7 @@ void bulletManager_createBullet(BulletManager* manager, Vec2 startPosition) {
   for (int i = 0; i < len; i++) {
       Bullet* b = &manager->bulletArray[i];
       if (b->speed == 0) {
-          manager->bulletArray[manager->lastIndex] = *bullet;
+          manager->bulletArray[i] = *bullet;
           manager->lastIndex +=1;
           break;
       }
@@ -77,10 +79,20 @@ void bulletManager_update(BulletManager* manager) {
 
       bool isExitLevel = bullet_checkLevelBounds (b->position);
       if (isExitLevel) {
-        free ((void*)b);
-        manager->bulletArray[i] = (Bullet){};
+        manager->bulletArray[i] = EMPTY_BULLET_TEMPLATE;
         manager->lastIndex -=1;
       }
   }
+}
 
+void bulletManager_draw(BulletManager* manager) {
+  int len = (sizeof (manager->bulletArray) / sizeof (Bullet)) - 1;
+  if (len <= 0) return;
+
+  for (int i = 0; i < len; i++)
+    {
+      Bullet* b = &manager->bulletArray[i];
+      if (b->speed == 0) continue;
+      bullet_draw (b);
+    }
 }

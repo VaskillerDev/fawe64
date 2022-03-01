@@ -2,24 +2,38 @@
 
 Enemy *new_enemy(Level *level)
 {
-    Enemy *enemy = (Enemy *)malloc(sizeof(Enemy));
-    enemy->level = level;
-    // todo: hp only for test. rm later
-    enemy->health = hp_new(1, enemy, 2, 1);
-    enemy->sprite = NULL;
-    enemy->prevActionState = -1;
+  Enemy *enemy = (Enemy *)malloc(sizeof(Enemy));
+  enemy->level = level;
+  // todo: hp only for test. rm later
+  enemy->health = hp_new(1, enemy, 2, 1);
+  enemy->sprite = NULL;
+  enemy->prevActionState = -1;
 
-    eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &enemy_change_animation);
-    eventEmitter_on(&enemy->health.emitter, E_HP_POINTS_OVER, &enemy_death);
+  eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &on_enemy_change_animation);
+  eventEmitter_on (&enemy->emitter, E_ENEMY_ATTACK_BULLET, &on_enemy_attack_bullet);
+  eventEmitter_on(&enemy->health.emitter, E_HP_POINTS_OVER, &enemy_death);
 
   return enemy;
 }
 
-void enemy_change_animation(EnemyActionStateChangedEvent event) {
+void on_enemy_attack_bullet(EnemyAttackBulletEvent* event) {
+  struct LevelEnemyAttackBulletEvent attackEvent = {
+      .enemy = event->enemy
+  };
+  eventEmitter_emit (&event->level->emitter, E_ENEMY_ATTACK_BULLET, (void*) &attackEvent);
+}
+
+void on_enemy_change_animation(EnemyActionStateChangedEvent event) {
   switch ((EnemyActionState)event.state)
     {
       case EnemyAction_Idle: {
         event.enemy->sprite->images = event.enemy->attackFrame;
+
+        struct EnemyAttackBulletEvent attackEvent = {
+            .enemy = event.enemy,
+            .level = event.enemy->level
+        };
+        eventEmitter_emit (&event.enemy->emitter, E_ENEMY_ATTACK_BULLET, (void *) &attackEvent);
       } break;
       case EnemyAction_Go: {
           event.enemy->sprite->images = event.enemy->goFrames;

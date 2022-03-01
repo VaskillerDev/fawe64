@@ -25,5 +25,7 @@ void bulletManager_createBullet(BulletManager* manager, Vec2 startPosition);
 
 void bulletManager_update(BulletManager* manager);
 
+void bulletManager_draw(BulletManager* manager);
+
 static bool bullet_checkLevelBounds(Vec2f position);
 

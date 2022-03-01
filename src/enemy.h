@@ -42,4 +42,5 @@ typedef struct Enemy Enemy;
 Enemy* new_enemy(Level* level);
 void enemy_death(HpPointsOverEvent eData);
 void enemy_update(Enemy* enemy);
-void enemy_change_animation(EnemyActionStateChangedEvent event);
+void on_enemy_change_animation(EnemyActionStateChangedEvent event);
+void on_enemy_attack_bullet(EnemyAttackBulletEvent* event);

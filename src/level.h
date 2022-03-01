@@ -6,10 +6,12 @@
  */
 typedef struct Level
 {
+    EventEmitter emitter;
     UT_array* objects;
     UT_array* enemies;
     TiledLevelChunk* levelChunk;
     ImagePool* imagePool;
+    BulletManager bulletManager;
 } Level;
 
 /**
@@ -74,4 +76,6 @@ void level_loadLevel(LoadLevelArgs* args, ChunkMovingDirection direction);
 void level_moveAndLoadLevel(LoadLevelArgs* args, ChunkMovingDirection direction);
 
 Vec2 level_directionAsStartPosition(ChunkMovingDirection direction);
+
+void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event);
 
