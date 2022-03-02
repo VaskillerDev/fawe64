@@ -16,3 +16,6 @@ typedef struct Sword Sword;
 typedef struct Sprite Sprite;
 typedef struct Player Player;
 typedef enum ChunkMovingDirection ChunkMovingDirection;
+typedef struct EnemyUnit EnemyUnit;
+typedef enum EnemyTypeName EnemyTypeName;
+typedef struct EnemyUnitNewArgs EnemyUnitNewArgs;

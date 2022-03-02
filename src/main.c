@@ -1,5 +1,5 @@
 #include "libs.h"
-#include "enemy_type_1.h"
+#include "enemy_unit.h"
 
 EventEmitter emitter;
 MenuState menuState;
@@ -7,7 +7,7 @@ GameState gameSate;
 //Test
 ImagePool imgPool;
 Level *level = NULL;
-EnemyType_1 enemy;
+EnemyUnit enemy;
 
 TiledLevelChunk chunk = {};
 

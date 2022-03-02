@@ -1,6 +1,6 @@
 #include "libs.h"
 #include "enemy.h"
-#include "enemy_type_1.h"
+#include "enemy_unit.h"
 
 UT_icd object_icd = {sizeof(Sprite *), NULL, NULL, NULL};
 UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
@@ -56,10 +56,17 @@ Enemy *level_spawnEnemy(Level *level)
   return newEnemy;
 }
 
-struct EnemyType_1 level_spawnEnemyType_1(Level *level)
+struct EnemyUnit level_spawnUnit(Level *level, EnemyTypeName type)
 {
   Enemy* enemy = level_spawnEnemy(level);
-  EnemyType_1 enemyType1 = EnemyType_1_new(enemy, level);
+
+  EnemyUnitNewArgs args = {
+      .level = level,
+      .enemy = enemy,
+      .type = type
+  };
+
+  EnemyUnit enemyType1 = enemyUnit_new(args);
   return enemyType1;
 }
 
@@ -212,7 +219,7 @@ void level_spawnEnemies(Level *level)
 
   for (uint_32 i = 0; i < enemyCount; i++)
   {
-    EnemyType_1 newEnemy = level_spawnEnemyType_1(level);
+    EnemyUnit newEnemy = level_spawnUnit (level, Bat);
 
     newEnemy.enemy->sprite->position.x = RANDOMIZE(30, 60);
     newEnemy.enemy->sprite->position.y = RANDOMIZE(30, 130);
