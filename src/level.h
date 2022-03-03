@@ -44,7 +44,7 @@ void level_setChunk(Level* level, Vec2 chunkCoords, TiledLevelChunk* chunk);
 void level_setImagePool(Level* level, ImagePool* pool);
 struct Sprite* level_spawnObject(Level *level);
 struct Enemy* level_spawnEnemy(Level *level);
-struct EnemyType_1 level_spawnEnemyType_1(Level *level);
+struct EnemyUnit level_spawnUnit(Level *level, EnemyTypeName type);
 void level_draw(Level* level);
 /**
  * Обработать логику перемещения между чанками
