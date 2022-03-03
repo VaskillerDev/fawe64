@@ -12,7 +12,7 @@ Sprite *sprite_new(Image *image)
     newSprite->currentImage = NULL;
     newSprite->currentImageIndex = 0;
     newSprite->isCollisionBox = false;
-    newSprite->flipH = 0;
+    newSprite->isFlipH = false;
     newSprite->frameCounter = 0;
     newSprite->health = NULL;
     newSprite->imageCount = 0;
@@ -43,7 +43,7 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     sprite->animDelay = animDelay;
     sprite->imageCount = imageCount;
     sprite->currentImageIndex = 0;
-    sprite->flipH = 0;
+    sprite->isFlipH = false;
     sprite->health = NULL;
     sprite->isCollisionBox = false;
     sprite->isHide = false;
@@ -63,7 +63,7 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
 
 void sprite_setFlipH(Sprite *sprite, bool flip)
 {
-    sprite->flipH = flip ? BLIT_FLIP_X : 0;
+  sprite->isFlipH = flip;
 }
 
 Sprite *sprite_init(Sprite *sprite, Image *image)
@@ -85,7 +85,7 @@ void sprite_draw(Sprite *sprite)
 
     if (sprite->currentImage)
     {
-        sprite->currentImage->flags |= sprite->flipH;
+        sprite->isFlipH ? (sprite->currentImage->flags |= BLIT_FLIP_X) : (sprite->currentImage->flags &= ~BLIT_FLIP_X);
         DrawImage(sprite->currentImage, sprite->position.x - sprite->size.x / 2, sprite->position.y - sprite->size.y / 2, true);
     }
 

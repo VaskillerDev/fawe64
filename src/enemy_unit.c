@@ -13,7 +13,7 @@ EnemyUnit enemyUnit_new(EnemyUnitNewArgs args) {
   {
       case Warlock: return warlock_new (args.enemy, args.level);
       case Bat: return bat_new(args.enemy, args.level);
-      default: return warlock_new (args.enemy, args.level);
+      //default: return warlock_new (args.enemy, args.level);
   }
 }
 
@@ -76,7 +76,6 @@ void warlock_behaviour(Enemy *enemy)
           {
             case EnemyDir_Bottom: {
                 enemy->moveDir = vec2_new(0, -1);
-                sprite_setFlipH (enemy->sprite, false);
               } break;
             case EnemyDir_Up: {
                 enemy->moveDir = vec2_new(0, 1);
@@ -87,6 +86,7 @@ void warlock_behaviour(Enemy *enemy)
               } break;
             case EnemyDir_Right: {
                 enemy->moveDir = vec2_new(1, 0);
+                sprite_setFlipH (enemy->sprite, false);
               } break;
           }
         return;
@@ -126,6 +126,39 @@ EnemyUnit bat_new(Enemy* enemy, Level* level) {
 
   EnemyWarlock bat = ENEMY_BAT_PROTOTYPE;
   bat.enemy = enemy;
-  bat.enemy->tactics = &warlock_behaviour;
+  bat.enemy->tactics = &bat_behaviour;
   return bat;
+}
+
+void bat_behaviour(Enemy* enemy) {
+  enemy->actionState = EnemyAction_Go;
+  bool isFlipH = player_getInstance()->sprite->position.x < enemy->sprite->position.x;
+  sprite_setFlipH (enemy->sprite, isFlipH);
+
+  if (enemy->movDist == 0)
+    {
+      enemy->delay = 30;
+      enemy->movDist = RANDOMIZE(100, 100);
+
+      enemy->direction = (EnemyMovementDirection) RANDOMIZE(1, 5);
+
+      switch (enemy->direction)
+        {
+          case EnemyDir_Bottom: {
+              enemy->moveDir = vec2_new(-1, -1);
+            } break;
+          case EnemyDir_Up: {
+              enemy->moveDir = vec2_new(1, 1);
+            } break;
+          case EnemyDir_Left: {
+              //sprite_setFlipH (enemy->sprite, true);
+              enemy->moveDir = vec2_new(-1, 1);
+            } break;
+          case EnemyDir_Right: {
+              //sprite_setFlipH (enemy->sprite, false);
+              enemy->moveDir = vec2_new(1, -1);
+            } break;
+        }
+      return;
+    }
 }
