@@ -1,25 +1,6 @@
 #include "libs.h"
 #include <math.h>
 
-
-
-Sword sword_empty() {
-
-  struct Sword sword = {
-  .sprite = NULL,
-  .counter = 0,
-  .hit = false,
-  .usage = false,
-  .damage = 0,
-  .emitter = {},
-  .attackDelay = 0,
-  .dir = vec2_new (0,0),
-  .damageRange = vec2f_new (0,0)
-  };
-
-  return sword;
-}
-
 Sword sword_new(Level *level)
 {
   Image* lSwordImage = imagePool_getImage (level->imagePool, PoolIdx_SwordLeft);

@@ -186,7 +186,8 @@ void on_player_attack(EnemySwordAttackHitEvent e) {
       break;
       case PlayerDir_Right: {
           offsetPosition = vec2_new(4,0);
-          sprite_animated_init(e.sword->sprite, e.sword->rSwordFrames, 3, 10);
+          sprite_animated_init(e.sword->sprite, e.sword->lSwordFrames, 3, 10);
+          sprite_setFlipH (e.sword->sprite, true);
       }
       break;
       case PlayerDir_Bottom: {
