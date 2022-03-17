@@ -1,13 +1,8 @@
 #pragma once
 #include"enemy.h"
 
-enum EnemyTypeName {
-    Warlock,
-    Bat
-};
-
 struct EnemyUnit {
-    const EnemyTypeName name;
+    UnitMetaData metaData;
     Enemy* enemy;
 };
 
@@ -18,6 +13,8 @@ struct EnemyUnitNewArgs {
 };
 
 EnemyUnit enemyUnit_new(EnemyUnitNewArgs args);
+
+void enemyUnit_updateAttackNameForEnemy(EnemyUnit* unit);
 
 // warlock
 typedef struct EnemyUnit EnemyWarlock;

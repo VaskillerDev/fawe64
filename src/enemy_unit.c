@@ -1,20 +1,36 @@
 #include "enemy_unit.h"
 
 EnemyWarlock ENEMY_WARLOCK_PROTOTYPE = {
-    .name = Warlock
+    .metaData ={
+      .name = EnemyTypeName_Warlock,
+      .attackName = EnemyAttackTypeName_Range,
+      .bulletLifetime = 50,
+      .bulletSpeed = 2
+    }
 };
 
 EnemyBat ENEMY_BAT_PROTOTYPE = {
-    .name = Bat
+    .metaData ={
+        .name = EnemyTypeName_Bat,
+        .attackName = EnemyAttackTypeName_Melee,
+        .bulletLifetime = 50,
+        .bulletSpeed = 2
+    }
 };
 
 EnemyUnit enemyUnit_new(EnemyUnitNewArgs args) {
   switch (args.type)
   {
-      case Warlock: return warlock_new (args.enemy, args.level);
-      case Bat: return bat_new(args.enemy, args.level);
-      //default: return warlock_new (args.enemy, args.level);
+      case EnemyTypeName_Warlock: return warlock_new (args.enemy, args.level);
+      case EnemyTypeName_Bat: return bat_new(args.enemy, args.level);
+
+      case EnemyTypeName_Unknown:
+      default: return warlock_new (args.enemy, args.level);
   }
+}
+
+void enemyUnit_updateAttackNameForEnemy(EnemyUnit* unit) {
+  unit->enemy ->metaData = unit->metaData;
 }
 
 EnemyWarlock warlock_new(Enemy *enemy, Level *level)
@@ -51,6 +67,7 @@ EnemyWarlock warlock_new(Enemy *enemy, Level *level)
 
     EnemyWarlock warlock = ENEMY_WARLOCK_PROTOTYPE;
     warlock.enemy = enemy;
+    enemyUnit_updateAttackNameForEnemy(&warlock);
     warlock.enemy->tactics = &warlock_behaviour;
     return warlock;
 }
@@ -124,8 +141,9 @@ EnemyUnit bat_new(Enemy* enemy, Level* level) {
   enemy->sprite->health = &enemy->health;
   enemy->sprite->position = vec2_new(80, 100);
 
-  EnemyWarlock bat = ENEMY_BAT_PROTOTYPE;
+  EnemyBat bat = ENEMY_BAT_PROTOTYPE;
   bat.enemy = enemy;
+  enemyUnit_updateAttackNameForEnemy(&bat);
   bat.enemy->tactics = &bat_behaviour;
   return bat;
 }
@@ -151,11 +169,9 @@ void bat_behaviour(Enemy* enemy) {
               enemy->moveDir = vec2_new(1, 1);
             } break;
           case EnemyDir_Left: {
-              //sprite_setFlipH (enemy->sprite, true);
               enemy->moveDir = vec2_new(-1, 1);
             } break;
           case EnemyDir_Right: {
-              //sprite_setFlipH (enemy->sprite, false);
               enemy->moveDir = vec2_new(1, -1);
             } break;
         }

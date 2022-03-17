@@ -3,6 +3,26 @@
 #include "hp.h"
 #define RANDOMIZE(a, b) (a) + ((float)rand() / (float)RAND_MAX * (b - a))
 
+enum EnemyTypeName {
+    EnemyTypeName_Unknown,
+    EnemyTypeName_Warlock,
+    EnemyTypeName_Bat
+};
+
+enum EnemyAttackTypeName {
+    EnemyAttackTypeName_None,
+    EnemyAttackTypeName_Melee,
+    EnemyAttackTypeName_Range
+};
+
+struct UnitMetaData {
+    EnemyAttackTypeName attackName;
+    EnemyTypeName name;
+
+    uint_8 bulletSpeed;
+    uint_8 bulletLifetime;
+};
+
 typedef enum EnemyMovementDirection {
     EnemyDir_Bottom = 1,
     EnemyDir_Up = 2,
@@ -28,6 +48,8 @@ struct Enemy
     Vec2 moveDir;
     uint_32 movDist;
     uint_32 delay;
+
+    UnitMetaData metaData;
 
     EnemyMovementDirection direction;
 

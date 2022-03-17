@@ -4,18 +4,26 @@ UT_icd bullet_icd = {sizeof(Bullet ), NULL, NULL, NULL};
 
 static const struct Bullet EMPTY_BULLET_TEMPLATE;
 
-void bullet_new(Bullet* bullet, Vec2 startPosition) {
-  bullet->speed = 2;
-  bullet->position = vec2f_fromVec2 (startPosition);
+void bullet_new(Bullet* bullet, BulletMetaData metaData) {
+  bullet->metaData = metaData;
+  bullet->position = vec2f_fromVec2 (bullet->metaData.startPosition);
   Vec2 playerPosition = player_getInstance()->sprite->position;
   bullet->direction = vec2_fromPoints (
       vec2_fromVec2f (bullet->position), playerPosition
       );
 }
 
+bool bullet_isEmpty(Bullet* bullet) {
+  return
+  (uint_8)bullet->position.x == (uint_8)EMPTY_BULLET_TEMPLATE.position.x
+  && (uint_8)bullet->position.y == (uint_8)EMPTY_BULLET_TEMPLATE.position.y
+  && bullet->metaData.speed == EMPTY_BULLET_TEMPLATE.metaData.speed;
+}
+
 void bullet_update(Bullet* bullet) {
   Vec2f normalizeDir = vec2_normalize(bullet->direction);
   bullet->position = vec2f_add(bullet->position, normalizeDir);
+  bullet->metaData.lifetime -= 1;
 }
 
 void bullet_draw(Bullet* bullet) {
@@ -50,14 +58,14 @@ BulletManager bulletManager_new() {
   return manager;
 }
 
-void bulletManager_createBullet(BulletManager* manager, Vec2 startPosition) {
+void bulletManager_createBullet(BulletManager* manager, BulletMetaData metaData) {
   Bullet* bullet = (Bullet*) malloc (sizeof (Bullet));
-  bullet_new (bullet, startPosition);
+  bullet_new (bullet, metaData);
 
   int len = (sizeof (manager->bulletArray) / sizeof (Bullet)) - 1;
   for (int i = 0; i < len; i++) {
       Bullet* b = &manager->bulletArray[i];
-      if (b->speed == 0) {
+      if (bullet_isEmpty(b)) {
           manager->bulletArray[i] = *bullet;
           manager->lastIndex +=1;
           break;
@@ -73,12 +81,13 @@ void bulletManager_update(BulletManager* manager) {
   for (int i = 0; i < len; i++)
   {
       Bullet* b = &manager->bulletArray[i];
-      if (b->speed == 0) continue;
+      if (bullet_isEmpty(b)) continue;
       bullet_update (b);
       bullet_draw (b);
 
-      bool isExitLevel = bullet_checkLevelBounds (b->position);
-      if (isExitLevel) {
+      bool isOutOfLevel = bullet_checkLevelBounds (b->position);
+      bool isLifetimeExpired = b->metaData.lifetime <= 0;
+      if (isOutOfLevel || isLifetimeExpired) {
         manager->bulletArray[i] = EMPTY_BULLET_TEMPLATE;
         manager->lastIndex -=1;
       }
@@ -92,7 +101,7 @@ void bulletManager_draw(BulletManager* manager) {
   for (int i = 0; i < len; i++)
     {
       Bullet* b = &manager->bulletArray[i];
-      if (b->speed == 0) continue;
+      if (bullet_isEmpty(b)) continue;
       bullet_draw (b);
     }
 }

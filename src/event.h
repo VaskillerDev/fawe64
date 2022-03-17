@@ -111,4 +111,5 @@ typedef struct EnemyAttackBulletEvent {
 
 typedef struct LevelEnemyAttackBulletEvent {
     Enemy* enemy;
+    uint_8 lifetimeMs;
 } LevelEnemyAttackBulletEvent;

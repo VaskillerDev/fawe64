@@ -8,6 +8,12 @@ Enemy *new_enemy(Level *level)
   enemy->health = hp_new(1, enemy, 2, 1);
   enemy->sprite = NULL;
   enemy->prevActionState = -1;
+  UnitMetaData metaData = {
+      .attackName = EnemyAttackTypeName_None,
+      .name = EnemyTypeName_Unknown
+  };
+  enemy->metaData = metaData;
+  enemy->emitter = eventEmitter_new();
 
   eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &on_enemy_change_animation);
   eventEmitter_on (&enemy->emitter, E_ENEMY_ATTACK_BULLET, &on_enemy_attack_bullet);
@@ -33,7 +39,7 @@ void on_enemy_change_animation(EnemyActionStateChangedEvent event) {
             .enemy = event.enemy,
             .level = event.enemy->level
         };
-        eventEmitter_emit (&event.enemy->emitter, E_ENEMY_ATTACK_BULLET, (void *) &attackEvent);
+        eventEmitter_emit (&event.enemy->emitter, E_ENEMY_ATTACK_BULLET,  &attackEvent);
       } break;
       case EnemyAction_Go: {
           event.enemy->sprite->images = event.enemy->goFrames;

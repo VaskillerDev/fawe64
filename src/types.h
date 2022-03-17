@@ -19,3 +19,5 @@ typedef enum ChunkMovingDirection ChunkMovingDirection;
 typedef struct EnemyUnit EnemyUnit;
 typedef enum EnemyTypeName EnemyTypeName;
 typedef struct EnemyUnitNewArgs EnemyUnitNewArgs;
+typedef enum EnemyAttackTypeName EnemyAttackTypeName;
+typedef struct UnitMetaData UnitMetaData;

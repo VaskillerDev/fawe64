@@ -27,7 +27,15 @@ Level *level_new()
 void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event) {
   BulletManager* bm = &event->enemy->level->bulletManager;
   Vec2 startPosition = event->enemy->sprite->position;
-  bulletManager_createBullet (bm, startPosition);
+  UnitMetaData unitMetaData = event->enemy->metaData;
+
+  BulletMetaData bulletMetaData = {
+      .startPosition = startPosition,
+      .speed = unitMetaData.bulletSpeed,
+      .lifetime = unitMetaData.bulletLifetime
+  };
+
+  bulletManager_createBullet (bm, bulletMetaData);
 }
 
 void level_clear(Level* level) {
@@ -219,7 +227,7 @@ void level_spawnEnemies(Level *level)
 
   for (uint_32 i = 0; i < enemyCount; i++)
   {
-    EnemyUnit newEnemy = level_spawnUnit (level, Bat);
+    EnemyUnit newEnemy = level_spawnUnit (level, EnemyTypeName_Warlock);
 
     newEnemy.enemy->sprite->position.x = RANDOMIZE(30, 60);
     newEnemy.enemy->sprite->position.y = RANDOMIZE(30, 130);
