@@ -1,5 +1,7 @@
 #FAWE64
 
+![alt text](promo.png)
+
 ##Требования:
 * [NodeJs](https://nodejs.org/en/)
 * [WASI SDK](https://github.com/WebAssembly/wasi-sdk)
