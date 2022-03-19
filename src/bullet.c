@@ -22,8 +22,18 @@ bool bullet_isEmpty(Bullet* bullet) {
 
 void bullet_update(Bullet* bullet) {
   Vec2f normalizeDir = vec2_normalize(bullet->direction);
-  bullet->position = vec2f_add(bullet->position, normalizeDir);
+  bullet->position = vec2f_add(bullet->position,
+                               vec2f_mulScalar(normalizeDir, bullet->metaData.speed));
   bullet->metaData.lifetime -= 1;
+
+  Vec2 position = vec2_fromVec2f (bullet->position);
+  Vec2 playerPosition = player_getInstance()->sprite->position;
+  Vec2 distance = vec2_sub(playerPosition, position);
+
+  if (vec2_getLength (distance) < 8) {
+      tracef ("emit bullet collision");
+  }
+
 }
 
 void bullet_draw(Bullet* bullet) {

@@ -4,8 +4,8 @@ EnemyWarlock ENEMY_WARLOCK_PROTOTYPE = {
     .metaData ={
       .name = EnemyTypeName_Warlock,
       .attackName = EnemyAttackTypeName_Range,
-      .bulletLifetime = 50,
-      .bulletSpeed = 2
+      .bulletLifetime = 100,
+      .bulletSpeed = 1
     }
 };
 
@@ -13,8 +13,8 @@ EnemyBat ENEMY_BAT_PROTOTYPE = {
     .metaData ={
         .name = EnemyTypeName_Bat,
         .attackName = EnemyAttackTypeName_Melee,
-        .bulletLifetime = 50,
-        .bulletSpeed = 2
+        .bulletLifetime = 4,
+        .bulletSpeed = 4
     }
 };
 
@@ -158,6 +158,7 @@ void bat_behaviour(Enemy* enemy) {
       enemy->delay = 30;
       enemy->movDist = RANDOMIZE(100, 100);
 
+      enemy->actionState = EnemyAction_Idle;
       enemy->direction = (EnemyMovementDirection) RANDOMIZE(1, 5);
 
       switch (enemy->direction)
