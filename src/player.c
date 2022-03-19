@@ -88,6 +88,7 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
       .level = level,
       .speed = 1.5f,
       .emitter = eventEmitter_new(),
+      .collisionBulletTimer = timer_new (32, false),
 
       .idleRightFrames = {
           imagePool_getImage (level->imagePool, PoolIdx_PiligrimIdleRight0),
@@ -163,10 +164,26 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
 
   eventEmitter_on (&player.health.emitter, E_HP_POINTS_OVER, &on_player_death);
   eventEmitter_on (&player.sword.emitter, E_SWORD_ATTACK_HIT, &on_player_attack);
+  eventEmitter_on (&player.emitter, E_PLAYER_HAS_GOT_BULLET_COLLISION, &on_player_has_got_bullet_collision);
   eventEmitter_on (&player.emitter, E_PLAYER_ATTACK_ANIMATION_TIMEOUT, &on_player_attack_animation_timeout);
   eventEmitter_on (&player.emitter, E_LEVEL_CHUNK_MOVED, &on_player_level_chunk_moved);
+  eventEmitter_on (&player.collisionBulletTimer.emitter, E_TIMER_EXPIRED, &on_collision_bullet_timer_expired);
 
   return player;
+}
+
+void on_collision_bullet_timer_expired(TimerExpiredEvent* e) {
+  timer_reload(e->timer);
+}
+
+void on_player_has_got_bullet_collision(PlayerHasGotBulletCollisionEvent* e) {
+  Player* player = player_getInstance();
+  Timer* timer = &player->collisionBulletTimer;
+
+  if (timer->isPause) {
+      timer_start(timer);
+      hp_substract (&player->health, e->damage);
+  }
 }
 
 /**
@@ -310,6 +327,7 @@ void player_update(Player *player, Level *level)
 
   sword_updatePosition(&player->sword, player->sprite);
   sword_update(player, level);
+  timer_update(&player->collisionBulletTimer);
 }
 
 

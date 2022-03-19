@@ -21,3 +21,4 @@ typedef enum EnemyTypeName EnemyTypeName;
 typedef struct EnemyUnitNewArgs EnemyUnitNewArgs;
 typedef enum EnemyAttackTypeName EnemyAttackTypeName;
 typedef struct UnitMetaData UnitMetaData;
+typedef struct Timer Timer;

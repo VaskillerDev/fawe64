@@ -19,6 +19,7 @@
 #include "image_pool.h"
 #include "bounding_volume.h"
 #include "menu.h"
+#include "timer.h"
 #include "sprite.h"
 #include "game.h"
 #include "hp.h"

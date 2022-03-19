@@ -31,7 +31,10 @@ void bullet_update(Bullet* bullet) {
   Vec2 distance = vec2_sub(playerPosition, position);
 
   if (vec2_getLength (distance) < 8) {
-      tracef ("emit bullet collision");
+      PlayerHasGotBulletCollisionEvent event = {
+        .damage = 2
+      };
+      eventEmitter_emit (&player_getInstance()->emitter, E_PLAYER_HAS_GOT_BULLET_COLLISION, &event);
   }
 
 }

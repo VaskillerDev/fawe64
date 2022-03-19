@@ -22,7 +22,8 @@ typedef enum EventName {
     E_SWORD_ATTACK_HIT = 35,
     E_PLAYER_ATTACK_ANIMATION_TIMEOUT = 36,
     E_PLAYER_HAS_GOT_BULLET_COLLISION = 37,
-    E_LEVEL_CHUNK_MOVED = 38
+    E_LEVEL_CHUNK_MOVED = 38,
+    E_TIMER_EXPIRED = 39,
 } EventName;
 
 /**
@@ -114,3 +115,12 @@ typedef struct LevelEnemyAttackBulletEvent {
     Enemy* enemy;
     uint_8 lifetimeMs;
 } LevelEnemyAttackBulletEvent;
+
+typedef struct PlayerHasGotBulletCollisionEvent {
+    uint_8 damage;
+} PlayerHasGotBulletCollisionEvent;
+
+typedef struct TimerExpiredEvent {
+    uint_8 id;
+    Timer* timer;
+} TimerExpiredEvent;

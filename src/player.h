@@ -49,6 +49,7 @@ struct Player
     Hp health;
 
     Sword sword;
+    Timer collisionBulletTimer;
     EventEmitter emitter;
 
     GameState* gameState;
@@ -97,3 +98,5 @@ void on_player_death(HpPointsOverEvent eData);
 void on_player_attack(EnemySwordAttackHitEvent e);
 void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e);
 void on_player_level_chunk_moved(PlayerLevelChunkMovedEvent* e);
+void on_player_has_got_bullet_collision(PlayerHasGotBulletCollisionEvent* e);
+void on_collision_bullet_timer_expired(TimerExpiredEvent* e);
