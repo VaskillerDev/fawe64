@@ -11,8 +11,6 @@ EnemyUnit enemy;
 
 TiledLevelChunk chunk = {};
 
-Bullet bullet = {};
-
 void start ()
 {
   SetPaletteColor_1 (0xa46422);

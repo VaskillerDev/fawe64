@@ -12,6 +12,9 @@ typedef struct Level
     TiledLevelChunk* levelChunk;
     ImagePool* imagePool;
     BulletManager bulletManager;
+
+    bool isTilesActive;
+    Dungeon dungeon;
 } Level;
 
 /**
@@ -23,6 +26,10 @@ typedef struct LoadLevelArgs {
     ImagePool* imagePool;
     TiledLevelChunk* newChunk;
 } LoadLevelArgs;
+
+typedef struct LoadDungeonArgs {
+
+}LoadDungeonArgs;
 
 typedef struct ChunkMovingArgs {
     Level* level;
@@ -69,6 +76,8 @@ void level_spawnEnemies(Level* level);
  */
 void level_loadLevel(LoadLevelArgs* args, ChunkMovingDirection direction);
 
+void level_loadDungeon(LoadDungeonArgs* args);
+
 /**
  * Сдвинуться на указанный вектор и загрузить уровень
  * @param direction
@@ -78,4 +87,6 @@ void level_moveAndLoadLevel(LoadLevelArgs* args, ChunkMovingDirection direction)
 Vec2 level_directionAsStartPosition(ChunkMovingDirection direction);
 
 void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event);
+
+void on_dungeon_enter(BoundingVolumeCollidedEvent event);
 

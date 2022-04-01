@@ -17,6 +17,7 @@ Level *level_new()
   level->objects->i = 0;
   level->objects->n = 0;
   level->bulletManager = bulletManager_new();
+  level->isTilesActive = true;
 
   level->emitter = eventEmitter_new();
   eventEmitter_on (&level->emitter, E_ENEMY_ATTACK_BULLET, &on_level_enemy_attack_bullet);
@@ -92,7 +93,7 @@ void level_draw(Level *level)
     return;
   }
 
-  tiledLevelChunk_draw(level->levelChunk, level->imagePool);
+  if (level->isTilesActive) tiledLevelChunk_draw(level->levelChunk, level->imagePool);
 
   Sprite **currentObject = NULL;
   while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject))) {
@@ -117,16 +118,35 @@ void level_setImagePool(Level *level, ImagePool *pool)
   level->imagePool = pool;
 }
 
+void on_dungeon_enter(BoundingVolumeCollidedEvent event) {
+  event;
+  LoadDungeonArgs args = {};
+  level_loadDungeon (&args);
+}
+
+void level_loadDungeon(LoadDungeonArgs* args) {
+  args;
+  Level* l = player_getInstance()->level;
+  Vec2f lastPosition = vec2f_fromVec2 (player_getInstance()->sprite->position);
+  l->dungeon = dungeon_new (lastPosition);
+  l->isTilesActive = false;
+  dungeon_enter(&l->dungeon);
+}
+
 void level_spawnCollisionByTiles(Level *level)
 {
   for (int i = 0; i < 64; ++i)
   {
-    if (level->levelChunk->tiles[i].id == 0 ||
-        level->levelChunk->tiles[i].id == 1 ||
-        level->levelChunk->tiles[i].id == 4 ||
-        level->levelChunk->tiles[i].id == 5)
+    uint_8 id = level->levelChunk->tiles[i].id;
+
+    Sprite *newCollisionBox = NULL;
+
+    if (id == 0 ||
+        id == 1 ||
+        id == 4 ||
+        id == 5)
     {
-      Sprite *newCollisionBox = level_spawnObject(level);
+      newCollisionBox = level_spawnObject(level);
       newCollisionBox->size = vec2_new(16, 16);
       newCollisionBox->position.y = i / 8 * 16 + level->levelChunk->y + 24;
       newCollisionBox->position.x = i % 8 * 16 + level->levelChunk->x + 24;
@@ -135,10 +155,18 @@ void level_spawnCollisionByTiles(Level *level)
       newCollisionBox->images = NULL;
       newCollisionBox->imageCount = 0;
       newCollisionBox->health = NULL;
-      newCollisionBox->isCollisionBox = true;
-
+      newCollisionBox->isTile = true;
 
       sprite_initBoundingVolume(newCollisionBox, BOX);
+      newCollisionBox->boundingVolume.emitter = (const struct EventEmitter){0};
+      newCollisionBox->boundingVolume.isEmitterExist = false;
+    }
+
+    if ( id == 4) {
+        newCollisionBox->boundingVolume.isEmitterExist = true;
+        newCollisionBox->boundingVolume.emitter = eventEmitter_new();
+
+        eventEmitter_on(&newCollisionBox->boundingVolume.emitter, E_BOUNDING_VOLUME_COLLIDED, on_dungeon_enter);
     }
   }
 }
@@ -285,6 +313,7 @@ void level_moveAndLoadLevel(LoadLevelArgs* args, ChunkMovingDirection to) {
   Vec2 addingTo = level_directionAsStartPosition(to);
   Vec2 newMovingPosition = vec2_add (from, addingTo);
 
+  if (newMovingPosition.x > 15 || newMovingPosition.y > 15 || newMovingPosition.x < 0 || newMovingPosition.y < 0) return;
   args->newChunkPosition = newMovingPosition;
   level_loadLevel(args, to);
 }

@@ -14,6 +14,7 @@ bool CheckCollision(BoundingVolume *bv1, BoundingVolume *bv2)
 
         if (distance < bv1->size.x + bv2->size.x)
         {
+            on_collision (bv1, bv2);
             return true;
         }
     }
@@ -37,37 +38,63 @@ bool CheckCollision(BoundingVolume *bv1, BoundingVolume *bv2)
         rect2[2] = vec2_add(pos2, vec2_mul(hSize2, vec2_new(-1, 1)));
         rect2[3] = vec2_add(pos2, hSize2);
 
-        if (rect1[0].x >= rect2[1].x && rect1[0].x <= rect2[0].x)
-            if (rect1[0].y >= rect2[0].y && rect1[0].y <= rect2[2].y)
-                return true;
+        if (rect1[0].x >= rect2[1].x && rect1[0].x <= rect2[0].x) {
+          if (rect1[0].y >= rect2[0].y && rect1[0].y <= rect2[2].y) {
+              on_collision (bv1, bv2);
+            return true;
+          }
+        }
 
-        if (rect1[1].x >= rect2[1].x && rect1[1].x <= rect2[0].x)
-            if (rect1[1].y >= rect2[0].y && rect1[1].y <= rect2[2].y)
-                return true;
+        if (rect1[1].x >= rect2[1].x && rect1[1].x <= rect2[0].x) {
+          if (rect1[1].y >= rect2[0].y && rect1[1].y <= rect2[2].y) {
+              on_collision (bv1, bv2);
+              return true;
+          }
+        }
 
-        if (rect1[2].x >= rect2[1].x && rect1[2].x <= rect2[0].x)
-            if (rect1[2].y >= rect2[0].y && rect1[2].y <= rect2[2].y)
-                return true;
+        if (rect1[2].x >= rect2[1].x && rect1[2].x <= rect2[0].x) {
+          if (rect1[2].y >= rect2[0].y && rect1[2].y <= rect2[2].y) {
+              on_collision (bv1, bv2);
+              return true;
+          }
+        }
 
-        if (rect1[3].x >= rect2[1].x && rect1[3].x <= rect2[0].x)
-            if (rect1[3].y >= rect2[0].y && rect1[3].y <= rect2[2].y)
-                return true;
+
+        if (rect1[3].x >= rect2[1].x && rect1[3].x <= rect2[0].x) {
+          if (rect1[3].y >= rect2[0].y && rect1[3].y <= rect2[2].y) {
+              on_collision (bv1, bv2);
+            return true;
+          }
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////
-        if (rect2[0].x >= rect1[1].x && rect2[0].x <= rect1[0].x)
-            if (rect2[0].y >= rect1[0].y && rect2[0].y <= rect1[2].y)
-                return true;
+        if (rect2[0].x >= rect1[1].x && rect2[0].x <= rect1[0].x) {
+            if (rect2[0].y >= rect1[0].y && rect2[0].y <= rect1[2].y) {
+                on_collision (bv1, bv2);
+              return true;
+            }
+        }
 
-        if (rect2[1].x >= rect1[1].x && rect2[1].x <= rect1[0].x)
-            if (rect2[1].y >= rect1[0].y && rect2[1].y <= rect1[2].y)
-                return true;
+        if (rect2[1].x >= rect1[1].x && rect2[1].x <= rect1[0].x) {
+          if (rect2[1].y >= rect1[0].y && rect2[1].y <= rect1[2].y) {
+              on_collision (bv1, bv2);
+              return true;
+            }
+        }
 
-        if (rect2[2].x >= rect1[1].x && rect2[2].x <= rect1[0].x)
-            if (rect2[2].y >= rect1[0].y && rect2[2].y <= rect1[2].y)
+        if (rect2[2].x >= rect1[1].x && rect2[2].x <= rect1[0].x) {
+            if (rect2[2].y >= rect1[0].y && rect2[2].y <= rect1[2].y) {
+                on_collision (bv1, bv2);
                 return true;
+            }
+        }
 
-        if (rect2[3].x >= rect1[1].x && rect2[3].x <= rect1[0].x)
-            if (rect2[3].y >= rect1[0].y && rect2[3].y <= rect1[2].y)
+        if (rect2[3].x >= rect1[1].x && rect2[3].x <= rect1[0].x) {
+            if (rect2[3].y >= rect1[0].y && rect2[3].y <= rect1[2].y) {
+                on_collision (bv1, bv2);
                 return true;
+            }
+        }
     }
     else if (bv1->shape != bv2->shape)
     {
@@ -89,27 +116,56 @@ bool CheckCollision(BoundingVolume *bv1, BoundingVolume *bv2)
         rect1[2] = vec2_add(pos, vec2_mul(hSize, vec2_new(-1, 1)));
         rect1[3] = vec2_add(pos, hSize);
 
-        if (spherePos.x >= rect1[1].x && spherePos.x <= rect1[0].x)
-            if (spherePos.y >= rect1[0].y && spherePos.y <= rect1[2].y)
+        if (spherePos.x >= rect1[1].x && spherePos.x <= rect1[0].x) {
+            if (spherePos.y >= rect1[0].y && spherePos.y <= rect1[2].y) {
+                on_collision (bv1, bv2);
                 return true;
+            }
+        }
 
-        if (vec2_getLength(vec2_sub(spherePos, rect1[0])) <= r)
+        if (vec2_getLength(vec2_sub(spherePos, rect1[0])) <= r) {
+            on_collision (bv1, bv2);
             return true;
-        if (vec2_getLength(vec2_sub(spherePos, rect1[1])) <= r)
+        }
+
+        if (vec2_getLength(vec2_sub(spherePos, rect1[1])) <= r) {
+            on_collision (bv1, bv2);
             return true;
-        if (vec2_getLength(vec2_sub(spherePos, rect1[2])) <= r)
+        }
+
+        if (vec2_getLength(vec2_sub(spherePos, rect1[2])) <= r) {
+            on_collision (bv1, bv2);
             return true;
-        if (vec2_getLength(vec2_sub(spherePos, rect1[3])) <= r)
+        }
+
+        if (vec2_getLength(vec2_sub(spherePos, rect1[3])) <= r) {
+            on_collision (bv1, bv2);
             return true;
+        }
 
         Vec2f rDir = vec2f_mulScalar(vec2_normalize(vec2_sub(*bv2->position, *bv1->position)), r);
 
         Vec2 rPoint = vec2_add(spherePos, vec2_fromVec2f(rDir));
 
-        if (rPoint.x >= rect1[1].x && rPoint.x <= rect1[0].x)
-            if (rPoint.y >= rect1[0].y && rPoint.y <= rect1[2].y)
+        if (rPoint.x >= rect1[1].x && rPoint.x <= rect1[0].x) {
+            if (rPoint.y >= rect1[0].y && rPoint.y <= rect1[2].y) {
+                on_collision (bv1, bv2);
                 return true;
+            }
+        }
     }
 
     return false;
+}
+
+void on_collision(BoundingVolume *bv1, BoundingVolume *bv2) {
+  if (bv2->isEmitterExist) {
+
+      BoundingVolumeCollidedEvent event = {
+          .bv1 = bv1,
+          .bv2 = bv2
+      };
+
+      eventEmitter_emit (&bv2->emitter, E_BOUNDING_VOLUME_COLLIDED, &event);
+    }
 }

@@ -16,7 +16,7 @@ void imagePool_init(ImagePool *pool)
     *(pool->images + 5) = imagePool_addImage (pool, (void*)tile1, 64, 16, 16, menuImgColors, BLIT_2BPP);
     *(pool->images + 6) = imagePool_addImage (pool, (void*)tile2, 32, 16, 16, menuImgColors, BLIT_1BPP);
     *(pool->images + 7) = imagePool_addImage (pool, (void*)tile3, 32, 16, 16, menuImgColors, BLIT_1BPP);
-    *(pool->images + 8) = imagePool_addImage (pool, (void*)tile4, 64, 16, 16, menuImgColors, BLIT_2BPP);
+    *(pool->images + 8) = imagePool_addImage (pool, (void*)tile4, 64, 16, 16, tile4Colors, BLIT_1BPP);
     *(pool->images + 9) = imagePool_addImage (pool, (void*)tile5, 32, 16, 16, menuImgColors, BLIT_1BPP);
     *(pool->images + 10) = imagePool_addImage (pool, (void*)tile6, 64, 16, 16, menuImgColors, BLIT_2BPP);
     *(pool->images + 11) = imagePool_addImage (pool, (void*)tile7, 64, 16, 16, menuImgColors, BLIT_2BPP);

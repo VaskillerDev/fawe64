@@ -17,8 +17,8 @@
 #include "image.h"
 #include "tiled.h"
 #include "image_pool.h"
-#include "bounding_volume.h"
 #include "menu.h"
+#include "bounding_volume.h"
 #include "timer.h"
 #include "sprite.h"
 #include "game.h"
@@ -28,6 +28,7 @@
 #include "sword.h"
 #include "player.h"
 #include "bullet.h"
+#include "dungeon.h"
 #include "level.h"
 #include "assets.h"
 

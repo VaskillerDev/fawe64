@@ -15,6 +15,7 @@ extern uint_16 menuImgColors[4];
 extern uint_16 pliligrimLeftColors[4];
 extern uint_16 pliligrimUpAttackColors[4];
 extern uint16_t enemy0ImgColors[4];
+extern uint_16 tile4Colors[4];
 extern const uint8_t menuImg[2560];
 
 #define piligrimWidth 16

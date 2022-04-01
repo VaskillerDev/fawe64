@@ -17,13 +17,16 @@ typedef enum EventName {
     E_HP_POINTS_FILLED  = 21,
     E_HP_POINTS_OVER    = 22,
 
+    E_BOUNDING_VOLUME_COLLIDED = 23,
     E_ENEMY_ACTION_STATE_CHANGED = 30,
     E_ENEMY_ATTACK_BULLET = 31,
     E_SWORD_ATTACK_HIT = 35,
     E_PLAYER_ATTACK_ANIMATION_TIMEOUT = 36,
     E_PLAYER_HAS_GOT_BULLET_COLLISION = 37,
-    E_LEVEL_CHUNK_MOVED = 38,
-    E_TIMER_EXPIRED = 39,
+    E_PLAYER_ENTER_DUNGEON = 38,
+    E_PLAYER_LEAVE_DUNGEON = 39,
+    E_LEVEL_CHUNK_MOVED = 40,
+    E_TIMER_EXPIRED = 41,
 } EventName;
 
 /**
@@ -124,3 +127,12 @@ typedef struct TimerExpiredEvent {
     uint_8 id;
     Timer* timer;
 } TimerExpiredEvent;
+
+typedef struct BoundingVolumeCollidedEvent {
+    BoundingVolume *bv1;
+    BoundingVolume *bv2;
+} BoundingVolumeCollidedEvent;
+
+typedef struct PlayerEnterDungeonEvent {
+    Vec2f startPosition;
+}PlayerEnterDungeonEvent;

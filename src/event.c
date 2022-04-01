@@ -14,7 +14,6 @@ EventEmitter eventEmitter_new (void)
 
 void eventEmitter_on (EventEmitter *emitter, enum EventName name, void *lambda)
 {
-
   struct EventKeyValue kv = {
       .eventNameAsKey = name,
       .lambdaRefAsValue = lambda

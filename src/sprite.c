@@ -11,13 +11,13 @@ Sprite *sprite_new(Image *image)
     newSprite->animDelay = 0;
     newSprite->currentImage = NULL;
     newSprite->currentImageIndex = 0;
-    newSprite->isCollisionBox = false;
     newSprite->isFlipH = false;
     newSprite->frameCounter = 0;
     newSprite->health = NULL;
     newSprite->imageCount = 0;
     newSprite->images = NULL;
     newSprite->isHide = false;
+    newSprite->isTile = false;
 
     return sprite_init(newSprite, image);
 }
@@ -45,7 +45,6 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     sprite->currentImageIndex = 0;
     sprite->isFlipH = false;
     sprite->health = NULL;
-    sprite->isCollisionBox = false;
     sprite->isHide = false;
     if (sprite->imageCount > 0)
     {
@@ -120,6 +119,4 @@ void sprite_initBoundingVolume(Sprite *sprite, BoundingVolumeShape shape)
     {
         sprite->boundingVolume.size = sprite->size;
     }
-    else
-        return;
 }

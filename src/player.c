@@ -37,6 +37,8 @@ bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
       if ((*currentObject)->boundingVolume.shape == BOX_TRIGGER)
         continue;
 
+      if ( (*currentObject)->isTile && !level->isTilesActive) continue;
+
       bool isClash = CheckCollision (&player->boundingVolume, &(*currentObject)->boundingVolume);
       if (!isClash)
         continue;
@@ -167,9 +169,14 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
   eventEmitter_on (&player.emitter, E_PLAYER_HAS_GOT_BULLET_COLLISION, &on_player_has_got_bullet_collision);
   eventEmitter_on (&player.emitter, E_PLAYER_ATTACK_ANIMATION_TIMEOUT, &on_player_attack_animation_timeout);
   eventEmitter_on (&player.emitter, E_LEVEL_CHUNK_MOVED, &on_player_level_chunk_moved);
+  eventEmitter_on (&player.emitter, E_PLAYER_ENTER_DUNGEON, &on_player_enter_dungeon);
   eventEmitter_on (&player.collisionBulletTimer.emitter, E_TIMER_EXPIRED, &on_collision_bullet_timer_expired);
 
   return player;
+}
+
+void on_player_enter_dungeon(PlayerEnterDungeonEvent* e) {
+  player_getInstance()->sprite->position = vec2_fromVec2f(e->startPosition);
 }
 
 void on_collision_bullet_timer_expired(TimerExpiredEvent* e) {

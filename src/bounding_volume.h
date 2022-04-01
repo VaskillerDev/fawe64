@@ -1,5 +1,5 @@
 #pragma once
-#include"libs.h"
+#include "event.h"
 
 typedef enum BoundingVolumeShape
 {
@@ -13,9 +13,13 @@ struct BoundingVolume
     BoundingVolumeShape shape;
     Vec2* position;
     Vec2 size;
+
+    EventEmitter emitter;
+    bool isEmitterExist;
 };
 
-typedef struct BoundingVolume BoundingVolume;
 
 bool CheckCollision(BoundingVolume* bv1, BoundingVolume* bv2);
 bool IsBox(BoundingVolume* bv);
+
+void on_collision(BoundingVolume *bv1, BoundingVolume *bv2);
