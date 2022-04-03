@@ -161,7 +161,7 @@ Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition)
   player.sprite = playerSprite;
   player.sprite->position = spawnPosition;
 
-  sprite_initBoundingVolume (player.sprite, BOX);
+  sprite_initBoundingVolume (player.sprite, BOX, BoundingVolumeTag_Player);
   player.health = hp_new(2, &player, 20, 20);
 
   eventEmitter_on (&player.health.emitter, E_HP_POINTS_OVER, &on_player_death);

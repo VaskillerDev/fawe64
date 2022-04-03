@@ -106,10 +106,11 @@ void sprite_draw(Sprite *sprite)
     }
 }
 
-void sprite_initBoundingVolume(Sprite *sprite, BoundingVolumeShape shape)
+void sprite_initBoundingVolume(Sprite *sprite, BoundingVolumeShape shape, BoundingVolumeTag tag)
 {
     sprite->boundingVolume.shape = shape;
     sprite->boundingVolume.position = &sprite->position;
+    sprite->boundingVolume.tag = tag;
     if (shape == SPHERE)
     {
         sprite->boundingVolume.size.x = MAX(sprite->size.x / 2, sprite->size.y / 2);

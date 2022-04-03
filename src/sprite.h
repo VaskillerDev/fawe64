@@ -11,13 +11,14 @@ struct Sprite
     uint_32 imageCount;
     uint_32 frameCounter;
     uint_32 animDelay;
-    bool isCollisionBox;
 
     Vec2 position;
     Vec2 size;
     BoundingVolume boundingVolume;
 
     Hp* health;
+
+    bool isTile;
 
     bool isHide;
     bool isFlipH ;
@@ -32,6 +33,6 @@ Sprite* sprite_init(Sprite* sprite, Image* image);
 
 void sprite_setFlipH(Sprite* sprite, bool flip);
 
-void sprite_initBoundingVolume(Sprite* sprite, BoundingVolumeShape shape);
+void sprite_initBoundingVolume(Sprite* sprite, BoundingVolumeShape shape, BoundingVolumeTag tag);
 
 void sprite_draw(Sprite* sprite);

@@ -15,13 +15,13 @@ enum EnemyAttackTypeName {
     EnemyAttackTypeName_Range
 };
 
-struct UnitMetaData {
+typedef struct UnitMetaData {
     EnemyAttackTypeName attackName;
     EnemyTypeName name;
 
     uint_8 bulletSpeed;
     uint_8 bulletLifetime;
-};
+} UnitMetaData;
 
 typedef enum EnemyMovementDirection {
     EnemyDir_Bottom = 1,

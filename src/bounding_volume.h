@@ -1,5 +1,13 @@
 #pragma once
 #include "event.h"
+#include "enemy.h"
+
+typedef enum BoundingVolumeTag {
+    BoundingVolumeTag_Unknown,
+    BoundingVolumeTag_Player,
+    BoundingVolumeTag_Enemy,
+    BoundingVolumeTag_Tile,
+} BoundingVolumeTag;
 
 typedef enum BoundingVolumeShape
 {
@@ -11,6 +19,7 @@ typedef enum BoundingVolumeShape
 struct BoundingVolume
 {
     BoundingVolumeShape shape;
+    BoundingVolumeTag tag;
     Vec2* position;
     Vec2 size;
 

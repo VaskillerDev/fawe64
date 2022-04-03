@@ -60,7 +60,7 @@ EnemyWarlock warlock_new(Enemy *enemy, Level *level)
     }
 
     sprite_animated_init(enemy->sprite, enemy->goFrames, 3, 10);
-    sprite_initBoundingVolume(enemy->sprite, BOX);
+    sprite_initBoundingVolume(enemy->sprite, BOX, BoundingVolumeTag_Enemy);
 
     enemy->sprite->health = &enemy->health;
     enemy->sprite->position = vec2_new(80, 100);
@@ -136,7 +136,7 @@ EnemyUnit bat_new(Enemy* enemy, Level* level) {
     }
 
   sprite_animated_init(enemy->sprite, enemy->goFrames, 3, 10);
-  sprite_initBoundingVolume(enemy->sprite, BOX);
+  sprite_initBoundingVolume(enemy->sprite, BOX, BoundingVolumeTag_Enemy);
 
   enemy->sprite->health = &enemy->health;
   enemy->sprite->position = vec2_new(80, 100);

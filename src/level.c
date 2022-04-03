@@ -119,9 +119,10 @@ void level_setImagePool(Level *level, ImagePool *pool)
 }
 
 void on_dungeon_enter(BoundingVolumeCollidedEvent event) {
-  event;
-  LoadDungeonArgs args = {};
-  level_loadDungeon (&args);
+  if (event.bv1->tag == BoundingVolumeTag_Player || event.bv2->tag == BoundingVolumeTag_Player) {
+      LoadDungeonArgs args = {};
+      level_loadDungeon (&args);
+  }
 }
 
 void level_loadDungeon(LoadDungeonArgs* args) {
@@ -157,7 +158,7 @@ void level_spawnCollisionByTiles(Level *level)
       newCollisionBox->health = NULL;
       newCollisionBox->isTile = true;
 
-      sprite_initBoundingVolume(newCollisionBox, BOX);
+      sprite_initBoundingVolume(newCollisionBox, BOX, BoundingVolumeTag_Tile);
       newCollisionBox->boundingVolume.emitter = (const struct EventEmitter){0};
       newCollisionBox->boundingVolume.isEmitterExist = false;
     }
