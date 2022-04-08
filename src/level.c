@@ -226,24 +226,44 @@ bool level_processChunkMoving(LoadLevelArgs* args, Player* player) {
   if (!level_isDone(args->level)) return false;
   if (player->sprite->position.x <= 24)
     {
+      LevelBorderContactEvent event = {
+          .direction = 2
+      };
+      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+
       level_moveAndLoadLevel(args,ChunkMovingDirection_Left);
       return true;
     }
 
   if (player->sprite->position.x >= 136)
     {
+      LevelBorderContactEvent event = {
+          .direction = 0
+      };
+      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+
       level_moveAndLoadLevel(args, ChunkMovingDirection_Right);
       return true;
     }
 
   if (player->sprite->position.y <= 24)
     {
+      LevelBorderContactEvent event = {
+          .direction = 1
+      };
+      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+
       level_moveAndLoadLevel(args,ChunkMovingDirection_Up);
       return true;
     }
 
   if (player->sprite->position.y >= 136)
     {
+      LevelBorderContactEvent event = {
+          .direction = 3
+      };
+      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+
       level_moveAndLoadLevel(args,ChunkMovingDirection_Bottom);
       return true;
     }
@@ -314,7 +334,18 @@ void level_moveAndLoadLevel(LoadLevelArgs* args, ChunkMovingDirection to) {
   Vec2 addingTo = level_directionAsStartPosition(to);
   Vec2 newMovingPosition = vec2_add (from, addingTo);
 
-  if (newMovingPosition.x > 15 || newMovingPosition.y > 15 || newMovingPosition.x < 0 || newMovingPosition.y < 0) return;
+  bool isDungeonActive = args->level->dungeon.isActive;
+  bool isWorldBorderContact = newMovingPosition.x > 15
+      || newMovingPosition.y > 15
+      || newMovingPosition.x < 0
+      || newMovingPosition.y < 0;
+
+  if (isDungeonActive) {
+      return;
+  };
+  if (isWorldBorderContact) {
+      return;
+  }
   args->newChunkPosition = newMovingPosition;
   level_loadLevel(args, to);
 }
