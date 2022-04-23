@@ -89,6 +89,8 @@ void warlock_behaviour(Enemy *enemy)
 
         enemy->direction = (EnemyMovementDirection) RANDOMIZE(1, 5);
 
+        tracef ("moveDir %d | %d", enemy->moveDir.x, enemy->moveDir.y);
+
         switch (enemy->direction)
           {
             case EnemyDir_Bottom: {

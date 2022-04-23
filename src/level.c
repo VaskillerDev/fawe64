@@ -340,10 +340,7 @@ void level_moveAndLoadLevel(LoadLevelArgs* args, ChunkMovingDirection to) {
       || newMovingPosition.x < 0
       || newMovingPosition.y < 0;
 
-  if (isDungeonActive) {
-      return;
-  };
-  if (isWorldBorderContact) {
+  if (isWorldBorderContact || isDungeonActive) {
       return;
   }
   args->newChunkPosition = newMovingPosition;
