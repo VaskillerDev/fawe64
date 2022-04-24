@@ -20,14 +20,15 @@ typedef enum EventName {
     E_BOUNDING_VOLUME_COLLIDED = 23,
     E_ENEMY_ACTION_STATE_CHANGED = 30,
     E_ENEMY_ATTACK_BULLET = 31,
-    E_SWORD_ATTACK_HIT = 35,
-    E_PLAYER_ATTACK_ANIMATION_TIMEOUT = 36,
-    E_PLAYER_HAS_GOT_BULLET_COLLISION = 37,
-    E_PLAYER_ENTER_DUNGEON = 38,
-    E_PLAYER_LEAVE_DUNGEON = 39,
-    E_LEVEL_BORDER_CONTACT = 40,
-    E_LEVEL_CHUNK_MOVED = 41,
-    E_TIMER_EXPIRED = 42,
+    E_ENEMY_HAS_GOT_BULLET_COLLISION = 32,
+    E_SWORD_ATTACK_HIT = 33,
+    E_PLAYER_ATTACK_ANIMATION_TIMEOUT = 34,
+    E_PLAYER_HAS_GOT_BULLET_COLLISION = 35,
+    E_PLAYER_ENTER_DUNGEON = 36,
+    E_PLAYER_LEAVE_DUNGEON = 37,
+    E_LEVEL_BORDER_CONTACT = 38,
+    E_LEVEL_CHUNK_MOVED = 39,
+    E_TIMER_EXPIRED = 40,
 } EventName;
 
 /**
@@ -141,3 +142,8 @@ typedef struct BoundingVolumeCollidedEvent {
 typedef struct PlayerEnterDungeonEvent {
     Vec2f startPosition;
 }PlayerEnterDungeonEvent;
+
+typedef struct EnemyHasGotBulletCollisionEvent {
+    uint_8 damage;
+    Enemy* enemy;
+} EnemyHasGotBulletCollisionEvent;

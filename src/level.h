@@ -53,6 +53,8 @@ struct Sprite* level_spawnObject(Level *level);
 struct Enemy* level_spawnEnemy(Level *level);
 struct EnemyUnit level_spawnUnit(Level *level, EnemyTypeName type);
 void level_draw(Level* level);
+Enemy* level_findNearestEnemy(Level* level, Vec2 position);
+
 /**
  * Обработать логику перемещения между чанками
  * @param args

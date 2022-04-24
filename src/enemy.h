@@ -66,3 +66,4 @@ void enemy_death(HpPointsOverEvent eData);
 void enemy_update(Enemy* enemy);
 void on_enemy_change_animation(EnemyActionStateChangedEvent event);
 void on_enemy_attack_bullet(EnemyAttackBulletEvent* event);
+void on_enemy_has_got_bullet_collision(EnemyHasGotBulletCollisionEvent* e);

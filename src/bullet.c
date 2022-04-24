@@ -27,14 +27,35 @@ void bullet_update(Bullet* bullet) {
   bullet->metaData.lifetime -= 1;
 
   Vec2 position = vec2_fromVec2f (bullet->position);
-  Vec2 playerPosition = player_getInstance()->sprite->position;
-  Vec2 distance = vec2_sub(playerPosition, position);
 
-  if (vec2_getLength (distance) < 8) {
-      PlayerHasGotBulletCollisionEvent event = {
-        .damage = 2
-      };
-      eventEmitter_emit (&player_getInstance()->emitter, E_PLAYER_HAS_GOT_BULLET_COLLISION, &event);
+  if (bullet->metaData.senderType == BulletSenderType_Enemy) { // отправитель - противник
+      Vec2 playerPosition = player_getInstance()->sprite->position;
+      Vec2 distance = vec2_sub(playerPosition, position);
+
+      if (vec2_getLength (distance) < 8) {
+          PlayerHasGotBulletCollisionEvent event = {
+              .damage = 2,
+          };
+          eventEmitter_emit (&player_getInstance()->emitter, E_PLAYER_HAS_GOT_BULLET_COLLISION, &event);
+        }
+      return;
+  }
+
+  if (bullet->metaData.senderType == BulletSenderType_Player) { // отправитель - игрок
+      Level* l = player_getInstance()->level;
+      Enemy* nearEnemy = level_findNearestEnemy (l, position);
+      if (nearEnemy != NULL) {
+          Vec2 distance = vec2_sub(nearEnemy->sprite->position, position);
+
+          if (vec2_getLength (distance) < 8) {
+              EnemyHasGotBulletCollisionEvent event = {
+                  .damage = 2,
+                  .enemy = nearEnemy
+              };
+              eventEmitter_emit (&nearEnemy->emitter, E_ENEMY_HAS_GOT_BULLET_COLLISION, &event);
+          }
+      }
+      return;
   }
 
 }

@@ -16,11 +16,16 @@ Enemy *new_enemy(Level *level)
   enemy->emitter = eventEmitter_new();
   enemy->moveDir = vec2_new (0,0);
 
+  eventEmitter_on (&enemy->emitter, E_ENEMY_HAS_GOT_BULLET_COLLISION, &on_enemy_has_got_bullet_collision);
   eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &on_enemy_change_animation);
   eventEmitter_on (&enemy->emitter, E_ENEMY_ATTACK_BULLET, &on_enemy_attack_bullet);
   eventEmitter_on(&enemy->health.emitter, E_HP_POINTS_OVER, &enemy_death);
 
   return enemy;
+}
+
+void on_enemy_has_got_bullet_collision(EnemyHasGotBulletCollisionEvent* e) {
+  hp_substract (&e->enemy->health, e->damage);
 }
 
 void on_enemy_attack_bullet(EnemyAttackBulletEvent* event) {
