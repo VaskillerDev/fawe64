@@ -1,7 +1,14 @@
 #pragma once
 #include "libs.h"
 
+typedef enum BulletSenderType {
+    BulletSenderType_Unknown,
+    BulletSenderType_Enemy,
+    BulletSenderType_Player
+} BulletSenderType;
+
 typedef struct BulletMetaData {
+    BulletSenderType senderType;
     Vec2 startPosition;
     uint_8 lifetime;
     uint_8 speed;

@@ -33,7 +33,8 @@ void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event) {
   BulletMetaData bulletMetaData = {
       .startPosition = startPosition,
       .speed = unitMetaData.bulletSpeed,
-      .lifetime = unitMetaData.bulletLifetime
+      .lifetime = unitMetaData.bulletLifetime,
+      .senderType = BulletSenderType_Enemy,
   };
 
   bulletManager_createBullet (bm, bulletMetaData);
@@ -104,6 +105,28 @@ void level_draw(Level *level)
       }
   }
   bulletManager_draw(&level->bulletManager);
+}
+
+Enemy* level_findNearestEnemy(Level* level, Vec2 position) {
+  uint_32 i = 0;
+
+  float minDistance = (float)INT32_MAX;
+  Enemy* result;
+  Enemy **currentObject = NULL;
+
+  while ((currentObject = (Enemy **)utarray_next(level->enemies, currentObject)))
+  {
+      Vec2 enemyPosition = (*currentObject)->sprite->position;
+      Vec2 dir = vec2_fromPoints(position,enemyPosition);
+      float distance = vec2_getLength(dir);
+      if (distance < minDistance) {
+        result = (Enemy *) *currentObject;
+        minDistance = distance;
+      }
+      ++i;
+  }
+
+  return result;
 }
 
 void level_setChunk(Level *level, Vec2 chunkCoords, TiledLevelChunk *levelChunk)
