@@ -5,6 +5,7 @@ UT_icd bullet_icd = {sizeof(Bullet ), NULL, NULL, NULL};
 static const struct Bullet EMPTY_BULLET_TEMPLATE;
 
 void bullet_new(Bullet* bullet, BulletMetaData metaData) {
+  bullet->wasCollision = false;
   bullet->metaData = metaData;
   bullet->position = vec2f_fromVec2 (bullet->metaData.startPosition);
   Vec2 playerPosition = player_getInstance()->sprite->position;
@@ -27,6 +28,16 @@ void bullet_update(Bullet* bullet) {
   bullet->metaData.lifetime -= 1;
 
   Vec2 position = vec2_fromVec2f (bullet->position);
+  Level* l = player_getInstance()->level;
+
+  Sprite* nearTile = level_findNearestTile (l, position);
+  if (nearTile != NULL) {
+      Vec2 distance = vec2_sub(nearTile->position, position);
+
+      if (vec2_getLength (distance) < 8) {
+          bullet->wasCollision = true;
+        }
+    }
 
   if (bullet->metaData.senderType == BulletSenderType_Enemy) { // отправитель - противник
       Vec2 playerPosition = player_getInstance()->sprite->position;
@@ -37,12 +48,12 @@ void bullet_update(Bullet* bullet) {
               .damage = 2,
           };
           eventEmitter_emit (&player_getInstance()->emitter, E_PLAYER_HAS_GOT_BULLET_COLLISION, &event);
+          bullet->wasCollision = true;
         }
       return;
   }
 
   if (bullet->metaData.senderType == BulletSenderType_Player) { // отправитель - игрок
-      Level* l = player_getInstance()->level;
       Enemy* nearEnemy = level_findNearestEnemy (l, position);
       if (nearEnemy != NULL) {
           Vec2 distance = vec2_sub(nearEnemy->sprite->position, position);
@@ -53,6 +64,7 @@ void bullet_update(Bullet* bullet) {
                   .enemy = nearEnemy
               };
               eventEmitter_emit (&nearEnemy->emitter, E_ENEMY_HAS_GOT_BULLET_COLLISION, &event);
+              bullet->wasCollision = true;
           }
       }
       return;
@@ -119,9 +131,10 @@ void bulletManager_update(BulletManager* manager) {
       bullet_update (b);
       bullet_draw (b);
 
+      bool wasCollision = b->wasCollision;
       bool isOutOfLevel = bullet_checkLevelBounds (b->position);
       bool isLifetimeExpired = b->metaData.lifetime <= 0;
-      if (isOutOfLevel || isLifetimeExpired) {
+      if (wasCollision || isOutOfLevel || isLifetimeExpired) {
         manager->bulletArray[i] = EMPTY_BULLET_TEMPLATE;
         manager->lastIndex -=1;
       }

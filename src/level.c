@@ -129,6 +129,30 @@ Enemy* level_findNearestEnemy(Level* level, Vec2 position) {
   return result;
 }
 
+Sprite* level_findNearestTile(Level* level, Vec2 position) {
+  uint_32 i = 0;
+
+  float minDistance = (float)INT32_MAX;
+  Sprite* result;
+  Sprite **currentObject = NULL;
+
+  while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
+    {
+      if (!(*currentObject)->isTile) continue;
+      Vec2 tilePosition = (*currentObject)->position;
+
+      Vec2 dir = vec2_fromPoints(position,tilePosition);
+      float distance = vec2_getLength(dir);
+      if (distance < minDistance) {
+          result = (Sprite *) *currentObject;
+          minDistance = distance;
+        }
+      ++i;
+    }
+
+  return result;
+}
+
 void level_setChunk(Level *level, Vec2 chunkCoords, TiledLevelChunk *levelChunk)
 {
   tiledLevelChunk_read(levelChunk, chunkCoords.x, chunkCoords.y);

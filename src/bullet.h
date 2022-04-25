@@ -18,6 +18,10 @@ typedef struct Bullet {
     Vec2f position;
     Vec2 direction;
     BulletMetaData metaData;
+    /**
+     * Факт столкновения
+     */
+    bool wasCollision;
 } Bullet;
 
 void bullet_new(Bullet* bullet, BulletMetaData metaData);
