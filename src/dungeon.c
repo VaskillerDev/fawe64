@@ -22,10 +22,12 @@ void dungeon_enter(Dungeon* dungeon) {
 void on_dungeon_level_border_contact(LevelBorderContactEvent event) {
   event;
   Dungeon dungeon = player_getInstance()->level->dungeon;
-  dungeon_leave(&dungeon);
+  dungeon_leave(&dungeon, event.direction);
 }
 
-void dungeon_leave(Dungeon* dungeon) {
+void dungeon_leave(Dungeon* dungeon, uint_8 direction) {
+  direction;
   dungeon->isActive = false;
   player_getInstance()->level->isTilesActive = true;
+  player_getInstance()->sprite->position = vec2_new (80,80);
 }
