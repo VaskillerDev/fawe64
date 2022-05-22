@@ -276,7 +276,7 @@ bool level_processChunkMoving(LoadLevelArgs* args, Player* player) {
       LevelBorderContactEvent event = {
           .direction = 2
       };
-      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+      eventEmitter_emit(&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
 
       level_moveAndLoadLevel(args,ChunkMovingDirection_Left);
       return true;
@@ -287,7 +287,7 @@ bool level_processChunkMoving(LoadLevelArgs* args, Player* player) {
       LevelBorderContactEvent event = {
           .direction = 0
       };
-      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+      eventEmitter_emit(&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
 
       level_moveAndLoadLevel(args, ChunkMovingDirection_Right);
       return true;
@@ -298,7 +298,7 @@ bool level_processChunkMoving(LoadLevelArgs* args, Player* player) {
       LevelBorderContactEvent event = {
           .direction = 1
       };
-      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+      eventEmitter_emit(&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
 
       level_moveAndLoadLevel(args,ChunkMovingDirection_Up);
       return true;
