@@ -20,9 +20,16 @@ Level *level_new()
   level->isTilesActive = true;
 
   level->emitter = eventEmitter_new();
+  eventEmitter_on (&level->emitter, E_LEVEL_BORDER_CONTACT, &on_level_border_contact);
   eventEmitter_on (&level->emitter, E_ENEMY_ATTACK_BULLET, &on_level_enemy_attack_bullet);
 
   return level;
+}
+
+void on_level_border_contact(LevelBorderContactEvent event) {
+  Dungeon* dungeon = &player_getInstance ()->level->dungeon;
+  if (!dungeon->isActive) return;
+  eventEmitter_emit (&dungeon->emitter, E_LEVEL_BORDER_CONTACT, &event);
 }
 
 void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event) {

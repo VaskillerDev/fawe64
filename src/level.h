@@ -93,3 +93,5 @@ void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event);
 
 void on_dungeon_enter(BoundingVolumeCollidedEvent event);
 
+void on_level_border_contact(LevelBorderContactEvent event);
+
