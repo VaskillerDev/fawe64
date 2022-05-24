@@ -21,8 +21,8 @@ void dungeon_enter(Dungeon* dungeon) {
 
 void on_dungeon_level_border_contact(LevelBorderContactEvent event) {
   event;
-  Dungeon dungeon = player_getInstance()->level->dungeon;
-  dungeon_leave(&dungeon, event.direction);
+  Dungeon* dungeon = &player_getInstance()->level->dungeon;
+  dungeon_leave(dungeon, event.direction);
 }
 
 void dungeon_leave(Dungeon* dungeon, uint_8 direction) {
