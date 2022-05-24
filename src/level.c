@@ -28,8 +28,9 @@ Level *level_new()
 
 void on_level_border_contact(LevelBorderContactEvent event) {
   Dungeon* dungeon = &player_getInstance ()->level->dungeon;
-  if (!dungeon->isActive) return;
-  eventEmitter_emit (&dungeon->emitter, E_LEVEL_BORDER_CONTACT, &event);
+  if (dungeon->isActive) {
+      eventEmitter_emit (&dungeon->emitter, E_LEVEL_BORDER_CONTACT, &event);
+  }
 }
 
 void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent* event) {
@@ -316,7 +317,7 @@ bool level_processChunkMoving(LoadLevelArgs* args, Player* player) {
       LevelBorderContactEvent event = {
           .direction = 3
       };
-      eventEmitter_on (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
+      eventEmitter_emit (&args->level->emitter, E_LEVEL_BORDER_CONTACT, &event);
 
       level_moveAndLoadLevel(args,ChunkMovingDirection_Bottom);
       return true;
