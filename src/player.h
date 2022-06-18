@@ -94,7 +94,7 @@ void player_move_down(Player *player);
 void player_update(Player *player, Level *level);
 void player_draw(Player *player, Level *level);
 void player_postUpdate(Player *player);
-void on_player_death(HpPointsOverEvent eData);
+void on_player_death(HpPointsOverEvent* e);
 void on_player_attack(EnemySwordAttackHitEvent e);
 void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e);
 void on_player_level_chunk_moved(PlayerLevelChunkMovedEvent* e);

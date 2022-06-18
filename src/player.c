@@ -416,10 +416,10 @@ void player_postUpdate(Player *player) {
   }
 }
 
-void on_player_death(HpPointsOverEvent eData)
+void on_player_death(HpPointsOverEvent* e)
 {
-    Player* player = (Player*)eData.parent;
-    player->gameState->currentScreen = IN_MENU;
+  e;
+  player_getInstance()->gameState->currentScreen = IN_MENU;
 }
 
 void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e) {
