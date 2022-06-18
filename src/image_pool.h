@@ -78,6 +78,8 @@ typedef enum ImagePoolIndex {
     PoolIdx_Enemy1Go1,
     PoolIdx_Enemy1Go2,
 
+    PoolIdx_Rock,
+
 } ImagePoolIndex;
 
 void imagePool_init(ImagePool* pool);

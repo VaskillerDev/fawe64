@@ -332,7 +332,7 @@ void level_spawnEnemies(Level *level)
 
   for (uint_32 i = 0; i < enemyCount; i++)
   {
-    EnemyUnit newEnemy = level_spawnUnit (level, EnemyTypeName_Warlock);
+    EnemyUnit newEnemy = level_spawnUnit (level, EnemyTypeName_Rock);
 
     newEnemy.enemy->sprite->position.x = RANDOMIZE(30, 60);
     newEnemy.enemy->sprite->position.y = RANDOMIZE(30, 130);

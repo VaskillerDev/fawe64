@@ -25,3 +25,8 @@ void warlock_behaviour(Enemy * enemy);
 typedef struct EnemyUnit EnemyBat;
 EnemyUnit bat_new(Enemy* enemy, Level* level);
 void bat_behaviour(Enemy* enemy);
+
+// rock
+typedef struct EnemyUnit EnemyRock;
+EnemyUnit rock_new(Enemy* enemy, Level* level);
+void rock_behaviour(Enemy* enemy);

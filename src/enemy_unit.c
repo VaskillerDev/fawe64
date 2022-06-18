@@ -18,11 +18,21 @@ EnemyBat ENEMY_BAT_PROTOTYPE = {
     }
 };
 
+EnemyRock ENEMY_ROCK_PROTOTYPE = {
+    .metaData = {
+        .name = EnemyTypeName_Rock,
+        .attackName = EnemyAttackTypeName_None,
+        .bulletLifetime = 1,
+        .bulletSpeed = 0
+    }
+};
+
 EnemyUnit enemyUnit_new(EnemyUnitNewArgs args) {
   switch (args.type)
   {
       case EnemyTypeName_Warlock: return warlock_new (args.enemy, args.level);
       case EnemyTypeName_Bat: return bat_new(args.enemy, args.level);
+      case EnemyTypeName_Rock: return rock_new (args.enemy, args.level);
 
       case EnemyTypeName_Unknown:
       default: return warlock_new (args.enemy, args.level);
@@ -178,4 +188,33 @@ void bat_behaviour(Enemy* enemy) {
         }
       return;
     }
+}
+
+EnemyUnit rock_new(Enemy* enemy, Level* level) {
+  enemy->sprite = level_spawnObject(level);
+  enemy->direction = EnemyDir_Left;
+  enemy->actionState = EnemyAction_Idle;
+
+  Image *frames[1] = {
+      imagePool_getImage(level->imagePool, PoolIdx_Rock)
+  };
+
+  enemy->goFrames[0] = frames[0];
+
+  sprite_animated_init(enemy->sprite, enemy->goFrames, 1, 10);
+  sprite_initBoundingVolume(enemy->sprite, BOX, BoundingVolumeTag_Enemy);
+
+  enemy->sprite->health = &enemy->health;
+  enemy->sprite->position = vec2_new(80, 100);
+
+  EnemyRock rock = ENEMY_ROCK_PROTOTYPE;
+  rock.enemy = enemy;
+  enemyUnit_updateAttackNameForEnemy(&rock);
+  rock.enemy->tactics = &rock_behaviour;
+  return rock;
+}
+
+void rock_behaviour(Enemy* enemy) {
+  enemy->actionState = EnemyAction_Idle;
+  sprite_setFlipH (enemy->sprite, false);
 }

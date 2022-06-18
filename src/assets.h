@@ -16,6 +16,7 @@ extern uint_16 pliligrimLeftColors[4];
 extern uint_16 pliligrimUpAttackColors[4];
 extern uint16_t enemy0ImgColors[4];
 extern uint_16 tile4Colors[4];
+extern uint_16 rockImgColors[4];
 extern const uint8_t menuImg[2560];
 
 #define piligrimWidth 16
@@ -84,5 +85,7 @@ extern const uint8_t enmy0_attack_img[64];
 extern const uint8_t enmy1_go_img_0[64];
 extern const uint8_t enmy1_go_img_1[64];
 extern const uint8_t enmy1_go_img_2[64];
+
+extern const uint8_t rock_img[64];
 
 #endif //_ASSETS_H_
