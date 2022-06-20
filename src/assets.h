@@ -87,5 +87,6 @@ extern const uint8_t enmy1_go_img_1[64];
 extern const uint8_t enmy1_go_img_2[64];
 
 extern const uint8_t rock_img[64];
+extern const uint8_t bomb_img[64];
 
 #endif //_ASSETS_H_

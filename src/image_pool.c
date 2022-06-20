@@ -2,8 +2,8 @@
 
 void imagePool_init(ImagePool *pool)
 {
-    pool->imageCount = 48;
-    pool->data = malloc(sizeof(uint8_t) * (32 * 7 + 64 * 41 + 2560));
+    pool->imageCount = 49;
+    pool->data = malloc(sizeof(uint8_t) * (32 * 7 + 64 * 42 + 2560));
     pool->images = (Image **)malloc(sizeof(Image) * pool->imageCount);
     pool->offset = 0;
 
@@ -72,6 +72,7 @@ void imagePool_init(ImagePool *pool)
   *(pool->images + 47) = imagePool_addImage (pool, (void*)enmy1_go_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
 
   *(pool->images + 48) = imagePool_addImage (pool, (void*)rock_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
+  *(pool->images + 49) = imagePool_addImage (pool, (void*)bomb_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
 }
 
 Image *imagePool_addImage(ImagePool *pool, void *dataPtr, uint_32 size, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags)
