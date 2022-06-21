@@ -217,4 +217,12 @@ EnemyUnit rock_new(Enemy* enemy, Level* level) {
 void rock_behaviour(Enemy* enemy) {
   enemy->actionState = EnemyAction_Idle;
   sprite_setFlipH (enemy->sprite, false);
+  Vec2 playerPosition = player_getInstance()->sprite->position;
+  Vec2 rockPosition = enemy->sprite->position;
+
+  float distance = vec2_getLength(vec2_sub(playerPosition, rockPosition));
+
+  if (distance < 20) {
+    //todo: handle
+  }
 }
