@@ -222,7 +222,10 @@ void rock_behaviour(Enemy* enemy) {
 
   float distance = vec2_getLength(vec2_sub(playerPosition, rockPosition));
 
-  if (distance < 20) {
-    //todo: handle
+  if (distance < 24) {
+      uint_16 color = *DRAW_COLORS;
+      *DRAW_COLORS = 0x30;
+      rect (rockPosition.x - 9, rockPosition.y - 9, 18, 18);
+      *DRAW_COLORS =color;
   }
 }
