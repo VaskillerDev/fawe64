@@ -1,21 +1,26 @@
 ﻿import {Fragment, Component} from "react";
 import * as PIXI from 'pixi.js'
+import {Viewport} from "pixi-viewport";
 
 const MAP_VIEW_SIZE = 2048
-const ZOOM_FACTOR = 3;
+const ZOOM_FACTOR = 2;
 
 export default class GridViewGl extends Component {
     
+    app;
     
     constructor() {
         super();
+        
         this.state = {
             gridViewGlElement: undefined
         }
     }
     
     componentDidMount() {
-        const gridViewGlElement = document.getElementById("gridViewGl");
+        console.log("mounted");
+        this.app = new PIXI.Application();
+        /*const gridViewGlElement = document.getElementById("gridViewGl");
         const ctx = gridViewGlElement.getContext('2d');
         ctx.imageSmoothingEnabled = false;
         
@@ -27,9 +32,6 @@ export default class GridViewGl extends Component {
         img.src = 'tiles.png'
 
         ctx.scale(ZOOM_FACTOR,ZOOM_FACTOR);
-        
-        
-        ctx.translate(25,25);
         
         gridViewGlElement.addEventListener("mousemove", function (e) {
             ctx.fillStyle = "#131618";
@@ -58,7 +60,32 @@ export default class GridViewGl extends Component {
         ctx.fillStyle = "#131618";
         this.setState({
             gridViewGlElement
+        })*/
+
+        
+        document.getElementById("gridViewGl").appendChild(this.app.view)
+
+        const viewport = new Viewport({
+            screenWidth: 3000,
+            screenHeight: 720,
+            worldWidth: MAP_VIEW_SIZE,
+            worldHeight: MAP_VIEW_SIZE,
+
+            interaction: this.app.renderer.plugins.interaction
         })
+
+        this.app.stage.addChild(viewport)
+
+        viewport
+            .drag()
+            .pinch()
+            .wheel()
+            .decelerate()
+
+        const sprite = viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE))
+        sprite.tint = 0xff0000
+        sprite.width = sprite.height = 100
+        sprite.position.set(100, 100)
         
     }
 
@@ -74,9 +101,8 @@ export default class GridViewGl extends Component {
         console.log("render")
         return (
             <Fragment>
-                <canvas id={"gridViewGl"} width={MAP_VIEW_SIZE} height={MAP_VIEW_SIZE} >
-
-                </canvas>
+                <div id={"gridViewGl"} style={{width: 3000}}>
+                </div>
             </Fragment>
         );
     }
