@@ -20,6 +20,8 @@ export default class GridViewGl extends Component {
     
     componentDidMount() {
         console.log("mounted");
+
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         this.app = new PIXI.Application({
             width: MAP_VIEW_SIZE,
             height: MAP_VIEW_SIZE,
@@ -40,9 +42,10 @@ export default class GridViewGl extends Component {
         })
         
         const mouseCursorBlock = viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE))
-        mouseCursorBlock.tint = 0xff0000
+        mouseCursorBlock.tint = 0x4E6BE3
         mouseCursorBlock.width = mouseCursorBlock.height = 16
         mouseCursorBlock.position.set(0, 0)
+        mouseCursorBlock.alpha = 0.45
 
         const borderLine = new PIXI.Graphics();
         const gridLine = new PIXI.Graphics();
@@ -63,6 +66,25 @@ export default class GridViewGl extends Component {
             mouseCursorBlock.position.set(16 * gridX, 16 * gridY)
         })
         
+        viewport.addListener('clicked', (e)=> {
+            console.log(e);
+            let mousePos = viewport.toWorld(e.event.data.global.x, e.event.data.global.y)
+            if (Number.isNaN(mousePos.x)) return
+            let gridX = Math.ceil(mousePos.x / 16);
+            let gridY = Math.ceil(mousePos.y / 16);
+
+            gridX =  gridX > 0  ? gridX - 1 : gridX;
+            gridY = gridY > 0  ? gridY - 1 : gridY
+            
+            console.log(gridX, gridY);
+
+            const sprite = viewport.addChild(new PIXI.Sprite(tiles[6]))
+            sprite.width = sprite.height = 16
+            sprite.position.set(16* gridX, 16 * gridY)
+            
+        });
+        
+        
         
         this.app.stage.addChild(viewport)
         
@@ -75,15 +97,34 @@ export default class GridViewGl extends Component {
 
         viewport.fit()
 
-        const sprite = viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE))
-        sprite.tint = 0xff0000
-        sprite.width = sprite.height = 16
-        sprite.position.set(0, 0)
+        const tiles = this.prepareAtlas();
+        
+        
 
 
         this.drawBorder(borderLine, viewport)
         this.drawGrid(gridLine, viewport)
     }
+    
+    prepareAtlas() {
+        const bT = PIXI.BaseTexture.from('tiles.png');
+        const tT = new PIXI.Texture(bT, new PIXI.Rectangle(16,0, 16,16));
+        
+        
+        return [
+            new PIXI.Texture(bT, new PIXI.Rectangle(0,0, 16,16)),
+            new PIXI.Texture(bT, new PIXI.Rectangle(16,0, 16,16)),
+            new PIXI.Texture(bT, new PIXI.Rectangle(32,0, 16,16)),
+            new PIXI.Texture(bT, new PIXI.Rectangle(48,0, 16,16)),
+
+            new PIXI.Texture(bT, new PIXI.Rectangle(0,16, 16,16)),
+            new PIXI.Texture(bT, new PIXI.Rectangle(16,16, 16,16)),
+            new PIXI.Texture(bT, new PIXI.Rectangle(32,16, 16,16)),
+            new PIXI.Texture(bT, new PIXI.Rectangle(48,16, 16,16)),
+        ]
+    }
+    
+    
     
     drawBorder(line, viewport) {
         line.clear();
