@@ -2,6 +2,7 @@
 import * as PIXI from 'pixi.js'
 import {Viewport} from "pixi-viewport";
 import TilePicker from "../TilePicker";
+import TileFlipper from "../TileFlipper";
 
 const MAP_VIEW_SIZE = 2048
 const ZOOM_FACTOR = 2;
@@ -12,14 +13,30 @@ export default class GridViewGl extends Component {
     app;
     currentPickedTileIndex = 0;
 
+    currentPickedTileIsFlipH = false;
+    currentPickedTileIsFlipV = false;
+    currentPickedTileIsFlipD = false;
+
     handleCurrentPickedTileIndex( index) {
         this.currentPickedTileIndex = index;
+    }
+
+    handleFlipTile(indexFlip, isFlip) {
+        console.log("handleFlipTile: ", indexFlip, isFlip)
+        
+        switch (indexFlip) {
+            case 0: { this.currentPickedTileIsFlipH = isFlip; break; }
+            case 1: { this.currentPickedTileIsFlipV = isFlip; break; }
+            case 2: { this.currentPickedTileIsFlipD = isFlip; break; }
+        }
+        
     }
     
     constructor(props) {
         super(props);
         
         this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
+        this.handleFlipTile = this.handleFlipTile.bind(this);
     }
     
     componentDidMount() {
@@ -80,7 +97,14 @@ export default class GridViewGl extends Component {
             
             console.log(gridX, gridY);
             
-            this.spawnTile(tiles, viewport, this.currentPickedTileIndex, gridX, gridY, true, false, true);
+            this.spawnTile(tiles,
+                viewport,
+                this.currentPickedTileIndex,
+                gridX,
+                gridY,
+                this.currentPickedTileIsFlipH,
+                this.currentPickedTileIsFlipV,
+                this.currentPickedTileIsFlipD);
         });
         
         
@@ -192,7 +216,10 @@ export default class GridViewGl extends Component {
                     <canvas id={"gridCanvas"}> 
                     </canvas>
                 </div>
+                <div>
                 <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
+                <TileFlipper handleFlipTile={this.handleFlipTile}/>
+                </div>
             </Fragment>
         );
     }

@@ -52,7 +52,7 @@ export default class TilePicker extends Component {
             <Fragment>
                 <div id={"tilePickerCursor"} style={{width: 64, height: 64, position: 'absolute', display: 'none' }}/>
                 <img id={"tilePicker"} src={"tiles.png"} style={{width: 256, height: 128, imageRendering: 'pixelated', marginLeft: '32px' }} alt={""}/>
-                <p>{this.state.currentPickedTileIndex}</p>
+                <p/> 
             </Fragment>
         );
     }
