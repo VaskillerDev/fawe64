@@ -23,8 +23,8 @@ export default class GridViewGl extends Component {
 
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         this.app = new PIXI.Application({
-            width: MAP_VIEW_SIZE,
-            height: MAP_VIEW_SIZE,
+            width: window.innerWidth - 512,
+            height: window.innerHeight - 256,
             view: document.getElementById("gridCanvas"),
             backgroundColor:  0x2A2A2C,
             clearBeforeRender: true
@@ -77,11 +77,8 @@ export default class GridViewGl extends Component {
             gridY = gridY > 0  ? gridY - 1 : gridY
             
             console.log(gridX, gridY);
-
-            const sprite = viewport.addChild(new PIXI.Sprite(tiles[6]))
-            sprite.width = sprite.height = 16
-            sprite.position.set(16* gridX, 16 * gridY)
             
+            this.spawnTile(tiles, viewport, 0, gridX, gridY);
         });
         
         
@@ -99,17 +96,18 @@ export default class GridViewGl extends Component {
 
         const tiles = this.prepareAtlas();
         
-        
-
-
         this.drawBorder(borderLine, viewport)
         this.drawGrid(gridLine, viewport)
     }
     
+    spawnTile(tiles, viewport, tileId,gridX,gridY) {
+        const sprite = viewport.addChild(new PIXI.Sprite(tiles[tileId]))
+        sprite.width = sprite.height = 16
+        sprite.position.set(16* gridX, 16 * gridY)
+    }
+    
     prepareAtlas() {
         const bT = PIXI.BaseTexture.from('tiles.png');
-        const tT = new PIXI.Texture(bT, new PIXI.Rectangle(16,0, 16,16));
-        
         
         return [
             new PIXI.Texture(bT, new PIXI.Rectangle(0,0, 16,16)),
@@ -189,7 +187,7 @@ export default class GridViewGl extends Component {
         console.log("render")
         return (
             <Fragment>
-                <div id={"gridViewGl"}  >
+                <div id={"gridViewGl"}>
                     <canvas id={"gridCanvas"}> 
                     </canvas>
                 </div>
