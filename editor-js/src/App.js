@@ -1,12 +1,15 @@
 import './App.css';
 import GridViewGl from "./gl/GridViewGl";
+import TilePicker from "./TilePicker";
 
 function App() {
+  
+    
+  
   return (
     <div className="App">
         <header className={"App-header"}>
-            <div style={{display: 'flex', marginRight: '256px'}} >
-                <img src={"tiles.png"} style={{width: 256, height: 128, imageRendering: 'pixelated' }}/>
+            <div style={{display: 'flex'}} >
                 <GridViewGl/>
             </div>
         </header>

@@ -1,6 +1,7 @@
 ﻿import {Fragment, Component} from "react";
 import * as PIXI from 'pixi.js'
 import {Viewport} from "pixi-viewport";
+import TilePicker from "../TilePicker";
 
 const MAP_VIEW_SIZE = 2048
 const ZOOM_FACTOR = 2;
@@ -9,24 +10,25 @@ const BLOCK_SIZE = 16;
 export default class GridViewGl extends Component {
     
     app;
+    currentPickedTileIndex = 0;
+
+    handleCurrentPickedTileIndex( index) {
+        this.currentPickedTileIndex = index;
+    }
     
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         
-        this.state = {
-            gridViewGlElement: undefined
-        }
+        this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
     }
     
     componentDidMount() {
-        console.log("mounted");
-
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         this.app = new PIXI.Application({
             width: window.innerWidth - 512,
             height: window.innerHeight - 256,
             view: document.getElementById("gridCanvas"),
-            backgroundColor:  0x2A2A2C,
+            backgroundColor:  0x282c34,
             clearBeforeRender: true
         });
         
@@ -43,7 +45,7 @@ export default class GridViewGl extends Component {
         
         const mouseCursorBlock = viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE))
         mouseCursorBlock.tint = 0x4E6BE3
-        mouseCursorBlock.width = mouseCursorBlock.height = 16
+        mouseCursorBlock.width = mouseCursorBlock.height = BLOCK_SIZE
         mouseCursorBlock.position.set(0, 0)
         mouseCursorBlock.alpha = 0.45
 
@@ -57,28 +59,28 @@ export default class GridViewGl extends Component {
             
             if (Number.isNaN(mousePos.x)) return
             
-            let gridX = Math.ceil(mousePos.x / 16);
-            let gridY = Math.ceil(mousePos.y / 16);
+            let gridX = Math.ceil(mousePos.x / BLOCK_SIZE);
+            let gridY = Math.ceil(mousePos.y / BLOCK_SIZE);
 
             gridX =  gridX > 0  ? gridX - 1 : gridX;
             gridY = gridY > 0  ? gridY - 1 : gridY
 
-            mouseCursorBlock.position.set(16 * gridX, 16 * gridY)
+            mouseCursorBlock.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY)
         })
         
         viewport.addListener('clicked', (e)=> {
             console.log(e);
             let mousePos = viewport.toWorld(e.event.data.global.x, e.event.data.global.y)
             if (Number.isNaN(mousePos.x)) return
-            let gridX = Math.ceil(mousePos.x / 16);
-            let gridY = Math.ceil(mousePos.y / 16);
+            let gridX = Math.ceil(mousePos.x / BLOCK_SIZE);
+            let gridY = Math.ceil(mousePos.y / BLOCK_SIZE);
 
             gridX =  gridX > 0  ? gridX - 1 : gridX;
             gridY = gridY > 0  ? gridY - 1 : gridY
             
             console.log(gridX, gridY);
             
-            this.spawnTile(tiles, viewport, 0, gridX, gridY);
+            this.spawnTile(tiles, viewport, this.currentPickedTileIndex, gridX, gridY, true, false, true);
         });
         
         
@@ -100,10 +102,18 @@ export default class GridViewGl extends Component {
         this.drawGrid(gridLine, viewport)
     }
     
-    spawnTile(tiles, viewport, tileId,gridX,gridY) {
+    spawnTile(tiles, viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD) {
         const sprite = viewport.addChild(new PIXI.Sprite(tiles[tileId]))
-        sprite.width = sprite.height = 16
-        sprite.position.set(16* gridX, 16 * gridY)
+        sprite.width = sprite.height = BLOCK_SIZE
+        sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
+        sprite.scale.x = isFlipH? -1 : 1;
+        sprite.scale.y = isFlipV? -1 : 1;
+        sprite.anchor.x = 0.5
+        sprite.anchor.y = 0.5
+        sprite.rotation = isFlipD? (3. * Math.PI / 2) : 0;
+        
+
+        sprite.position.set( sprite.position.x + BLOCK_SIZE / 2,  sprite.position.y + BLOCK_SIZE / 2);
     }
     
     prepareAtlas() {
@@ -133,7 +143,6 @@ export default class GridViewGl extends Component {
     }
     
     drawGrid(line, viewport) {
-        //line.clear();
         const chunkSize = 8 * BLOCK_SIZE;
 
         const viewportPointRB = viewport.toWorld(viewport.right, viewport.bottom)
@@ -175,14 +184,6 @@ export default class GridViewGl extends Component {
         
     }
 
-    mousePos(gridViewGlElement, e) {
-        const rect = gridViewGlElement.getBoundingClientRect();
-        return {
-            x: (e.clientX - rect.left ),
-            y: (e.clientY - rect.top)
-        };
-    }
-
     render() {
         console.log("render")
         return (
@@ -191,6 +192,7 @@ export default class GridViewGl extends Component {
                     <canvas id={"gridCanvas"}> 
                     </canvas>
                 </div>
+                <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
             </Fragment>
         );
     }
