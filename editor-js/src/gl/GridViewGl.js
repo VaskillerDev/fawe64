@@ -19,6 +19,8 @@ export default class GridViewGl extends Component {
 
     mouseCursorBlock;
 
+    isBrushMode = false;
+    
     handleCurrentPickedTileIndex(index) {
         this.currentPickedTileIndex = index;
     }
@@ -66,6 +68,8 @@ export default class GridViewGl extends Component {
         viewport.addChild(borderLine);
         viewport.addChild(gridLine);
         
+        viewport.sortableChildren = true;
+
         viewport.addListener("mousemove", (e)=> {
             let mousePos = viewport.toWorld(e.data.global.x, e.data.global.y)
             
@@ -76,17 +80,43 @@ export default class GridViewGl extends Component {
 
             gridX =  gridX > 0  ? gridX - 1 : gridX;
             gridY = gridY > 0  ? gridY - 1 : gridY
-
+            
             this.mouseCursorBlock.position.set(BLOCK_SIZE * gridX + BLOCK_SIZE / 2, BLOCK_SIZE * gridY + BLOCK_SIZE / 2)
             this.setMouseCursorBlock(tiles, 
                 this.currentPickedTileIndex, 
                 this.currentPickedTileIsFlipH,
                 this.currentPickedTileIsFlipV,
                 this.currentPickedTileIsFlipD);
+            
+            if (!this.isBrushMode) return;
+
+            this.spawnTile(tiles,
+                viewport,
+                this.currentPickedTileIndex,
+                gridX,
+                gridY,
+                this.currentPickedTileIsFlipH,
+                this.currentPickedTileIsFlipV,
+                this.currentPickedTileIsFlipD);
         })
         
+        const canvas = document.getElementById("gridCanvas");
+
+        canvas.addEventListener('mousedown', (e)=>{
+            if (e.button === 0) {
+                this.isBrushMode = true;
+            }
+        })
+
+        canvas.addEventListener('mouseup', (e)=>{
+            if (e.button === 0) {
+                this.isBrushMode = false;
+            }
+        })
+        
+        
         viewport.addListener('clicked', (e)=> {
-            console.log(e);
+            
             let mousePos = viewport.toWorld(e.event.data.global.x, e.event.data.global.y)
             if (Number.isNaN(mousePos.x)) return
             let gridX = Math.ceil(mousePos.x / BLOCK_SIZE);
@@ -95,7 +125,7 @@ export default class GridViewGl extends Component {
             gridX =  gridX > 0  ? gridX - 1 : gridX;
             gridY = gridY > 0  ? gridY - 1 : gridY
             
-            console.log(gridX, gridY);
+            // console.log(gridX, gridY);
             
             this.spawnTile(tiles,
                 viewport,
@@ -112,7 +142,9 @@ export default class GridViewGl extends Component {
         this.app.stage.addChild(viewport)
 
         viewport
-            .drag()
+            .drag({
+                mouseButtons: 'middle'
+            })
             .pinch()
             .wheel()
             .decelerate()
@@ -136,6 +168,7 @@ export default class GridViewGl extends Component {
         this.mouseCursorBlock.width = this.mouseCursorBlock.height = BLOCK_SIZE
         this.mouseCursorBlock.position.set(0, 0)
         this.mouseCursorBlock.alpha = 0.45
+        this.mouseCursorBlock.zIndex = 1;
     }
     
     setMouseCursorBlock(tiles, tileId, isFlipH, isFlipV, isFlipD) {
@@ -156,6 +189,7 @@ export default class GridViewGl extends Component {
         sprite.anchor.x = 0.5
         sprite.anchor.y = 0.5
         sprite.rotation = isFlipD? (3. * Math.PI / 2) : 0;
+        sprite.zIndex = -1;
         
 
         sprite.position.set( sprite.position.x + BLOCK_SIZE / 2,  sprite.position.y + BLOCK_SIZE / 2);
@@ -191,8 +225,6 @@ export default class GridViewGl extends Component {
         const chunkSize = 8 * BLOCK_SIZE;
 
         const viewportPointRB = viewport.toWorld(viewport.right, viewport.bottom)
-        
-        console.log(viewport.right)
         
         for (let x = 0; x < MAP_VIEW_SIZE; x+=BLOCK_SIZE) {
             
@@ -230,7 +262,6 @@ export default class GridViewGl extends Component {
     }
 
     render() {
-        console.log("render")
         return (
             <Fragment>
                 <div id={"gridViewGl"}>
