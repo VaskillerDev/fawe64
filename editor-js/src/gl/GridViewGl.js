@@ -17,12 +17,13 @@ export default class GridViewGl extends Component {
     currentPickedTileIsFlipV = false;
     currentPickedTileIsFlipD = false;
 
-    handleCurrentPickedTileIndex( index) {
+    mouseCursorBlock;
+
+    handleCurrentPickedTileIndex(index) {
         this.currentPickedTileIndex = index;
     }
 
     handleFlipTile(indexFlip, isFlip) {
-        console.log("handleFlipTile: ", indexFlip, isFlip)
         
         switch (indexFlip) {
             case 0: { this.currentPickedTileIsFlipH = isFlip; break; }
@@ -59,12 +60,6 @@ export default class GridViewGl extends Component {
             
             interaction: this.app.renderer.plugins.interaction
         })
-        
-        const mouseCursorBlock = viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE))
-        mouseCursorBlock.tint = 0x4E6BE3
-        mouseCursorBlock.width = mouseCursorBlock.height = BLOCK_SIZE
-        mouseCursorBlock.position.set(0, 0)
-        mouseCursorBlock.alpha = 0.45
 
         const borderLine = new PIXI.Graphics();
         const gridLine = new PIXI.Graphics();
@@ -82,7 +77,12 @@ export default class GridViewGl extends Component {
             gridX =  gridX > 0  ? gridX - 1 : gridX;
             gridY = gridY > 0  ? gridY - 1 : gridY
 
-            mouseCursorBlock.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY)
+            this.mouseCursorBlock.position.set(BLOCK_SIZE * gridX + BLOCK_SIZE / 2, BLOCK_SIZE * gridY + BLOCK_SIZE / 2)
+            this.setMouseCursorBlock(tiles, 
+                this.currentPickedTileIndex, 
+                this.currentPickedTileIsFlipH,
+                this.currentPickedTileIsFlipV,
+                this.currentPickedTileIsFlipD);
         })
         
         viewport.addListener('clicked', (e)=> {
@@ -106,11 +106,10 @@ export default class GridViewGl extends Component {
                 this.currentPickedTileIsFlipV,
                 this.currentPickedTileIsFlipD);
         });
-        
+
         
         
         this.app.stage.addChild(viewport)
-        
 
         viewport
             .drag()
@@ -121,9 +120,31 @@ export default class GridViewGl extends Component {
         viewport.fit()
 
         const tiles = this.prepareAtlas();
+
+        this.initMouseCursorBlock(viewport);
+        this.setMouseCursorBlock(tiles, 0, 
+            this.currentPickedTileIsFlipH,
+            this.currentPickedTileIsFlipV,
+            this.currentPickedTileIsFlipD);
         
         this.drawBorder(borderLine, viewport)
         this.drawGrid(gridLine, viewport)
+    }
+    
+    initMouseCursorBlock(viewport) {
+        this.mouseCursorBlock = viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE))
+        this.mouseCursorBlock.width = this.mouseCursorBlock.height = BLOCK_SIZE
+        this.mouseCursorBlock.position.set(0, 0)
+        this.mouseCursorBlock.alpha = 0.45
+    }
+    
+    setMouseCursorBlock(tiles, tileId, isFlipH, isFlipV, isFlipD) {
+        this.mouseCursorBlock.texture = tiles[tileId];
+        this.mouseCursorBlock.scale.x = isFlipH? -1 : 1;
+        this.mouseCursorBlock.scale.y = isFlipV? -1 : 1;
+        this.mouseCursorBlock.anchor.x = 0.5
+        this.mouseCursorBlock.anchor.y = 0.5
+        this.mouseCursorBlock.rotation = isFlipD? (3. * Math.PI / 2) : 0;
     }
     
     spawnTile(tiles, viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD) {

@@ -47,20 +47,20 @@ export default class TileFlipper extends Component {
     
     render() {
         
-        const flipHColor = this.state.isFlipH ? "black" :"white"
-        const flipVColor = this.state.isFlipV ? "black" : "white"
-        const flipDColor = this.state.isFlipD ? "black" :"white"
+        const flipHColor = this.state.isFlipH ? "DarkSeaGreen" :"white"
+        const flipVColor = this.state.isFlipV ? "DarkSeaGreen" : "white"
+        const flipDColor = this.state.isFlipD ? "DarkSeaGreen" :"white"
         
         return (
             <Fragment>
             <button id={'flipH'} onClick={this.onFlipClick} style={{backgroundColor: flipHColor}}>
-                <img src={"flipH.png"} alt={"flipH"} style={{width: '64px', height: '64px',  imageRendering: 'pixelated'}}/>
+                <img src={"flipH.png"} alt={"flipH"} style={{width: '64px', height: '64px'}}/>
             </button>
                 <button id={'flipV'} onClick={this.onFlipClick} style={{backgroundColor: flipVColor}} >
-                    <img src={"flipV.png"} alt={"flipV"} style={{width: '64px', height: '64px',  imageRendering: 'pixelated'}}/>
+                    <img src={"flipV.png"} alt={"flipV"} style={{width: '64px', height: '64px'}}/>
                 </button>
                 <button id={'flipD'} onClick={this.onFlipClick} style={{backgroundColor: flipDColor}}>
-                    <img src={"flipD.png"} alt={"flipD"} style={{width: '64px', height: '64px',  imageRendering: 'pixelated'}}/>
+                    <img src={"flipD.png"} alt={"flipD"} style={{width: '64px', height: '64px'}}/>
                 </button>
             </Fragment>
         );
