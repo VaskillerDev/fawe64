@@ -17,12 +17,19 @@ export default class GridViewGl extends Component {
     currentPickedTileIsFlipV = false;
     currentPickedTileIsFlipD = false;
 
+    tiles;
     mouseCursorBlock;
 
     isBrushMode = false;
     
     handleCurrentPickedTileIndex(index) {
         this.currentPickedTileIndex = index;
+
+        this.setMouseCursorBlock(this.tiles,
+            this.currentPickedTileIndex,
+            this.currentPickedTileIsFlipH,
+            this.currentPickedTileIsFlipV,
+            this.currentPickedTileIsFlipD);
     }
 
     handleFlipTile(indexFlip, isFlip) {
@@ -33,6 +40,11 @@ export default class GridViewGl extends Component {
             case 2: { this.currentPickedTileIsFlipD = isFlip; break; }
         }
         
+        this.setMouseCursorBlock(this.tiles,
+            this.currentPickedTileIndex,
+            this.currentPickedTileIsFlipH,
+            this.currentPickedTileIsFlipV,
+            this.currentPickedTileIsFlipD);
     }
     
     constructor(props) {
@@ -82,15 +94,10 @@ export default class GridViewGl extends Component {
             gridY = gridY > 0  ? gridY - 1 : gridY
             
             this.mouseCursorBlock.position.set(BLOCK_SIZE * gridX + BLOCK_SIZE / 2, BLOCK_SIZE * gridY + BLOCK_SIZE / 2)
-            this.setMouseCursorBlock(tiles, 
-                this.currentPickedTileIndex, 
-                this.currentPickedTileIsFlipH,
-                this.currentPickedTileIsFlipV,
-                this.currentPickedTileIsFlipD);
             
             if (!this.isBrushMode) return;
 
-            this.spawnTile(tiles,
+            this.spawnTile(this.tiles,
                 viewport,
                 this.currentPickedTileIndex,
                 gridX,
@@ -127,7 +134,7 @@ export default class GridViewGl extends Component {
             
             // console.log(gridX, gridY);
             
-            this.spawnTile(tiles,
+            this.spawnTile(this.tiles,
                 viewport,
                 this.currentPickedTileIndex,
                 gridX,
@@ -151,10 +158,10 @@ export default class GridViewGl extends Component {
 
         viewport.fit()
 
-        const tiles = this.prepareAtlas();
+        this.tiles = this.prepareAtlas();
 
         this.initMouseCursorBlock(viewport);
-        this.setMouseCursorBlock(tiles, 0, 
+        this.setMouseCursorBlock(this.tiles, 0, 
             this.currentPickedTileIsFlipH,
             this.currentPickedTileIsFlipV,
             this.currentPickedTileIsFlipD);

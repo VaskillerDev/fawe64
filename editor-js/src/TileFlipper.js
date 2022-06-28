@@ -42,9 +42,42 @@ export default class TileFlipper extends Component {
             } break;
         }
         this.props.handleFlipTile(flipIndex, isFlip)
-        console.log(flipIndex);
     }
     
+    componentDidMount() {
+        const body = document.body
+        body.addEventListener("keyup", (e) => {
+            const {key} = e;
+            let flipIndex;
+            let isFlip;
+            
+            if (key.toLowerCase() === 'h') {
+                flipIndex = 0;
+                this.setState({
+                    isFlipH: !this.state.isFlipH
+                });
+                isFlip = this.state.isFlipH;
+            }
+
+            if (key.toLowerCase() === 'v') {
+                flipIndex = 1;
+                this.setState({
+                    isFlipV: !this.state.isFlipV
+                });
+                isFlip = this.state.isFlipV;
+            }
+
+            if (key.toLowerCase() === 'r') {
+                flipIndex = 2;
+                this.setState({
+                    isFlipD: !this.state.isFlipD
+                });
+                isFlip = this.state.isFlipD;
+            }
+            this.props.handleFlipTile(flipIndex, isFlip)
+        })
+    }
+
     render() {
         
         const flipHColor = this.state.isFlipH ? "DarkSeaGreen" :"white"
@@ -52,7 +85,7 @@ export default class TileFlipper extends Component {
         const flipDColor = this.state.isFlipD ? "DarkSeaGreen" :"white"
         
         return (
-            <Fragment>
+            <div id={"tileFlipper"}>
             <button id={'flipH'} onClick={this.onFlipClick} style={{backgroundColor: flipHColor}}>
                 <img src={"flipH.png"} alt={"flipH"} style={{width: '64px', height: '64px'}}/>
             </button>
@@ -62,7 +95,7 @@ export default class TileFlipper extends Component {
                 <button id={'flipD'} onClick={this.onFlipClick} style={{backgroundColor: flipDColor}}>
                     <img src={"flipD.png"} alt={"flipD"} style={{width: '64px', height: '64px'}}/>
                 </button>
-            </Fragment>
+            </div>
         );
     }
 }
