@@ -1,6 +1,6 @@
 import './App.css';
 import GridViewGl from "./gl/GridViewGl";
-import TilePicker from "./TilePicker";
+import DownloadMapButton from "./DownloadMapButton";
 
 function App() {
   
@@ -12,6 +12,7 @@ function App() {
             <div style={{display: 'flex'}} >
                 <GridViewGl/>
             </div>
+            <DownloadMapButton/>
         </header>
     </div>
   );

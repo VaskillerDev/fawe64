@@ -218,8 +218,6 @@ export default class GridViewGl extends Component {
         ]
     }
     
-    
-    
     drawBorder(line, viewport) {
         line.clear();
         this.drawLine(line, viewport,0,0, 0, MAP_VIEW_SIZE);
