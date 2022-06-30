@@ -1,8 +1,9 @@
 ﻿import {Fragment, Component} from "react";
 import * as PIXI from 'pixi.js'
 import {Viewport} from "pixi-viewport";
-import TilePicker from "../TilePicker";
-import TileFlipper from "../TileFlipper";
+import DownloadMapButton from "./DownloadMapButton";
+import TilePicker from "./TilePicker";
+import TileFlipper from "./TileFlipper";
 
 const MAP_VIEW_SIZE = 2048
 const ZOOM_FACTOR = 2;
@@ -18,9 +19,35 @@ export default class GridViewGl extends Component {
     currentPickedTileIsFlipD = false;
 
     tiles;
+    viewport;
     mouseCursorBlock;
 
     isBrushMode = false;
+
+    handleMapLoaded() {
+        for (let i = 0 ; i < 16; i++) {
+            for (let j = 0 ; j < 16; j++) {
+                const chunk = localStorage.getItem(`${i}:${j}`);
+                const chunkData = chunk.split(',')
+
+                let offset = 0;
+                for (const tile of chunkData) {
+                    const tileInt = Number.parseInt(tile);
+                    if (tileInt === 0) {
+                        ++offset;
+                        continue;
+                    }
+                    
+                    let x = (i * 8 + offset) % 8
+                    let y = (j * 8 ) % 8 // todo
+                    
+                    
+                    this.spawnTile(this.tiles, this.viewport, 0, x, y)
+                    ++offset;
+                }
+            }
+        }
+    }
     
     handleCurrentPickedTileIndex(index) {
         this.currentPickedTileIndex = index;
@@ -51,7 +78,13 @@ export default class GridViewGl extends Component {
         super(props);
         
         this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
+        this.handleMapLoaded = this.handleMapLoaded.bind(this);
         this.handleFlipTile = this.handleFlipTile.bind(this);
+        
+        this.state = {
+            downloadMapButton: <div>Empty</div>
+        }
+        
     }
     
     componentDidMount() {
@@ -75,6 +108,8 @@ export default class GridViewGl extends Component {
             interaction: this.app.renderer.plugins.interaction
         })
 
+        this.viewport = viewport;
+        
         const borderLine = new PIXI.Graphics();
         const gridLine = new PIXI.Graphics();
         viewport.addChild(borderLine);
@@ -168,6 +203,10 @@ export default class GridViewGl extends Component {
         
         this.drawBorder(borderLine, viewport)
         this.drawGrid(gridLine, viewport)
+        
+        this.setState({
+            downloadMapButton: <DownloadMapButton handleMapLoaded={this.handleMapLoaded}/>
+        })
     }
     
     initMouseCursorBlock(viewport) {
@@ -277,6 +316,7 @@ export default class GridViewGl extends Component {
                 <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
                 <TileFlipper handleFlipTile={this.handleFlipTile}/>
                 </div>
+                {this.state.downloadMapButton}
             </Fragment>
         );
     }

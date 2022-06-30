@@ -1,18 +1,13 @@
 import './App.css';
-import GridViewGl from "./gl/GridViewGl";
-import DownloadMapButton from "./DownloadMapButton";
+import GridViewGl from "./GridViewGl";
 
 function App() {
-  
-    
-  
   return (
     <div className="App">
         <header className={"App-header"}>
             <div style={{display: 'flex'}} >
                 <GridViewGl/>
             </div>
-            <DownloadMapButton/>
         </header>
     </div>
   );
