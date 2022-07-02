@@ -38,11 +38,11 @@ export default class GridViewGl extends Component {
                         continue;
                     }
                     
-                    let x = (i * 8 + offset) % 8
-                    let y = (j * 8 ) % 8 // todo
+                    let gridX = (i * 8 + offset) % 8
+                    let gridY = Math.ceil((j * 8 + (offset / 8))  % 8)
+                    gridY = gridY > 0  ? gridY - 1 : gridY
                     
-                    
-                    this.spawnTile(this.tiles, this.viewport, 0, x, y)
+                    this.spawnTile(this.tiles, this.viewport, 0, gridX, gridY)
                     ++offset;
                 }
             }
