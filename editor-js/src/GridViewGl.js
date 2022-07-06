@@ -37,7 +37,7 @@ export default class GridViewGl extends Component {
                         ++offset;
                         continue;
                     }
-                    // rewrite
+                    
                     let gridX = i * 8 + (offset % 8)
                     let gridY = Math.ceil((j * 8 + ((offset + 1) / 8)))
                     gridY = gridY > 0  ? gridY - 1 : gridY
