@@ -41,12 +41,34 @@ export default class GridViewGl extends Component {
                     let gridX = i * 8 + (offset % 8)
                     let gridY = Math.ceil((j * 8 + ((offset + 1) / 8)))
                     gridY = gridY > 0  ? gridY - 1 : gridY
-                    
-                    this.spawnTile(this.tiles, this.viewport, 0, gridX, gridY)
+
+                    this.spawnTileByCode(tileInt, gridX, gridY);
                     ++offset;
                 }
             }
         }
+    }
+    
+    spawnTileByCode(tileInt, gridX, gridY) {
+        let isFlipH = false;
+        let isFlipV = false;
+        let isFlipD = false;
+        let tileId = 0;
+
+        isFlipH = tileInt >= 100;
+
+        const twoPosTIleInt = tileInt >= 100 ? tileInt % 100 / 10 : Math.round(tileInt / 10);
+        tileId = tileInt % 10;
+        
+        isFlipV = twoPosTIleInt === 1;
+        isFlipD = twoPosTIleInt === 2;
+        
+        if (twoPosTIleInt === 3) {
+            isFlipD = true;
+            isFlipV = true;
+        }
+        
+        this.spawnTile(this.tiles, this.viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD)
     }
     
     handleCurrentPickedTileIndex(index) {
