@@ -50,10 +50,10 @@ export default class GridViewGl extends Component {
     }
     
     spawnTileByCode(tileInt, gridX, gridY) {
-        let isFlipH = false;
-        let isFlipV = false;
-        let isFlipD = false;
-        let tileId = 0;
+        let isFlipH;
+        let isFlipV;
+        let isFlipD;
+        let tileId;
 
         isFlipH = tileInt >= 100;
 
@@ -106,7 +106,6 @@ export default class GridViewGl extends Component {
         this.state = {
             downloadMapButton: <div>Empty</div>
         }
-        
     }
     
     componentDidMount() {
@@ -151,6 +150,7 @@ export default class GridViewGl extends Component {
             gridY = gridY > 0  ? gridY - 1 : gridY
             
             this.mouseCursorBlock.position.set(BLOCK_SIZE * gridX + BLOCK_SIZE / 2, BLOCK_SIZE * gridY + BLOCK_SIZE / 2)
+            this.props.handleGridPositionChanged(gridX,gridY);
             
             if (!this.isBrushMode) return;
 
@@ -162,7 +162,8 @@ export default class GridViewGl extends Component {
                 this.currentPickedTileIsFlipH,
                 this.currentPickedTileIsFlipV,
                 this.currentPickedTileIsFlipD);
-        })
+        });
+        
         
         const canvas = document.getElementById("gridCanvas");
 
