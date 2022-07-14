@@ -6,8 +6,8 @@ import TilePicker from "./TilePicker";
 import TileFlipper from "./TileFlipper";
 
 const MAP_VIEW_SIZE = 2048
-const ZOOM_FACTOR = 2;
 const BLOCK_SIZE = 16;
+const CHUNK_SIZE = 8;
 
 export default class GridViewGl extends Component {
     
@@ -24,6 +24,20 @@ export default class GridViewGl extends Component {
 
     isBrushMode = false;
 
+    createMap() {
+        for (let i = 0 ; i < 16; i++) {
+            for (let j = 0 ; j < 16; j++) {
+                let chunk  = '';
+                
+                for (let jj = 0 ; jj < 64; jj++) {
+                    chunk += jj === 63 ?'0' : '0,'
+                }
+                
+                localStorage.setItem(`${i}:${j}`,chunk)
+            }
+        }
+    }
+    
     loadMap() {
         for (let i = 0 ; i < 16; i++) {
             for (let j = 0 ; j < 16; j++) {
@@ -57,7 +71,9 @@ export default class GridViewGl extends Component {
 
         isFlipH = tileInt >= 100;
 
-        const twoPosTIleInt = tileInt >= 100 ? tileInt % 100 / 10 : Math.round(tileInt / 10);
+        const tileDataWithoutId = Math.floor(tileInt / 10);
+        
+        const twoPosTIleInt = tileDataWithoutId > 10 ? tileDataWithoutId - 10 : tileDataWithoutId;
         tileId = tileInt % 10;
         
         isFlipV = twoPosTIleInt === 1;
@@ -68,7 +84,7 @@ export default class GridViewGl extends Component {
             isFlipV = true;
         }
         
-        this.spawnTile(this.tiles, this.viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD)
+        this.spawnTile(this.tiles, this.viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD, true)
     }
     
     handleCurrentPickedTileIndex(index) {
@@ -222,7 +238,8 @@ export default class GridViewGl extends Component {
         this.drawBorder(borderLine, viewport)
         this.drawGrid(gridLine, viewport);
 
-        this.loadMap();
+        const isSavedMapExist = localStorage.getItem('0:0');
+        isSavedMapExist ? this.loadMap() : this.createMap();
     }
     
     initMouseCursorBlock(viewport) {
@@ -242,7 +259,7 @@ export default class GridViewGl extends Component {
         this.mouseCursorBlock.rotation = isFlipD? (3. * Math.PI / 2) : 0;
     }
     
-    spawnTile(tiles, viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD) {
+    spawnTile(tiles, viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD, withoutSave) {
         const sprite = viewport.addChild(new PIXI.Sprite(tiles[tileId]))
         sprite.width = sprite.height = BLOCK_SIZE
         sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
@@ -253,8 +270,45 @@ export default class GridViewGl extends Component {
         sprite.rotation = isFlipD? (3. * Math.PI / 2) : 0;
         sprite.zIndex = -1;
         
-
         sprite.position.set( sprite.position.x + BLOCK_SIZE / 2,  sprite.position.y + BLOCK_SIZE / 2);
+        
+        if (withoutSave) return;
+        
+        let tileCode = isFlipH ? 100 : 0;
+        tileCode = isFlipV ? tileCode + 10 : tileCode;
+        tileCode = isFlipD ? tileCode + 20 : tileCode;
+        tileCode += tileId;
+        
+        this.saveTile(gridX, gridY, tileCode);
+    }
+    
+    saveTile(gridX, gridY, tileCode) {
+        const chunkX = Math.floor(gridX / CHUNK_SIZE);
+        const chunkY = Math.floor(gridY / CHUNK_SIZE);
+        
+        const posX = gridX - chunkX * CHUNK_SIZE
+        const posY = gridY - chunkY * CHUNK_SIZE;
+        let posLine = (posX + posY * CHUNK_SIZE);
+        posLine = posLine < 0 ? 0 : posLine
+        
+        const chunk = localStorage.getItem(`${chunkX}:${chunkY}`);
+        const chunkData = chunk.split(',');
+        
+        let newChunk = '';
+        let i = 0;
+        for (const tile of chunkData) {
+            if (i === posLine) {
+                const char = i === 63? `${tileCode}` : `${tileCode},`;
+                newChunk += char
+                i++;
+                continue;
+            }
+            
+            newChunk += i === 63? tile : `${tile},`;
+            i++;
+        }
+        
+        localStorage.setItem(`${chunkX}:${chunkY}`, newChunk);
     }
     
     prepareAtlas() {
