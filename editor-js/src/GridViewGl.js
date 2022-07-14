@@ -30,7 +30,7 @@ export default class GridViewGl extends Component {
                 let chunk  = '';
                 
                 for (let jj = 0 ; jj < 64; jj++) {
-                    chunk += jj === 63 ?'0' : '0,'
+                    chunk += jj === 63 ?'-1' : '-1,'
                 }
                 
                 localStorage.setItem(`${i}:${j}`,chunk)
@@ -47,7 +47,7 @@ export default class GridViewGl extends Component {
                 let offset = 0;
                 for (const tile of chunkData) {
                     const tileInt = Number.parseInt(tile);
-                    if (tileInt === 0) {
+                    if (tileInt === -1) {
                         ++offset;
                         continue;
                     }
