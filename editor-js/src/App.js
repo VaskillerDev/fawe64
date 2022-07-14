@@ -23,8 +23,8 @@ class App extends React.Component {
             currentGridY: 0,
         }
     }
-    
-     render() {
+
+    render() {
          return (
              <div className="App">
                  <header className={"App-header"}>

@@ -18,7 +18,7 @@ export default class DownloadMapButton extends React.Component {
                 localStorage.setItem(`${i}:${j}`,chunk)
             }
         }*/
-        this.props.handleMapLoaded();
+        //this.props.handleMapLoaded();
     }
     
     componentDidMount() {

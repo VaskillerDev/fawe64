@@ -24,7 +24,7 @@ export default class GridViewGl extends Component {
 
     isBrushMode = false;
 
-    handleMapLoaded() {
+    loadMap() {
         for (let i = 0 ; i < 16; i++) {
             for (let j = 0 ; j < 16; j++) {
                 const chunk = localStorage.getItem(`${i}:${j}`);
@@ -100,12 +100,7 @@ export default class GridViewGl extends Component {
         super(props);
         
         this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
-        this.handleMapLoaded = this.handleMapLoaded.bind(this);
         this.handleFlipTile = this.handleFlipTile.bind(this);
-        
-        this.state = {
-            downloadMapButton: <div>Empty</div>
-        }
     }
     
     componentDidMount() {
@@ -225,11 +220,9 @@ export default class GridViewGl extends Component {
             this.currentPickedTileIsFlipD);
         
         this.drawBorder(borderLine, viewport)
-        this.drawGrid(gridLine, viewport)
-        
-        this.setState({
-            downloadMapButton: <DownloadMapButton handleMapLoaded={this.handleMapLoaded}/>
-        })
+        this.drawGrid(gridLine, viewport);
+
+        this.loadMap();
     }
     
     initMouseCursorBlock(viewport) {
@@ -339,7 +332,6 @@ export default class GridViewGl extends Component {
                 <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
                 <TileFlipper handleFlipTile={this.handleFlipTile}/>
                 </div>
-                {this.state.downloadMapButton}
             </Fragment>
         );
     }
