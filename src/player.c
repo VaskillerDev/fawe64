@@ -290,27 +290,39 @@ void player_update(Player *player, Level *level)
 
     if (gamepad == 16)
     {
-      player_move_left (player);
-      player->sword.dir = vec2_new (-1, 0);
-      goto MOVE_PLAYER;
+      if (player->actionState != PlayerAction_Attack)
+      {
+        player_move_left (player);
+      }
+        player->sword.dir = vec2_new (-1, 0);
+        goto MOVE_PLAYER;
     }
   if (gamepad == 32)
     {
-      player_move_right (player);
-      player->sword.dir = vec2_new (1, 0);
-      goto MOVE_PLAYER;
+       if (player->actionState != PlayerAction_Attack)
+       {
+          player_move_right (player);
+       }
+        player->sword.dir = vec2_new (1, 0);
+        goto MOVE_PLAYER;
     }
   if (gamepad == 128)
     {
-      player_move_down (player);
-      player->sword.dir = vec2_new (0, 1);
-      goto MOVE_PLAYER;
+       if (player->actionState != PlayerAction_Attack)
+       {
+               player_move_down (player);
+       }
+       player->sword.dir = vec2_new (0, 1);
+       goto MOVE_PLAYER;
     }
   if (gamepad == 64)
     {
-      player_move_up (player);
-      player->sword.dir = vec2_new (0, -1);
-      goto MOVE_PLAYER;
+       if (player->actionState != PlayerAction_Attack)
+       {
+           player_move_up (player);
+       }
+         player->sword.dir = vec2_new (0, -1);
+         goto MOVE_PLAYER;
     }
 
   MOVE_PLAYER:
