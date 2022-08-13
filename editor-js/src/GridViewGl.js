@@ -1,9 +1,9 @@
 ﻿import {Fragment, Component} from "react";
 import * as PIXI from 'pixi.js'
 import {Viewport} from "pixi-viewport";
-import DownloadMapButton from "./DownloadMapButton";
 import TilePicker from "./TilePicker";
 import TileFlipper from "./TileFlipper";
+import PathModeToggler from "./PathModeToggler";
 
 const MAP_VIEW_SIZE = 2048
 const BLOCK_SIZE = 16;
@@ -382,9 +382,10 @@ export default class GridViewGl extends Component {
                     <canvas id={"gridCanvas"}> 
                     </canvas>
                 </div>
-                <div>
+                <div style={{textAlign: "right"}}>
                 <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
                 <TileFlipper handleFlipTile={this.handleFlipTile}/>
+                <PathModeToggler/>
                 </div>
             </Fragment>
         );
