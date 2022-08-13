@@ -51,7 +51,7 @@ export default class TileFlipper extends Component {
             let flipIndex;
             let isFlip;
             
-            if (key.toLowerCase() === 'h') {
+            if (key.toLowerCase() === 'q') {
                 flipIndex = 0;
                 this.setState({
                     isFlipH: !this.state.isFlipH
@@ -59,7 +59,7 @@ export default class TileFlipper extends Component {
                 isFlip = this.state.isFlipH;
             }
 
-            if (key.toLowerCase() === 'v') {
+            if (key.toLowerCase() === 'w') {
                 flipIndex = 1;
                 this.setState({
                     isFlipV: !this.state.isFlipV
@@ -67,7 +67,7 @@ export default class TileFlipper extends Component {
                 isFlip = this.state.isFlipV;
             }
 
-            if (key.toLowerCase() === 'r') {
+            if (key.toLowerCase() === 'e') {
                 flipIndex = 2;
                 this.setState({
                     isFlipD: !this.state.isFlipD
