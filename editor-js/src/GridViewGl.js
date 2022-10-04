@@ -22,6 +22,8 @@ export default class GridViewGl extends Component {
     viewport;
     mouseCursorBlock;
 
+    pathPoint;
+    
     isBrushMode = false;
 
     createMap() {
@@ -86,6 +88,14 @@ export default class GridViewGl extends Component {
         
         this.spawnTile(this.tiles, this.viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD, true)
     }
+
+    handlePathModePathEditorChanged(entityId, gridPosArr) {
+        
+        for (const gridPos of gridPosArr) {
+            this.drawPathPoint(this.pathPoint, undefined, gridPos.x+8, gridPos.y+8 );
+        }
+        
+    }
     
     handleCurrentPickedTileIndex(index) {
         this.currentPickedTileIndex = index;
@@ -116,6 +126,7 @@ export default class GridViewGl extends Component {
         super(props);
         
         this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
+        this.handlePathModePathEditorChanged = this.handlePathModePathEditorChanged.bind(this);
         this.handleFlipTile = this.handleFlipTile.bind(this);
     }
     
@@ -144,6 +155,10 @@ export default class GridViewGl extends Component {
         
         const borderLine = new PIXI.Graphics();
         const gridLine = new PIXI.Graphics();
+        const pathPoint = new PIXI.Graphics();
+        this.pathPoint = pathPoint;
+        
+        viewport.addChild(pathPoint);
         viewport.addChild(borderLine);
         viewport.addChild(gridLine);
         
@@ -374,6 +389,18 @@ export default class GridViewGl extends Component {
             .lineTo(x1, y1);
         
     }
+    
+    drawPathPoint(line, viewport,x0,y0) {
+        const widthLine = 10;
+        const color = 0xff0000
+
+        line.beginFill(color);
+        
+        line.lineStyle(widthLine, color, 0.25, 0.5,true)
+            .drawCircle(x0,y0, 4);
+        
+        line.endFill()
+    }
 
     render() {
         return (
@@ -385,7 +412,7 @@ export default class GridViewGl extends Component {
                 <div style={{textAlign: "right"}}>
                 <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
                 <TileFlipper handleFlipTile={this.handleFlipTile}/>
-                <PathModeToggler/>
+                <PathModeToggler handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}/>
                 </div>
             </Fragment>
         );

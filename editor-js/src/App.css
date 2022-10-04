@@ -34,19 +34,26 @@
   margin-bottom: 0;
 }
 
-.App-path-mode-inspector ul {
+.App-path-mode-inspector ol {
+  margin-left: 32px;
   padding-top: 0;
   margin-top: 6px;
   height: 300px;
   width: auto;
   overflow:hidden;
   overflow-y:scroll;
+  background-color: #3c4048;
+  border-radius: 2%;
 }
 
 .App-path-mode-inspector li {
+  padding-top: 16px;
   font-size: large;
+  text-align: center;
 }
-
+.App-path-mode-inspector-path-editor input {
+  width: 80%;
+}
 
 
 @keyframes App-logo-spin {
