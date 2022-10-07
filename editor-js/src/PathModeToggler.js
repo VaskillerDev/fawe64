@@ -6,7 +6,6 @@ export default class PathModeToggler
 
     handlePathModePathEditorChanged(text) {
         try {
-
             const dataArr = text.toLowerCase().split('->'); // "bat->(0;0)->(1;0)->(2;2)"
 
             const entityId = dataArr[0]; // 'bat'

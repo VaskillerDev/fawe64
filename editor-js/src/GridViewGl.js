@@ -90,9 +90,23 @@ export default class GridViewGl extends Component {
     }
 
     handlePathModePathEditorChanged(entityId, gridPosArr) {
+        this.pathPoint.clear();
+        let prevGridPos = undefined;
         
         for (const gridPos of gridPosArr) {
-            this.drawPathPoint(this.pathPoint, undefined, gridPos.x+8, gridPos.y+8 );
+            const x = gridPos.x * BLOCK_SIZE + BLOCK_SIZE / 2;
+            const y = gridPos.y * BLOCK_SIZE + BLOCK_SIZE / 2;
+
+            if (prevGridPos) {
+                this.drawPathLineToPoint(this.pathPoint, undefined,
+                    prevGridPos.x * BLOCK_SIZE + BLOCK_SIZE / 2,
+                    prevGridPos.y * BLOCK_SIZE + BLOCK_SIZE / 2,
+                    x,
+                    y);
+            }
+            this.drawPathPoint(this.pathPoint, undefined, x, y);
+            
+            prevGridPos = gridPos;
         }
         
     }
@@ -390,16 +404,25 @@ export default class GridViewGl extends Component {
         
     }
     
-    drawPathPoint(line, viewport,x0,y0) {
+    drawPathLineToPoint(line, viewport, x0, y0, x1, y1) {
+        const widthLine = 5;
+        const color = 0xffff00;
+
+        line.lineStyle(widthLine, color, 0.2, 0.5, true)
+            .moveTo(x0, y0)
+            .lineTo(x1, y1);
+    }
+    
+    drawPathPoint(path, viewport,x0,y0) {
         const widthLine = 10;
         const color = 0xff0000
 
-        line.beginFill(color);
+        path.beginFill(color);
         
-        line.lineStyle(widthLine, color, 0.25, 0.5,true)
+        path.lineStyle(widthLine, color, 0.25, 0.5,true)
             .drawCircle(x0,y0, 4);
         
-        line.endFill()
+        path.endFill()
     }
 
     render() {
