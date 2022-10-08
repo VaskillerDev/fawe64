@@ -267,13 +267,15 @@ void level_update(Level *level)
 {
   if (level->pause)
   {
+    return;
+  }
+  
     Enemy **currentEnemy = NULL;
     while ((currentEnemy = (Enemy **)utarray_next(level->enemies, currentEnemy)))
     {
       enemy_update(*currentEnemy);
     }
     bulletManager_update(&level->bulletManager);
-  }
 }
 
 bool level_isDone(Level *level)
@@ -336,7 +338,7 @@ void level_spawnEnemies(Level *level)
 
   for (uint_32 i = 0; i < enemyCount; i++)
   {
-    EnemyUnit newEnemy = level_spawnUnit (level, EnemyTypeName_Rock);
+    EnemyUnit newEnemy = level_spawnUnit (level, EnemyTypeName_Warlock);
 
     newEnemy.enemy->sprite->position.x = RANDOMIZE(30, 60);
     newEnemy.enemy->sprite->position.y = RANDOMIZE(30, 130);

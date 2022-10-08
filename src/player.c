@@ -129,7 +129,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
       },
       .sword = sword_new(level),
       .attackAnimationTimeout = ATTACK_ANIMATION_TIMEOUT_VALUE,
-      .itemsCount = {100, 0, 0},
+      .itemsCount = {10, 0, 0},
       .selectorIndex = PlayerItem_Count};
 
   Sprite *playerSprite = level_spawnObject(level);
