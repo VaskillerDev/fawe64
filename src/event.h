@@ -28,7 +28,7 @@ typedef enum EventName {
     E_PLAYER_LEAVE_DUNGEON = 37,
     E_LEVEL_BORDER_CONTACT = 38,
     E_LEVEL_CHUNK_MOVED = 39,
-    E_TIMER_EXPIRED = 40,
+    E_TIMER_EXPIRED = 40
 } EventName;
 
 /**

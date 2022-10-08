@@ -22,7 +22,7 @@ Level *level_new()
   level->emitter = eventEmitter_new();
   eventEmitter_on (&level->emitter, E_LEVEL_BORDER_CONTACT, &on_level_border_contact);
   eventEmitter_on (&level->emitter, E_ENEMY_ATTACK_BULLET, &on_level_enemy_attack_bullet);
-
+  
   return level;
 }
 
@@ -262,14 +262,17 @@ void level_deleteEnemy(Level *level, struct Enemy *enemy)
   }
 }
 
-
 void level_update(Level *level)
 {
-  Enemy **currentEnemy = NULL;
-  while ((currentEnemy = (Enemy **)utarray_next(level->enemies, currentEnemy))) {
+  if (level->pause)
+  {
+    Enemy **currentEnemy = NULL;
+    while ((currentEnemy = (Enemy **)utarray_next(level->enemies, currentEnemy)))
+    {
       enemy_update(*currentEnemy);
+    }
+    bulletManager_update(&level->bulletManager);
   }
-  bulletManager_update (&level->bulletManager);
 }
 
 bool level_isDone(Level *level)
