@@ -73,22 +73,20 @@ void update ()
               player_initInstance(args);
           }
 
+          struct LoadLevelArgs chunkMovingArgs = {
+              .level = level,
+              .newChunk = &chunk,
+              .imagePool = &imgPool,
+              .newChunkPosition = vec2_new(chunk.x, chunk.y)};
+
+          level_processChunkMoving(&chunkMovingArgs, player_getInstance());
+          level_update(level);
+          level_draw(level);
 
           Player* player = player_getInstance();
           player_update (player, level);
           player_draw (player, level);
           player_postUpdate(player);
-
-          struct LoadLevelArgs chunkMovingArgs = {
-              .level = level,
-              .newChunk = &chunk,
-              .imagePool = &imgPool,
-              .newChunkPosition = vec2_new (chunk.x, chunk.y)
-          };
-
-          level_processChunkMoving(&chunkMovingArgs, player);
-          level_update (level);
-          level_draw (level);
         }
       break;
       /**

@@ -1,6 +1,7 @@
 #pragma once
 #include "libs.h"
 
+void DrawRectangle(int_32 x, int_32 y, int_32 w, int_32 h, uint_16 colors[4]);
 void DrawImage(Image *img, int_32 x, int_32 y, bool defaultColors);
 void DrawText(char* content, int_32 x, int_32 y, uint_16 colors[4]);
 void DrawBoundingVolume(BoundingVolume* bv);

@@ -14,6 +14,14 @@ typedef enum PlayerActionState {
     PlayerAction_Attack
 } PlayerActionState;
 
+enum PlayerItemType
+{
+    PlayerItem_Potion,
+    PlayerItem_Bomb,
+    PlayerItem_PlasticExplosive,
+    PlayerItem_Count
+};
+
 struct Player
 {
     struct Sprite *sprite;
@@ -55,6 +63,10 @@ struct Player
     GameState* gameState;
 
     uint_8 attackAnimationTimeout;
+
+    uint_8 itemsCount[PlayerItem_Count];
+    Image* itemImages[PlayerItem_Count];
+    uint_8 selectorIndex;
 };
 
 typedef struct Player Player;
@@ -94,6 +106,7 @@ void player_move_down(Player *player);
 void player_update(Player *player, Level *level);
 void player_draw(Player *player, Level *level);
 void player_postUpdate(Player *player);
+void player_useItem();
 void on_player_death(HpPointsOverEvent* e);
 void on_player_attack(EnemySwordAttackHitEvent e);
 void on_player_attack_animation_timeout(PlayerAttackAnimationTimeoutEvent* e);

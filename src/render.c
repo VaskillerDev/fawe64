@@ -1,5 +1,12 @@
 #include "libs.h"
 
+void DrawRectangle(int_32 x, int_32 y, int_32 w, int_32 h, uint_16 colors[4])
+{
+   SetDrawColor_1(colors[0]);
+   SetDrawColor_2(colors[1]);
+   rect(x - w / 2, y - h / 2, w , h);
+}
+
 void DrawImage(Image *img, int_32 x, int_32 y, bool defaultColors)
 {
     if (defaultColors)

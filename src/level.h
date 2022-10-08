@@ -13,6 +13,8 @@ typedef struct Level
     ImagePool* imagePool;
     BulletManager bulletManager;
 
+    bool pause;
+
     bool isTilesActive;
     Dungeon dungeon;
 } Level;
