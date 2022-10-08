@@ -18,6 +18,7 @@ Level *level_new()
   level->objects->n = 0;
   level->bulletManager = bulletManager_new();
   level->isTilesActive = true;
+  level->pause = false;
 
   level->emitter = eventEmitter_new();
   eventEmitter_on (&level->emitter, E_LEVEL_BORDER_CONTACT, &on_level_border_contact);

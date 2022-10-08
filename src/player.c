@@ -641,4 +641,15 @@ void player_useItem()
   }
 
   --player->itemsCount[player->selectorIndex];
+
+  switch (player->selectorIndex)
+  {
+  case PlayerItem_Potion:
+      usePoition();
+    break;
+  
+  default:
+    break;
+  }
+
 }

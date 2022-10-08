@@ -11,6 +11,7 @@
         "dungeon.h": "c",
         "level.h": "c",
         "assets.h": "c",
-        "libs.h": "c"
+        "libs.h": "c",
+        "math.h": "c"
     }
 }

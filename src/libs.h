@@ -26,6 +26,7 @@
 #include "enemy.h"
 #include "render.h"
 #include "sword.h"
+#include "items.h"
 #include "player.h"
 #include "bullet.h"
 #include "dungeon.h"
