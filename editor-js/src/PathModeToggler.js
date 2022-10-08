@@ -26,6 +26,11 @@ export default class PathModeToggler
         
     }
 
+    handlePathModeInspectorInit(pathTextArr) {
+        if (!this.props.handlePathModeInspectorInit) return;
+        this.props.handlePathModeInspectorInit(pathTextArr);
+    }
+
     rawPosToNormalPos(rawPos) {
         const lastChar = rawPos.length-1;
         if (!(rawPos.charAt(0) === '(' && rawPos.charAt(lastChar) === ')')) return;
@@ -38,6 +43,7 @@ export default class PathModeToggler
         super(props);
 
         this.onPathModeClick = this.onPathModeClick.bind(this)
+        this.handlePathModeInspectorInit = this.handlePathModeInspectorInit.bind(this);
         this.handlePathModePathEditorChanged = this.handlePathModePathEditorChanged.bind(this);
         
         this.state = {
@@ -55,7 +61,10 @@ export default class PathModeToggler
     render() {
         const isPathMode = this.state.isPathMode ? "DarkSeaGreen" :"white"
         const inspectorComponent = this.state.isPathMode? 
-            (<PathModeInspector handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}/>) 
+            (<PathModeInspector 
+                handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}
+                handlePathModeInspectorInit={this.handlePathModeInspectorInit}
+            />) 
             : (<div></div>);
         
         

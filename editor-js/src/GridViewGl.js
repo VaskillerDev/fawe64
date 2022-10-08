@@ -32,7 +32,7 @@ export default class GridViewGl extends Component {
                 let chunk  = '';
                 
                 for (let jj = 0 ; jj < 64; jj++) {
-                    chunk += jj === 63 ?'-1' : '-1,'
+                    chunk += jj === 63 ? '-1' : '-1,'
                 }
                 
                 localStorage.setItem(`${i}:${j}`,chunk)
@@ -121,6 +121,10 @@ export default class GridViewGl extends Component {
             this.currentPickedTileIsFlipD);
     }
 
+    handlePathModeInspectorInit(pathTextArr) {
+        console.log(pathTextArr);
+    }
+    
     handleFlipTile(indexFlip, isFlip) {
         
         switch (indexFlip) {
@@ -139,6 +143,7 @@ export default class GridViewGl extends Component {
     constructor(props) {
         super(props);
         
+        this.handlePathModeInspectorInit = this.handlePathModeInspectorInit.bind(this);
         this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
         this.handlePathModePathEditorChanged = this.handlePathModePathEditorChanged.bind(this);
         this.handleFlipTile = this.handleFlipTile.bind(this);
@@ -381,8 +386,6 @@ export default class GridViewGl extends Component {
                 this.drawGridLine(line, viewport, 0, x, MAP_VIEW_SIZE, x);
             }
         }
-
-        
     }
     
     drawLine(line, viewport,x0,y0,x1,y1) {
@@ -435,7 +438,10 @@ export default class GridViewGl extends Component {
                 <div style={{textAlign: "right"}}>
                 <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
                 <TileFlipper handleFlipTile={this.handleFlipTile}/>
-                <PathModeToggler handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}/>
+                <PathModeToggler 
+                    handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}
+                    handlePathModeInspectorInit = {this.handlePathModeInspectorInit}
+                />
                 </div>
             </Fragment>
         );
