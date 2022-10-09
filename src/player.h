@@ -97,6 +97,7 @@ Player* player_getInstance();
  */
 Player* player_initInstance(PlayerInitInstanceArgs args);
 
+bool player_checkTileCollision(Sprite *player, Level *level, Vec2 dir);
 bool player_checkCollision(struct Sprite *player, Level* level, Vec2 dir);
 void player_move_left(Player *player);
 void player_move_right(Player *player);

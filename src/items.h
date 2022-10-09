@@ -2,3 +2,4 @@
 #include "libs.h"
 
 void usePoition();
+bool setupBomb();

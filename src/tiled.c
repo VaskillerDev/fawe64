@@ -57,7 +57,8 @@ TileData tileData_new (uint_8 data)
       .flip_vertical = fv,
       .flip_diagonal = fd,
       .id = id,
-      .isUse2BPP = id == 0 || id == 1 || id == 4 || id == 6
+      .isUse2BPP = id == 0 || id == 1 || id == 4 || id == 6,
+      .collision = id == 0 || id == 1 || id == 4 || id == 5
   };
 
   return tileData;
