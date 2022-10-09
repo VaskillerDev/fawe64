@@ -80,6 +80,7 @@ typedef enum ImagePoolIndex {
 
     PoolIdx_Rock,
     PoolIdx_Bomb,
+    PoolIdx_Potion,
 
 } ImagePoolIndex;
 

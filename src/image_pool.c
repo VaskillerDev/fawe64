@@ -73,6 +73,7 @@ void imagePool_init(ImagePool *pool)
 
   *(pool->images + 48) = imagePool_addImage (pool, (void*)rock_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
   *(pool->images + 49) = imagePool_addImage (pool, (void*)bomb_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
+  *(pool->images + 50) = imagePool_addImage (pool, (void*)potion_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
 }
 
 Image *imagePool_addImage(ImagePool *pool, void *dataPtr, uint_32 size, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags)
