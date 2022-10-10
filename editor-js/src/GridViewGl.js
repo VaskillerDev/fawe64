@@ -9,7 +9,7 @@ import PathModeInspector from "./PathModeInspector";
 
 const BLOCK_SIZE = 16;
 const CHUNK_SIZE = 8;
-const CHUNK_LEN_IN_MAP = 8;
+export const CHUNK_LEN_IN_MAP = 8;
 const MAP_VIEW_SIZE = BLOCK_SIZE * CHUNK_SIZE * CHUNK_LEN_IN_MAP;
 
 export default class GridViewGl extends Component {
