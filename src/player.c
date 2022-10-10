@@ -664,6 +664,10 @@ void player_useItem()
     if(!setupBomb())
       return;
     break;
+case PlayerItem_PlasticExplosive:
+    if(!setupDirectedBomb())
+      return;
+    break;
 
   default:
     break;

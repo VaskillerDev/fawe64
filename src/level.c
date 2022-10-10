@@ -228,22 +228,23 @@ void level_spawnCollisionByTiles(Level *level)
     if (tileCollision)
     {
       uint_8 collisionDirs = 0;
-      collisionDirs += (i + 1 < 64 && level->levelChunk->tiles[i + 1].collision);
-      collisionDirs += (i - 1 >= 0 && level->levelChunk->tiles[i - 1].collision);
+      collisionDirs += (i + 1 < 64 && (i % 8 != 1) && level->levelChunk->tiles[i + 1].collision);
+      collisionDirs += (i - 1 >= 0 && (i % 8 != 0) && level->levelChunk->tiles[i - 1].collision);
       collisionDirs += (i + 8 < 64 && level->levelChunk->tiles[i + 8].collision);
       collisionDirs += (i - 8 >= 0 && level->levelChunk->tiles[i - 8].collision);
 
-      uint_8 edges = 0;
-      edges += i % 8 == 0;
+      int edges = 0;
+      edges += (i % 8 == 0);
+      edges += (i % 8 == 7);
       edges += i < 8 || i > 55;
 
-      if(4 - collisionDirs - edges == 0)
+      if(4 - edges <= collisionDirs)
         continue;
 
       newCollisionBox = level_spawnObject(level);
       newCollisionBox->size = vec2_new(16, 16);
-      newCollisionBox->position.y = i / 8 * 16 + level->levelChunk->y + 24;
-      newCollisionBox->position.x = i % 8 * 16 + level->levelChunk->x + 24;
+      newCollisionBox->position.y = i / 8 * 16 + 24;
+      newCollisionBox->position.x = i % 8 * 16 + 24;
       newCollisionBox->currentImage = NULL;
       newCollisionBox->animDelay = 0;
       newCollisionBox->images = NULL;
