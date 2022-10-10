@@ -2,8 +2,8 @@
 
 void imagePool_init(ImagePool *pool)
 {
-    pool->imageCount = 49;
-    pool->data = malloc(sizeof(uint8_t) * (32 * 7 + 64 * 42 + 2560));
+    pool->imageCount = 50;
+    pool->data = malloc(sizeof(uint8_t) * (32 * 7 + 64 * 43 + 2560));
     pool->images = (Image **)malloc(sizeof(Image) * pool->imageCount);
     pool->offset = 0;
 
