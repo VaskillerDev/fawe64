@@ -105,14 +105,14 @@ BulletManager bulletManager_new() {
 }
 
 void bulletManager_createBullet(BulletManager* manager, BulletMetaData metaData) {
-  Bullet* bullet = (Bullet*) malloc (sizeof (Bullet));
-  bullet_new (bullet, metaData);
+  Bullet bullet;
+  bullet_new(&bullet, metaData);
 
   int len = (sizeof (manager->bulletArray) / sizeof (Bullet)) - 1;
   for (int i = 0; i < len; i++) {
       Bullet* b = &manager->bulletArray[i];
       if (bullet_isEmpty(b)) {
-          manager->bulletArray[i] = *bullet;
+          manager->bulletArray[i] = bullet;
           manager->lastIndex +=1;
           break;
       }

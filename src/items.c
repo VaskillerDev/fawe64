@@ -3,6 +3,115 @@
 
 const uint_8 POITION_EFFECT = 5;
 
+Bomb bomb_new(Level *level, Vec2 spawnPoint)
+{
+    Sprite *sprite = level_spawnObject(level);
+    sprite->images = &level->imagePool->images[PoolIdx_Bomb];
+    sprite->position = spawnPoint;
+    sprite->imageCount = 1;
+    sprite->currentImage = 0;
+    sprite->size.x = level->imagePool->images[PoolIdx_Bomb]->width;
+    sprite->size.y = level->imagePool->images[PoolIdx_Bomb]->height;
+    sprite->currentImage = sprite->images[0];
+
+    Bomb bomb =
+        {
+            .sprite = sprite,
+            .timer = timer_new(120, false)};
+
+    timer_start(&bomb.timer);
+
+    return bomb;
+}
+
+bool bomb_isEmpty(Bomb *bomb)
+{
+    return bomb->sprite == NULL;
+}
+
+void bomb_update(Level *level, Bomb *bomb)
+{
+    timer_update(&bomb->timer);
+
+    if (timer_isOut(&bomb->timer))
+    {
+        Vec2 bombPos = bomb->sprite->position;
+        bombPos.x += 8;
+        bombPos.y += 8;
+
+        Enemy **currentObject = NULL;
+        BOOM:
+        currentObject = NULL;
+        while ((currentObject = (Enemy **)utarray_next(level->enemies, currentObject)))
+        {
+            Vec2 enemyPosition = (*currentObject)->sprite->position;
+            enemyPosition.x += 8;
+            enemyPosition.y += 8;
+
+            Vec2 dir = vec2_fromPoints(bombPos, enemyPosition);
+            float distance = vec2_getLength(dir);
+            if (distance <= 32)
+            {
+                hp_substract(&(*currentObject)->health, 1);
+                goto BOOM;
+            }
+        }
+
+        level_deleteObject(level, bomb->sprite);
+        bomb->sprite = NULL;
+        tone(100, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE2);
+    }
+}
+
+BombManager bombManager_new()
+{
+    BombManager bombManager;
+    int len = (sizeof(bombManager.bombs) / sizeof(Bomb)) - 1;
+
+    for (int i = 0; i < len; ++i)
+    {
+        bombManager.bombs[i].sprite = NULL;
+        timer_reload(&bombManager.bombs[i].timer);
+    }
+
+    return bombManager;
+}
+
+void bombManager_addBomb(Level *level, Vec2 position)
+{
+    int len = (sizeof(level->bombManager.bombs) / sizeof(Bomb)) - 1;
+    if (len <= 0)
+        return;
+
+    for (int i = 0; i < len; i++)
+    {
+        Bomb *bomb = &level->bombManager.bombs[i];
+
+        if (bomb_isEmpty(bomb))
+        {
+            *bomb = bomb_new(level, position);
+            break;
+        }
+    }
+}
+
+void bombManager_update(Level *level, BombManager *bombManager)
+{
+    int len = (sizeof(bombManager->bombs) / sizeof(Bomb)) - 1;
+    if (len <= 0)
+        return;
+
+    for (int i = 0; i < len; i++)
+    {
+        Bomb *bomb = &bombManager->bombs[i];
+
+        if (bomb_isEmpty(bomb))
+            continue;
+
+        bomb_update(level, bomb);
+    }
+}
+
 void usePoition()
 {
     Player *player = player_getInstance();
@@ -67,14 +176,7 @@ bool setupBomb()
         return false;
     }
 
-    Sprite *e = level_spawnObject(player->level);
-    e->images = &player->level->imagePool->images[PoolIdx_Bomb];
-    e->position = spawnPoint;
-    e->imageCount = 1;
-    e->currentImage = 0;
-    e->size.x = player->level->imagePool->images[PoolIdx_Bomb]->width;
-    e->size.y = player->level->imagePool->images[PoolIdx_Bomb]->height;
-    e->currentImage = e->images[0];
+    bombManager_addBomb(player->level, spawnPoint);
 
     return true;
 }

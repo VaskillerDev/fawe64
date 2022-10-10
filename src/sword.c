@@ -47,7 +47,8 @@ Sword sword_new(Level *level)
 void sword_hit(EnemySwordAttackHitEvent event) {
   event.sword->hit = true;
   if (event.target == NULL) return;
-
+  if(event.target->health->swordResistance) return;
+  
   hp_substract(event.target->health, event.sword->damage);
   tone(150, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE1);
 }

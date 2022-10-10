@@ -20,9 +20,11 @@ typedef struct Hp {
      *  Максимальное здоровье
      */
      uint8_t maxPoints;
+
+     bool swordResistance;
 } Hp;
 
-Hp hp_new(uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints);
+Hp hp_new(uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints, bool swordResistance);
 
 /**
  * Отнять очки здоровья

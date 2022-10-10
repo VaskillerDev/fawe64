@@ -5,7 +5,8 @@ EnemyWarlock ENEMY_WARLOCK_PROTOTYPE = {
       .name = EnemyTypeName_Warlock,
       .attackName = EnemyAttackTypeName_Range,
       .bulletLifetime = 100,
-      .bulletSpeed = 1
+      .bulletSpeed = 1,
+      .swordResistance = false
     }
 };
 
@@ -14,7 +15,8 @@ EnemyBat ENEMY_BAT_PROTOTYPE = {
         .name = EnemyTypeName_Bat,
         .attackName = EnemyAttackTypeName_Melee,
         .bulletLifetime = 4,
-        .bulletSpeed = 4
+        .bulletSpeed = 4,
+        .swordResistance = false
     }
 };
 
@@ -23,7 +25,8 @@ EnemyRock ENEMY_ROCK_PROTOTYPE = {
         .name = EnemyTypeName_Rock,
         .attackName = EnemyAttackTypeName_None,
         .bulletLifetime = 1,
-        .bulletSpeed = 0
+        .bulletSpeed = 0,
+        .swordResistance = true
     }
 };
 
@@ -77,6 +80,7 @@ EnemyWarlock warlock_new(Enemy *enemy, Level *level)
 
     EnemyWarlock warlock = ENEMY_WARLOCK_PROTOTYPE;
     warlock.enemy = enemy;
+    enemy->sprite->health->swordResistance = warlock.metaData.swordResistance;
     enemyUnit_updateAttackNameForEnemy(&warlock);
     warlock.enemy->tactics = &warlock_behaviour;
     return warlock;
@@ -153,6 +157,7 @@ EnemyUnit bat_new(Enemy* enemy, Level* level) {
 
   EnemyBat bat = ENEMY_BAT_PROTOTYPE;
   bat.enemy = enemy;
+  enemy->sprite->health->swordResistance = bat.metaData.swordResistance;
   enemyUnit_updateAttackNameForEnemy(&bat);
   bat.enemy->tactics = &bat_behaviour;
   return bat;
@@ -209,6 +214,7 @@ EnemyUnit rock_new(Enemy* enemy, Level* level) {
 
   EnemyRock rock = ENEMY_ROCK_PROTOTYPE;
   rock.enemy = enemy;
+  enemy->sprite->health->swordResistance = rock.metaData.swordResistance;
   enemyUnit_updateAttackNameForEnemy(&rock);
   rock.enemy->tactics = &rock_behaviour;
   return rock;

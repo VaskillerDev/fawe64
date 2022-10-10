@@ -5,7 +5,7 @@ Enemy *new_enemy(Level *level)
   Enemy *enemy = (Enemy *)malloc(sizeof(Enemy));
   enemy->level = level;
   // todo: hp only for test. rm later
-  enemy->health = hp_new(1, enemy, 2, 1);
+  enemy->health = hp_new(1, enemy, 2, 1, false);
   enemy->sprite = NULL;
   enemy->prevActionState = -1;
   UnitMetaData metaData = {
@@ -56,8 +56,6 @@ void on_enemy_change_animation(EnemyActionStateChangedEvent event) {
 void enemy_death(HpPointsOverEvent eData)
 {
     Enemy *enemy = (Enemy *)eData.parent;
-    //trace("dead");
-    level_deleteObject(enemy->level, enemy->sprite);
     level_deleteEnemy(enemy->level, enemy);
 }
 

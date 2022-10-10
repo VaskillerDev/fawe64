@@ -97,7 +97,7 @@ typedef struct UT_array UT_array;
 #define utarray_reserve(a,by) do {                                            \
   if (((a)->i+(by)) > (a)->n) {                                               \
     char *utarray_tmp;                                                        \
-    while (((a)->i+(by)) > (a)->n) { (a)->n = ((a)->n ? (2*(a)->n) : 8); }    \
+    (a)->n = (a)->n + by;                                                     \
     utarray_tmp=(char*)realloc((a)->d, (a)->n*(a)->icd.sz);                   \
     if (utarray_tmp == NULL) {                                                \
     }                                                                         \

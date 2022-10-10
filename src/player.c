@@ -153,7 +153,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
   player.sprite->position = spawnPosition;
 
   sprite_initBoundingVolume(player.sprite, BOX, BoundingVolumeTag_Player);
-  player.health = hp_new(2, &player, 20, 20);
+  player.health = hp_new(2, &player, 20, 20, false);
 
   eventEmitter_on(&player.health.emitter, E_HP_POINTS_OVER, &on_player_death);
   eventEmitter_on(&player.sword.emitter, E_SWORD_ATTACK_HIT, &on_player_attack);
