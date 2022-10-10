@@ -4,10 +4,13 @@ import {Viewport} from "pixi-viewport";
 import TilePicker from "./TilePicker";
 import TileFlipper from "./TileFlipper";
 import PathModeToggler from "./PathModeToggler";
+import DownloadMapButton from "./DownloadMapButton";
+import PathModeInspector from "./PathModeInspector";
 
-const MAP_VIEW_SIZE = 2048
 const BLOCK_SIZE = 16;
 const CHUNK_SIZE = 8;
+const CHUNK_LEN_IN_MAP = 8;
+const MAP_VIEW_SIZE = BLOCK_SIZE * CHUNK_SIZE * CHUNK_LEN_IN_MAP;
 
 export default class GridViewGl extends Component {
     
@@ -25,10 +28,12 @@ export default class GridViewGl extends Component {
     pathPoint;
     
     isBrushMode = false;
+    
+    pathLineArr = [];
 
     createMap() {
-        for (let i = 0 ; i < 16; i++) {
-            for (let j = 0 ; j < 16; j++) {
+        for (let i = 0 ; i < CHUNK_LEN_IN_MAP; i++) {
+            for (let j = 0 ; j < CHUNK_LEN_IN_MAP; j++) {
                 let chunk  = '';
                 
                 for (let jj = 0 ; jj < 64; jj++) {
@@ -41,8 +46,8 @@ export default class GridViewGl extends Component {
     }
     
     loadMap() {
-        for (let i = 0 ; i < 16; i++) {
-            for (let j = 0 ; j < 16; j++) {
+        for (let i = 0 ; i < CHUNK_LEN_IN_MAP; i++) {
+            for (let j = 0 ; j < CHUNK_LEN_IN_MAP; j++) {
                 const chunk = localStorage.getItem(`${i}:${j}`);
                 const chunkData = chunk.split(',')
 
@@ -89,26 +94,63 @@ export default class GridViewGl extends Component {
         this.spawnTile(this.tiles, this.viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD, true)
     }
 
-    handlePathModePathEditorChanged(entityId, gridPosArr) {
-        this.pathPoint.clear();
-        let prevGridPos = undefined;
-        
-        for (const gridPos of gridPosArr) {
-            const x = gridPos.x * BLOCK_SIZE + BLOCK_SIZE / 2;
-            const y = gridPos.y * BLOCK_SIZE + BLOCK_SIZE / 2;
+    handlePathModePathEditorChanged(count, text) {
+        try {
+            const dataArr = text.toLowerCase().split('->'); // "bat->(0;0)->(1;0)->(2;2)"
 
-            if (prevGridPos) {
-                this.drawPathLineToPoint(this.pathPoint, undefined,
-                    prevGridPos.x * BLOCK_SIZE + BLOCK_SIZE / 2,
-                    prevGridPos.y * BLOCK_SIZE + BLOCK_SIZE / 2,
-                    x,
-                    y);
+            const entityId = dataArr[0]; // 'bat'
+            if (!ENTITY_LIST[entityId]) return;
+
+            const len = dataArr.length;
+            let gridPosArr = [];
+            for (let i = 1; i < len; i++) {
+                const rawPos = dataArr[i] // '(0;0)'
+                if (rawPos === '') return;
+                const pos = this.rawPosToNormalPos(rawPos);
+                if (!pos) return;
+                gridPosArr.push(pos);
             }
-            this.drawPathPoint(this.pathPoint, undefined, x, y);
-            
-            prevGridPos = gridPos;
-        }
+
+            this.processHandlePathModePathEditorChanged(entityId, count, gridPosArr);
+        } catch (e) {}
+    }
+
+    rawPosToNormalPos(rawPos) {
+        const lastChar = rawPos.length-1;
+        if (!(rawPos.charAt(0) === '(' && rawPos.charAt(lastChar) === ')')) return;
+
+        let pos = rawPos.substring(1, lastChar).split(';');
+        return {x: Number.parseInt(pos[0]), y: Number.parseInt(pos[1])};
+    }
+
+    processHandlePathModePathEditorChanged(entityId, count, gridPosArr) {
+        this.pathLineArr[count] = gridPosArr;
+        this.pathPoint.clear();
         
+        for (const _gridPosArr of this.pathLineArr) {
+            if (!_gridPosArr) continue;
+            let prevGridPos = undefined;
+            for (const gridPos of _gridPosArr) {
+
+                const x = gridPos.x * BLOCK_SIZE + BLOCK_SIZE / 2;
+                const y = gridPos.y * BLOCK_SIZE + BLOCK_SIZE / 2;
+
+                if (prevGridPos) {
+                    this.drawPathLineToPoint(this.pathPoint, undefined,
+                        prevGridPos.x * BLOCK_SIZE + BLOCK_SIZE / 2,
+                        prevGridPos.y * BLOCK_SIZE + BLOCK_SIZE / 2,
+                        x,
+                        y);
+                }
+                this.drawPathPoint(this.pathPoint, undefined, x, y);
+
+                prevGridPos = gridPos;
+            }
+        }
+    }
+
+    handlePathModeTogglerChanged(isEnable) {
+        this.setState({isPathInspectorEnabled: isEnable})
     }
     
     handleCurrentPickedTileIndex(index) {
@@ -145,8 +187,14 @@ export default class GridViewGl extends Component {
         
         this.handlePathModeInspectorInit = this.handlePathModeInspectorInit.bind(this);
         this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
+        this.handlePathModeTogglerChanged = this.handlePathModeTogglerChanged.bind(this);
         this.handlePathModePathEditorChanged = this.handlePathModePathEditorChanged.bind(this);
+        
         this.handleFlipTile = this.handleFlipTile.bind(this);
+        
+        this.state = {
+            isPathInspectorEnabled: false
+        }
     }
     
     componentDidMount() {
@@ -399,7 +447,7 @@ export default class GridViewGl extends Component {
 
     drawGridLine(line, viewport,x0,y0,x1,y1) {
         const widthLine = 1;
-        const color = 0xffffff
+        const color = 0xffffff;
         
         line.lineStyle(widthLine, color, 0.2, 0.5,true)
             .moveTo(x0, y0)
@@ -429,6 +477,13 @@ export default class GridViewGl extends Component {
     }
 
     render() {
+        const InspectorComponent = this.state.isPathInspectorEnabled ?
+            (<PathModeInspector
+                handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}
+                handlePathModeInspectorInit={this.handlePathModeInspectorInit}
+            />)
+            : (<Fragment/>);
+        
         return (
             <Fragment>
                 <div id={"gridViewGl"}>
@@ -441,11 +496,23 @@ export default class GridViewGl extends Component {
                 <PathModeToggler 
                     handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}
                     handlePathModeInspectorInit = {this.handlePathModeInspectorInit}
+                    handlePathModeTogglerChanged = {this.handlePathModeTogglerChanged}
                 />
+                <DownloadMapButton/>
+                    {InspectorComponent}
+                </div>
+                <div >
+               
                 </div>
             </Fragment>
         );
     }
+}
+
+const ENTITY_LIST = {
+    "bat": true,
+    "cannon": true,
+    "warlock": true,
 }
 
 

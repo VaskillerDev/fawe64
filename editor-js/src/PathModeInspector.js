@@ -11,10 +11,6 @@ export default class PathModeInspector extends React.Component {
         this.handlePathModeInspectorPathEditorInit = this.handlePathModeInspectorPathEditorInit.bind(this);
     }
     
-    componentDidMount() {
-        this.init();
-    }
-    
     getPathTextArr() {
         const rawPathTextArr = localStorage.getItem(PATH_TEXT_ARR_KEY) ?? [];
         return typeof rawPathTextArr === "string"
@@ -38,18 +34,18 @@ export default class PathModeInspector extends React.Component {
                 const inputElem = elem.firstChild;
                 if (inputElem.id !== ""+count) continue;
                 inputElem.value = pathTextArr[count] ?? "";
-                this.props.handlePathModePathEditorChanged(inputElem.value);
+                this.props.handlePathModePathEditorChanged(count, inputElem.value);
             }
         }
     }
     
     handlePathModePathEditorChanged(count, text) {
-        this.props.handlePathModePathEditorChanged(text);
+        this.props.handlePathModePathEditorChanged(count, text);
         this.savePathTextArr(count, text);
     }
     
     render() {
-        const pathModeInspectorPathEditorList = [0,1,2];
+        const pathModeInspectorPathEditorList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
         
         return (
             <nav className={"App-path-mode-inspector"}>
