@@ -188,6 +188,8 @@ export default class GridViewGl extends Component {
         this.state = {
             isPathInspectorEnabled: false
         }
+        
+        
     }
     
     componentDidMount() {

@@ -53,6 +53,8 @@ export default class DownloadMapButton extends React.Component {
         fileString += "};\n\n"
         
         const pathTextArr = JSON.parse(localStorage.getItem(PATH_TEXT_ARR_KEY));
+        if (!pathTextArr) return fileString;
+        
         fileString += "const uint8_t LEVEL_PATH\n" +
             "[32]// количество возможных записей \n" +
             "[2 + 1 + (5 * 2)] // CHUNK_POS + ENTITY_ID + PATH_PER_STEP * 2 - id существа сколько шагов доступно для одного маршрута, где каждая пара [x,y]\n" +

@@ -2,6 +2,11 @@ import './App.css';
 import GridViewGl from "./GridViewGl";
 import React from "react";
 import GridPositionComponent from "./GridPositionComponent";
+import SaveLocalStorage from "./SaveLocalStorage";
+import LoadToLocalStorage from "./LoadToLocalStorage";
+
+window.Save = SaveLocalStorage;
+window.Load = LoadToLocalStorage;
 
 class App extends React.Component {
 

@@ -45,7 +45,10 @@ export default class PathModeInspector extends React.Component {
     }
     
     render() {
-        const pathModeInspectorPathEditorList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+        let pathModeInspectorPathEditorList = [];
+        for (let i = 0; i < 32; i++) {
+            pathModeInspectorPathEditorList.push(i);
+        }
         
         return (
             <nav className={"App-path-mode-inspector"}>
