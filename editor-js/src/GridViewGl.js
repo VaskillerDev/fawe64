@@ -6,6 +6,7 @@ import TileFlipper from "./TileFlipper";
 import PathModeToggler from "./PathModeToggler";
 import DownloadMapButton from "./DownloadMapButton";
 import PathModeInspector from "./PathModeInspector";
+import rawPosToNormalPos from "./util/rawPosToNormalPos";
 
 const BLOCK_SIZE = 16;
 const CHUNK_SIZE = 8;
@@ -106,21 +107,13 @@ export default class GridViewGl extends Component {
             for (let i = 1; i < len; i++) {
                 const rawPos = dataArr[i] // '(0;0)'
                 if (rawPos === '') return;
-                const pos = this.rawPosToNormalPos(rawPos);
+                const pos = rawPosToNormalPos(rawPos);
                 if (!pos) return;
                 gridPosArr.push(pos);
             }
 
             this.processHandlePathModePathEditorChanged(entityId, count, gridPosArr);
         } catch (e) {}
-    }
-
-    rawPosToNormalPos(rawPos) {
-        const lastChar = rawPos.length-1;
-        if (!(rawPos.charAt(0) === '(' && rawPos.charAt(lastChar) === ')')) return;
-
-        let pos = rawPos.substring(1, lastChar).split(';');
-        return {x: Number.parseInt(pos[0]), y: Number.parseInt(pos[1])};
     }
 
     processHandlePathModePathEditorChanged(entityId, count, gridPosArr) {
@@ -514,6 +507,3 @@ const ENTITY_LIST = {
     "cannon": true,
     "warlock": true,
 }
-
-
-

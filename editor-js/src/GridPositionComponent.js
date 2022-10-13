@@ -1,6 +1,5 @@
 ﻿import React, {Fragment} from "react";
-
-const CHUNK_SIZE = 8;
+import gridPosToChunk from "./util/gridPosToChunk";
 
 export default class GridPositionComponent extends React.Component {
     
@@ -8,13 +7,10 @@ export default class GridPositionComponent extends React.Component {
         super(props);
     }
     
-    gridPosToChunk (pos) {
-        return Math.floor(pos / CHUNK_SIZE)
-    }
-    
     render() {
-        const chunkX = this.gridPosToChunk(this.props.x)
-        const chunkY = this.gridPosToChunk(this.props.y);
+        const chunkPos = gridPosToChunk(this.props);
+        const chunkX = chunkPos.x;
+        const chunkY = chunkPos.y;
         
         return ( <Fragment>
         <p style={{position: "absolute", left: '32px', top: '96%', fontSize: 'small', backgroundColor: 'black'}}> 

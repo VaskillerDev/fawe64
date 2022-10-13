@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import PathModeInspectorPathEditor from "./PathModeInspectorPathEditor";
 
-const PATH_TEXT_ARR_KEY = "pathTextArr";
+export const PATH_TEXT_ARR_KEY = "pathTextArr";
 
 export default class PathModeInspector extends React.Component {
     
