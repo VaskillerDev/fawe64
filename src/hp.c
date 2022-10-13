@@ -3,13 +3,14 @@
 //
 #include "libs.h"
 
-Hp hp_new (uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints)
+Hp hp_new (uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints, bool swordResistance)
 {
   struct Hp hp = {
       .maxPoints = maxPoints,
       .currentPoints = currentPoints,
       .id = id,
-      .parent = parent
+      .parent = parent,
+      .swordResistance = swordResistance
   };
 
   hp.emitter = eventEmitter_new();

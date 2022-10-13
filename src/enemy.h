@@ -22,6 +22,7 @@ typedef struct UnitMetaData {
 
     uint_8 bulletSpeed;
     uint_8 bulletLifetime;
+    bool swordResistance;
 } UnitMetaData;
 
 typedef enum EnemyMovementDirection {
@@ -40,15 +41,14 @@ struct Enemy
 {
     Image* goFrames[3];
     Image* attackFrame[3];
-
+    void* tactics;
     Level* level;
     struct Sprite* sprite;
+  
     Hp health;
-
-    void* tactics;
     Vec2 moveDir;
-    uint_32 movDist;
-    uint_32 delay;
+    uint_8 movDist;
+    uint_8 delay;
 
     UnitMetaData metaData;
 

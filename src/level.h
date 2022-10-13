@@ -6,17 +6,18 @@
  */
 typedef struct Level
 {
-    EventEmitter emitter;
     UT_array* objects;
     UT_array* enemies;
     TiledLevelChunk* levelChunk;
     ImagePool* imagePool;
+
+    EventEmitter emitter;
     BulletManager bulletManager;
-
-    bool pause;
-
-    bool isTilesActive;
+    BombManager bombManager;
     Dungeon dungeon;
+   
+    bool pause;
+    bool isTilesActive;
 } Level;
 
 /**
@@ -24,9 +25,9 @@ typedef struct Level
  */
 typedef struct LoadLevelArgs {
     Level* level;
-    Vec2 newChunkPosition;
     ImagePool* imagePool;
     TiledLevelChunk* newChunk;
+    Vec2 newChunkPosition;
 } LoadLevelArgs;
 
 typedef struct LoadDungeonArgs {

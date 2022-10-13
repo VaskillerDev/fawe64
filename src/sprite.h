@@ -7,7 +7,9 @@ struct Sprite
 {
     uint_32 currentImageIndex;
     Image* currentImage;
+    Hp* health;
     Image** images;
+    
     uint_32 imageCount;
     uint_32 frameCounter;
     uint_32 animDelay;
@@ -16,12 +18,9 @@ struct Sprite
     Vec2 size;
     BoundingVolume boundingVolume;
 
-    Hp* health;
-
     bool isTile;
-
     bool isHide;
-    bool isFlipH ;
+    bool isFlipH;
 };
 
 typedef struct Sprite Sprite;

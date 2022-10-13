@@ -11,6 +11,21 @@
 static Player *globalPlayerRef = NULL;
 static Player globalPlayer = {};
 
+bool player_checkTileCollision(Sprite *player, Level *level, Vec2 dir)
+{
+  Vec2 originalPos = vec2_new(player->position.x, player->position.y);
+  Vec2 pos = vec2_new((originalPos.x - 24 + 8) / 16, (originalPos.y - 24 + 8) / 16);
+  Vec2 targetPos = vec2_add(pos, dir);
+
+  if(targetPos.x < 0 || targetPos.x > 7)
+    return true;
+
+  if(targetPos.y < 0 || targetPos.y > 7)
+    return true;
+
+  return level->levelChunk->tiles[targetPos.y * 8 + targetPos.x].collision;
+}
+
 bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
 {
   if (player->position.x <= 23 && dir.x == -1)
@@ -129,7 +144,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
       },
       .sword = sword_new(level),
       .attackAnimationTimeout = ATTACK_ANIMATION_TIMEOUT_VALUE,
-      .itemsCount = {10, 0, 0},
+      .itemsCount = {10, 10, 10},
       .selectorIndex = PlayerItem_Count};
 
   Sprite *playerSprite = level_spawnObject(level);
@@ -138,7 +153,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
   player.sprite->position = spawnPosition;
 
   sprite_initBoundingVolume(player.sprite, BOX, BoundingVolumeTag_Player);
-  player.health = hp_new(2, &player, 20, 20);
+  player.health = hp_new(2, &player, 20, 20, false);
 
   eventEmitter_on(&player.health.emitter, E_HP_POINTS_OVER, &on_player_death);
   eventEmitter_on(&player.sword.emitter, E_SWORD_ATTACK_HIT, &on_player_attack);
@@ -149,7 +164,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
   eventEmitter_on(&player.collisionBulletTimer.emitter, E_TIMER_EXPIRED, &on_collision_bullet_timer_expired);
 
   player.itemImages[0] = player.goBottomFrames[0];
-  player.itemImages[1] = player.sword.bottomSwordFrames[0];
+  player.itemImages[1] = level->imagePool->images[PoolIdx_Bomb];
   player.itemImages[2] = player.goBottomFrames[0];
 
   return player;
@@ -317,7 +332,7 @@ void player_update(Player *player, Level *level)
     button_1_pressTime = 0;
   }
 
-  if(!level->pause)
+  if (!level->pause)
     ++pauseOff_time;
 
   if (button_2)
@@ -640,16 +655,23 @@ void player_useItem()
     return;
   }
 
-  --player->itemsCount[player->selectorIndex];
-
   switch (player->selectorIndex)
   {
   case PlayerItem_Potion:
-      usePoition();
+    usePoition();
     break;
-  
+  case PlayerItem_Bomb:
+    if(!setupBomb())
+      return;
+    break;
+case PlayerItem_PlasticExplosive:
+    if(!setupDirectedBomb())
+      return;
+    break;
+
   default:
     break;
   }
 
+  --player->itemsCount[player->selectorIndex];
 }

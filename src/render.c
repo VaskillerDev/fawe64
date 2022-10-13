@@ -32,7 +32,7 @@ void DrawText(char *content, int_32 x, int_32 y, uint_16 colors[4])
 void DrawBoundingVolume(BoundingVolume *bv)
 {
     SetDrawColor_1(0);
-    SetDrawColor_2(2);
+    SetDrawColor_2(3);
 
     if (bv->shape == SPHERE)
         oval(bv->position->x - bv->size.x, bv->position->y - bv->size.x, bv->size.x * 2, bv->size.x * 2);
