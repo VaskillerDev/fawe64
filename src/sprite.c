@@ -1,4 +1,5 @@
 #include "libs.h"
+#include "allocator.h"
 
 #define DEBUG_BOUNDING_VOLUME 1
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
@@ -6,7 +7,7 @@
 
 Sprite *sprite_new(Image *image)
 {
-    Sprite *newSprite = (Sprite *)malloc(sizeof(Sprite));
+    Sprite *newSprite = (Sprite *)allocate(sizeof(Sprite));
 
     newSprite->animDelay = 0;
     newSprite->currentImage = NULL;
@@ -24,17 +25,17 @@ Sprite *sprite_new(Image *image)
 
 void sprite_delete(Sprite *sprite)
 {
-    if (sprite->images)
+    if (sprite->images && sprite->imageCount > 1)
     {
-        free(sprite->images);
+        //alloc_free(sprite->images);
     }
 
     if (sprite->health)
     {
-        free(sprite->health);
+        //alloc_free(sprite->health);
     }
 
-    free(sprite);
+    alloc_free(sprite);
 }
 
 Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount, uint_32 animDelay)
@@ -48,10 +49,10 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     sprite->isHide = false;
     if (sprite->imageCount > 0)
     {
-        sprite->images = (Image **)malloc(sizeof(Image *) * imageCount);
+        sprite->images = images;
 
-        for (uint_32 i = 0; i < imageCount; ++i)
-            sprite->images[i] = images[i];
+        //for (uint_32 i = 0; i < imageCount; ++i)
+         //   sprite->images[i] = images[i];
     }
 
     sprite->currentImage = *sprite->images;
