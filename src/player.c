@@ -208,7 +208,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
   eventEmitter_on(&player.emitter, E_PLAYER_ENTER_DUNGEON, &on_player_enter_dungeon);
   eventEmitter_on(&player.collisionBulletTimer.emitter, E_TIMER_EXPIRED, &on_collision_bullet_timer_expired);
 
-  player.itemImages[0] = player.goBottomFrames[0];
+  player.itemImages[0] = level->imagePool->images[PoolIdx_Potion];
   player.itemImages[1] = level->imagePool->images[PoolIdx_Bomb];
   player.itemImages[2] = player.goBottomFrames[0];
 
