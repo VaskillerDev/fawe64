@@ -53,6 +53,7 @@ export default class PathModeInspector extends React.Component {
         return (
             <nav className={"App-path-mode-inspector"}>
                 <h1>Inspector</h1>
+                <p style={{fontSize: "x-small"}}>entity: warlock , bat , rock</p>
                 <p style={{fontSize: "x-small"}}>bat->(0;0)->(1;0)->(2;2)</p>
             <dl id={`inspector-path-editor-list`}>
                 {pathModeInspectorPathEditorList.map(i => {

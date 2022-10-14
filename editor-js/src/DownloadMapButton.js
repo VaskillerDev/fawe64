@@ -4,6 +4,7 @@ import {PATH_TEXT_ARR_KEY} from "./PathModeInspector";
 import rawPosToNormalPos from "./util/rawPosToNormalPos";
 import gridPosToChunk from "./util/gridPosToChunk";
 import entityIdToNumber from "./util/entityIdToNumber";
+import globalPosToLocalPos from "./util/globalPosToLocalPos";
 
 const EMPTY_NUMBER = 101;
 
@@ -34,7 +35,7 @@ export default class DownloadMapButton extends React.Component {
         for(let i = 0; i < CHUNK_LEN_IN_MAP; i++) {
             fileString += `{ // ${i}\n`;
             
-            for(let j = 0; j < CHUNK_LEN_IN_MAP; j++) {
+            for(let j = CHUNK_LEN_IN_MAP-1; j >= 0; j--) {
                 fileString += "{";
                 const chunk = localStorage.getItem(`${i}:${j}`);
                 let chunkString= chunk === "-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1" 
@@ -61,7 +62,6 @@ export default class DownloadMapButton extends React.Component {
             "= {\n"
         
         let pathCount = 0;
-        
         for (const path of pathTextArr) {
             if (path === "") continue;
             const pathArr = path.split('->');
@@ -78,7 +78,9 @@ export default class DownloadMapButton extends React.Component {
             let i = 0;
             for (const rawPos of _pathArr) {
                 const pos = rawPosToNormalPos(rawPos);
-                fileString += `${pos.x},${pos.y},`;
+                const localPos = globalPosToLocalPos(chunkPos, pos);
+                
+                fileString += `${localPos.x},${localPos.y},`;
                 i+=1;
             }
             
@@ -92,14 +94,45 @@ export default class DownloadMapButton extends React.Component {
         }
         
         if (pathCount <= 32) {
-            if (pathCount <= 32) {
-                for (let ii = pathCount; ii < 32; ii++) {
-                    fileString += `{101,101,101,101,101,101,101,101,101,101,101,101,101},\n`;
-                }
+            for (let ii = pathCount; ii < 32; ii++) {
+                fileString += `{101,101,101,101,101,101,101,101,101,101,101,101,101},\n`;
             }
         }
         
         fileString += "};\n";
+        
+        let rockExist = false;
+        let rockCount = 0;
+        for (let gridPosX = 0; gridPosX < 64; gridPosX++) {
+            for (let gridPosY = 0; gridPosY < 64; gridPosY++) {
+                const mbRock = localStorage.getItem(`rock:${gridPosX}:${gridPosY}`);
+                if (mbRock === null) continue;
+                if (!rockExist) {
+                    fileString += "const uint8_t ROCK_LEVEL [32][2 + 2] = { // CHUNK_POS + LOCAL_POS\n"
+                    rockExist = true;
+                }
+                
+                const [localPosX,localPosY] = mbRock.split(',');
+                const localPos = {
+                    x: Number.parseInt(localPosX),
+                    y: Number.parseInt(localPosY)
+                }
+                
+                const chunkPos = gridPosToChunk({x: gridPosX, y: gridPosY});
+                
+                fileString += `{${chunkPos.x},${chunkPos.y},${localPos.x},${localPos.y}},\n`
+                rockCount+=1;
+            }
+        }
+
+        if (rockCount <= 32) {
+            for (let ii = rockCount; ii < 32; ii++) {
+                fileString += `{101,101,101,101},\n`;
+            }
+        }
+        
+        fileString += "};\n"
+        
         return fileString;
     }
     
