@@ -133,7 +133,7 @@ void level_draw(Level *level)
     sprite_draw(*currentObject);
     if ((*currentObject)->imageCount == 0 && (*currentObject)->size.x > 16)
     {
-     // trace("a");
+      // trace("a");
     }
   }
   bulletManager_draw(&level->bulletManager);
@@ -441,6 +441,8 @@ bool level_processChunkMoving(LoadLevelArgs *args, Player *player)
 
 void level_spawnEnemies(Level *level)
 {
+  level_spawnRocks(level);
+
   uint_32 enemyCount = RANDOMIZE(0, 0);
 
   for (uint_32 i = 0; i < enemyCount; i++)
@@ -465,6 +467,20 @@ void level_spawnEnemies(Level *level)
       HpPointsOverEvent e;
       e.parent = newEnemy.enemy;
       enemy_death(e);
+    }
+  }
+}
+
+void level_spawnRocks(Level *level)
+{
+  for (unsigned long i = 0; i < sizeof(ROCK_LEVEL) / (sizeof(uint8_t) * 4); ++i)
+  {
+    if (level->levelChunk->x == ROCK_LEVEL[i][0] && level->levelChunk->y == ROCK_LEVEL[i][1])
+    {
+      EnemyUnit newEnemy = level_spawnUnit(level, EnemyTypeName_Rock);
+
+      newEnemy.enemy->sprite->position.x = 24 +  16 * ROCK_LEVEL[i][2];
+      newEnemy.enemy->sprite->position.y = 24 + 16 * ROCK_LEVEL[i][3];
     }
   }
 }
