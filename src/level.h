@@ -16,6 +16,8 @@ typedef struct Level
     BombManager bombManager;
     Dungeon dungeon;
    
+    uint_8 destroyedRocks[32][4];
+
     bool pause;
     bool isTilesActive;
 } Level;
@@ -98,3 +100,4 @@ void on_dungeon_enter(BoundingVolumeCollidedEvent event);
 
 void on_level_border_contact(LevelBorderContactEvent event);
 
+void level_addDestroyedRock(Level* level, Vec2 pos);

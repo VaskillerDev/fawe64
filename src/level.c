@@ -24,6 +24,11 @@ Level *level_new()
   eventEmitter_on(&level->emitter, E_LEVEL_BORDER_CONTACT, &on_level_border_contact);
   eventEmitter_on(&level->emitter, E_ENEMY_ATTACK_BULLET, &on_level_enemy_attack_bullet);
 
+  for (uint_8 i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint_8)); ++i)
+  {
+    level->destroyedRocks[i][0] = 100;
+  }
+
   return level;
 }
 
@@ -477,9 +482,28 @@ void level_spawnRocks(Level *level)
   {
     if (level->levelChunk->x == ROCK_LEVEL[i][0] && level->levelChunk->y == ROCK_LEVEL[i][1])
     {
+
+      bool destroyed = false;
+
+      for(unsigned long j = 0; j < sizeof(level->destroyedRocks) / (sizeof(uint8_t) * 4); ++j)
+      {
+        if(level->destroyedRocks[j][0] == level->levelChunk->x 
+        && level->destroyedRocks[j][1] == level->levelChunk->y
+        && level->destroyedRocks[j][2] == ROCK_LEVEL[i][2]
+        && level->destroyedRocks[j][3] == ROCK_LEVEL[i][3])
+        {
+          destroyed = true;
+        }
+      }
+
+    if(destroyed)
+    {
+      continue;
+    }
+
       EnemyUnit newEnemy = level_spawnUnit(level, EnemyTypeName_Rock);
 
-      newEnemy.enemy->sprite->position.x = 24 +  16 * ROCK_LEVEL[i][2];
+      newEnemy.enemy->sprite->position.x = 24 + 16 * ROCK_LEVEL[i][2];
       newEnemy.enemy->sprite->position.y = 24 + 16 * ROCK_LEVEL[i][3];
     }
   }
@@ -555,5 +579,21 @@ Vec2 level_directionAsStartPosition(ChunkMovingDirection direction)
     return vec2_new(0, -1);
   default:
     return vec2_new(0, 0);
+  }
+}
+
+void level_addDestroyedRock(Level *level, Vec2 pos)
+{
+  for (uint_8 i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint_8)); ++i)
+  {
+    if (level->destroyedRocks[i][0] == 100)
+    {
+      level->destroyedRocks[i][0] = level->levelChunk->x;
+      level->destroyedRocks[i][1] = level->levelChunk->y;
+      level->destroyedRocks[i][2] = (pos.x - 24) / 16;
+      level->destroyedRocks[i][3] = (pos.y - 24) / 16;
+
+      break;
+    }
   }
 }

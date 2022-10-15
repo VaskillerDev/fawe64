@@ -54,6 +54,7 @@ void bomb_update(Level *level, Bomb *bomb)
             if (distance <= 32)
             {
                 hp_substract(&(*currentObject)->health, 1);
+                level_addDestroyedRock(level, enemyPosition);
                 goto BOOM;
             }
         }
@@ -104,6 +105,7 @@ void directedBomb_update(Level *level, Bomb *bomb)
             if (distance <= 8)
             {
                 hp_substract(&(*currentObject)->health, 1);
+                level_addDestroyedRock(level, enemyPosition);
                 goto BOOM;
             }
         }
