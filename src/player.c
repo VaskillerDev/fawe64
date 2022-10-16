@@ -365,6 +365,7 @@ void player_update(Player *player, Level *level)
     {
       level->pause = false;
       pauseOff_time = 0;
+      tone(500, 1 | (10 << 8), 2, TONE_TRIANGLE | TONE_MODE4);
     }
   }
   else
@@ -415,6 +416,7 @@ void player_update(Player *player, Level *level)
             --player->selectorIndex;
           }
         }
+        tone(1500, 1 | (10 << 8), 1, TONE_TRIANGLE | TONE_MODE4);
       }
     }
     else
@@ -444,6 +446,7 @@ void player_update(Player *player, Level *level)
             ++player->selectorIndex;
           }
         }
+        tone(1500, 1 | (10 << 8), 1, TONE_TRIANGLE | TONE_MODE4);
       }
     }
     else
