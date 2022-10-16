@@ -16,7 +16,8 @@ Enemy *new_enemy(Level *level)
   enemy->metaData = metaData;
   enemy->emitter = eventEmitter_new();
   enemy->moveDir = vec2_new (0,0);
-
+  enemy->navRoot = NULL;
+  
   eventEmitter_on (&enemy->emitter, E_ENEMY_HAS_GOT_BULLET_COLLISION, &on_enemy_has_got_bullet_collision);
   eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &on_enemy_change_animation);
   eventEmitter_on (&enemy->emitter, E_ENEMY_ATTACK_BULLET, &on_enemy_attack_bullet);

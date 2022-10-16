@@ -23,6 +23,7 @@
 #include "sprite.h"
 #include "game.h"
 #include "hp.h"
+#include "navigation.h"
 #include "enemy.h"
 #include "render.h"
 #include "sword.h"

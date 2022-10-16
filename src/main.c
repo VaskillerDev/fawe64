@@ -64,6 +64,7 @@ void update ()
               level = level_new ();
               level_setImagePool (level, &imgPool);
               level_setChunk (level, vec2_new (0, 0), &chunk);
+              level_loadNavRoots(level);
               level_spawnEnemies(level);
 
               const struct PlayerInitInstanceArgs args = {

@@ -44,7 +44,8 @@ struct Enemy
     void* tactics;
     Level* level;
     struct Sprite* sprite;
-  
+    struct NavRoot* navRoot;
+
     Hp health;
     Vec2 moveDir;
     uint_8 movDist;

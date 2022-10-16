@@ -53,17 +53,6 @@ bool CheckCollision(BoundingVolume *bv1, BoundingVolume *bv2)
 
         on_collision(bv1, bv2);
         return true;
-
-        // if ((rect2[0].y >= rect1[0].y && rect2[0].y <= rect1[3].y) ||
-        //     (rect2[3].y >= rect1[0].y && rect2[3].y <= rect1[3].y))
-        // {
-        //     if ((rect2[1].x >= rect1[1].x && rect2[1].x <= rect1[0].x) ||
-        //         (rect2[0].x >= rect1[1].x && rect2[0].x <= rect1[0].x))
-        //     {
-        //         on_collision(bv1, bv2);
-        //         return true;
-        //     }
-        // }
     }
     else if (bv1->shape != bv2->shape)
     {

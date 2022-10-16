@@ -709,7 +709,7 @@ void player_useItem()
     if (!setupBomb())
       return;
     break;
-  case PlayerItem_PlasticExplosive:
+  case PlayerItem_DirectBomb:
     if (!setupDirectedBomb())
       return;
     break;

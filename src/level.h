@@ -4,6 +4,7 @@
 /**
  * Класс, отвечающий за игровой уровень
  */
+
 typedef struct Level
 {
     UT_array* objects;
@@ -20,6 +21,9 @@ typedef struct Level
 
     bool pause;
     bool isTilesActive;
+
+    NavRoot navRoots[4];
+    uint_8 navRootCount;
 } Level;
 
 /**
@@ -56,7 +60,7 @@ void level_setChunk(Level* level, Vec2 chunkCoords, TiledLevelChunk* chunk);
 void level_setImagePool(Level* level, ImagePool* pool);
 struct Sprite* level_spawnObject(Level *level);
 struct Enemy* level_spawnEnemy(Level *level);
-struct EnemyUnit level_spawnUnit(Level *level, EnemyTypeName type);
+struct EnemyUnit level_spawnUnit(Level *level, EnemyTypeName type, NavRoot* navRoot);
 void level_draw(Level* level);
 Enemy* level_findNearestEnemy(Level* level, Vec2 position);
 Sprite* level_findNearestTile(Level* level, Vec2 position);
@@ -78,6 +82,9 @@ bool level_isDone(Level* level);
 
 void level_spawnEnemies(Level* level);
 void level_spawnRocks(Level* level);
+
+void level_loadNavRoots(Level* level);
+
 /**
  * Загрузить уровень (тайлы, противников, героя)
  * @param args

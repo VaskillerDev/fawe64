@@ -18,7 +18,7 @@ enum PlayerItemType
 {
     PlayerItem_Potion,
     PlayerItem_Bomb,
-    PlayerItem_PlasticExplosive,
+    PlayerItem_DirectBomb,
     PlayerItem_Count
 };
 
