@@ -75,7 +75,7 @@ void level_spawnCollisionByTiles(Level* level);
 bool level_isDone(Level* level);
 
 void level_spawnEnemies(Level* level);
-
+void level_spawnRocks(Level* level);
 /**
  * Загрузить уровень (тайлы, противников, героя)
  * @param args

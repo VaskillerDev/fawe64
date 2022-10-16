@@ -1,8 +1,9 @@
 #include "libs.h"
+#include "allocator.h"
 
 Enemy *new_enemy(Level *level)
 {
-  Enemy *enemy = (Enemy *)malloc(sizeof(Enemy));
+  Enemy *enemy = (Enemy *)allocate(sizeof(Enemy));
   enemy->level = level;
   // todo: hp only for test. rm later
   enemy->health = hp_new(1, enemy, 2, 1, false);

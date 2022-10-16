@@ -1,18 +1,17 @@
 #include "libs.h"
 #include "enemy.h"
 #include "enemy_unit.h"
+#include "allocator.h"
 
 UT_icd object_icd = {sizeof(Sprite *), NULL, NULL, NULL};
 UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
 
 Level *level_new()
 {
-  Level *level = (Level *)malloc(sizeof(Level));
+  Level *level = (Level *)allocate(sizeof(Level));
 
   utarray_new(level->objects, &object_icd);
-  utarray_reserve(level->objects, 100);
   utarray_new(level->enemies, &enemy_icd);
-  utarray_reserve(level->enemies, 20);
   level->objects->d = 0;
   level->objects->i = 0;
   level->objects->n = 0;
@@ -65,8 +64,13 @@ DELETE_ENEMY:
   }
 
   Sprite **currentObject = NULL;
+DELETE_OBJECT:
+  currentObject = NULL;
   while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
-    sprite_delete(*currentObject);
+  {
+    level_deleteObject(level, *currentObject);
+    goto DELETE_OBJECT;
+  }
 
   level->bombManager = bombManager_new();
 
@@ -129,7 +133,7 @@ void level_draw(Level *level)
     sprite_draw(*currentObject);
     if ((*currentObject)->imageCount == 0 && (*currentObject)->size.x > 16)
     {
-      trace("a");
+      // trace("a");
     }
   }
   bulletManager_draw(&level->bulletManager);
@@ -219,11 +223,11 @@ void level_loadDungeon(LoadDungeonArgs *args)
 
 void level_spawnCollisionByTiles(Level *level)
 {
+  bool collisionMap[8][8] = {0};
+
   for (int i = 0; i < 64; ++i)
   {
     uint_8 tileCollision = level->levelChunk->tiles[i].collision;
-
-    Sprite *newCollisionBox = NULL;
 
     if (tileCollision)
     {
@@ -235,35 +239,93 @@ void level_spawnCollisionByTiles(Level *level)
 
       int edges = 0;
       edges += (i % 8 == 0);
-      edges += (i % 8 == 7);
-      edges += i < 8 || i > 55;
+      if (i < 8)
+      {
+        edges += (i % 8 == 7);
+      }
+      else
+      {
+        edges += (i % 8 == 1);
+      }
+      edges += (i <= 7) || (i > 55);
 
-      if(4 - edges <= collisionDirs)
+      if (4 - edges <= collisionDirs)
         continue;
 
-      newCollisionBox = level_spawnObject(level);
-      newCollisionBox->size = vec2_new(16, 16);
-      newCollisionBox->position.y = i / 8 * 16 + 24;
-      newCollisionBox->position.x = i % 8 * 16 + 24;
-      newCollisionBox->currentImage = NULL;
-      newCollisionBox->animDelay = 0;
-      newCollisionBox->images = NULL;
-      newCollisionBox->imageCount = 0;
-      newCollisionBox->health = NULL;
-      newCollisionBox->isTile = true;
+      collisionMap[i / 8][i - i / 8 * 8] = true;
+    }
+  }
 
+  Sprite *newCollisionBox = NULL;
+
+  for (int i = 0; i < 8; ++i)
+  {
+    if (newCollisionBox)
+    {
       sprite_initBoundingVolume(newCollisionBox, BOX, BoundingVolumeTag_Tile);
       newCollisionBox->boundingVolume.emitter = (const struct EventEmitter){0};
       newCollisionBox->boundingVolume.isEmitterExist = false;
-    }
 
-    if (level->levelChunk->tiles[i].id == 4)
+      if (level->levelChunk->tiles[i].id == 4)
+      {
+        newCollisionBox->boundingVolume.isEmitterExist = true;
+        newCollisionBox->boundingVolume.emitter = eventEmitter_new();
+
+        eventEmitter_on(&newCollisionBox->boundingVolume.emitter, E_BOUNDING_VOLUME_COLLIDED, on_dungeon_enter);
+      }
+      newCollisionBox = NULL;
+    }
+    for (int j = 0; j < 8; ++j)
     {
-      newCollisionBox->boundingVolume.isEmitterExist = true;
-      newCollisionBox->boundingVolume.emitter = eventEmitter_new();
+      if (collisionMap[i][j])
+      {
+        if (newCollisionBox == NULL)
+        {
+          newCollisionBox = level_spawnObject(level);
+          newCollisionBox->size = vec2_new(16, 16);
 
-      eventEmitter_on(&newCollisionBox->boundingVolume.emitter, E_BOUNDING_VOLUME_COLLIDED, on_dungeon_enter);
+          newCollisionBox->position.y = i * 16 + 24;
+          newCollisionBox->position.x = j * 16 + 24;
+          newCollisionBox->currentImage = NULL;
+          newCollisionBox->animDelay = 0;
+          newCollisionBox->images = NULL;
+          newCollisionBox->imageCount = 0;
+          newCollisionBox->health = NULL;
+          newCollisionBox->isTile = true;
+        }
+        else
+        {
+          newCollisionBox->size.x += 16;
+          newCollisionBox->position.x += 8;
+        }
+      }
+      else
+      {
+        if (newCollisionBox)
+        {
+          sprite_initBoundingVolume(newCollisionBox, BOX, BoundingVolumeTag_Tile);
+          newCollisionBox->boundingVolume.emitter = (const struct EventEmitter){0};
+          newCollisionBox->boundingVolume.isEmitterExist = false;
+
+          if (level->levelChunk->tiles[i].id == 4)
+          {
+            newCollisionBox->boundingVolume.isEmitterExist = true;
+            newCollisionBox->boundingVolume.emitter = eventEmitter_new();
+
+            eventEmitter_on(&newCollisionBox->boundingVolume.emitter, E_BOUNDING_VOLUME_COLLIDED, on_dungeon_enter);
+          }
+
+          newCollisionBox = NULL;
+        }
+      }
     }
+  }
+
+  if (newCollisionBox)
+  {
+    sprite_initBoundingVolume(newCollisionBox, BOX, BoundingVolumeTag_Tile);
+    newCollisionBox->boundingVolume.emitter = (const struct EventEmitter){0};
+    newCollisionBox->boundingVolume.isEmitterExist = false;
   }
 }
 
@@ -294,7 +356,7 @@ void level_deleteEnemy(Level *level, struct Enemy *enemy)
     if (*currentObject == enemy)
     {
       level_deleteObject(level, enemy->sprite);
-      free(enemy);
+      alloc_free(enemy);
       utarray_erase(level->enemies, i, 1);
       break;
     }
@@ -334,6 +396,7 @@ bool level_processChunkMoving(LoadLevelArgs *args, Player *player)
 {
   if (!level_isDone(args->level))
     return false;
+
   if (player->sprite->position.x <= 24)
   {
     LevelBorderContactEvent event = {
@@ -378,7 +441,9 @@ bool level_processChunkMoving(LoadLevelArgs *args, Player *player)
 
 void level_spawnEnemies(Level *level)
 {
-  uint_32 enemyCount = RANDOMIZE(3, 5);
+  level_spawnRocks(level);
+
+  uint_32 enemyCount = RANDOMIZE(0, 0);
 
   for (uint_32 i = 0; i < enemyCount; i++)
   {
@@ -406,6 +471,20 @@ void level_spawnEnemies(Level *level)
   }
 }
 
+void level_spawnRocks(Level *level)
+{
+  for (unsigned long i = 0; i < sizeof(ROCK_LEVEL) / (sizeof(uint8_t) * 4); ++i)
+  {
+    if (level->levelChunk->x == ROCK_LEVEL[i][0] && level->levelChunk->y == ROCK_LEVEL[i][1])
+    {
+      EnemyUnit newEnemy = level_spawnUnit(level, EnemyTypeName_Rock);
+
+      newEnemy.enemy->sprite->position.x = 24 +  16 * ROCK_LEVEL[i][2];
+      newEnemy.enemy->sprite->position.y = 24 + 16 * ROCK_LEVEL[i][3];
+    }
+  }
+}
+
 void level_loadLevel(LoadLevelArgs *args, ChunkMovingDirection to)
 {
 
@@ -418,16 +497,16 @@ void level_loadLevel(LoadLevelArgs *args, ChunkMovingDirection to)
   switch (to)
   {
   case ChunkMovingDirection_Right:
-    startPosition = vec2_new(30, 64);
+    startPosition = vec2_new(30, 80);
     break;
   case ChunkMovingDirection_Up:
-    startPosition = vec2_new(64, 130);
+    startPosition = vec2_new(80, 130);
     break;
   case ChunkMovingDirection_Left:
-    startPosition = vec2_new(130, 64);
+    startPosition = vec2_new(130, 80);
     break;
   case ChunkMovingDirection_Bottom:
-    startPosition = vec2_new(64, 32);
+    startPosition = vec2_new(80, 32);
     break;
   default:
     startPosition = vec2_new(0, 0);

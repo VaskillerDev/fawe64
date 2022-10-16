@@ -1,6 +1,6 @@
 #include "libs.h"
 #include "enemy_unit.h"
-
+#include "allocator.h"
 EventEmitter emitter;
 MenuState menuState;
 GameState gameSate;
@@ -13,6 +13,8 @@ TiledLevelChunk chunk = {};
 
 void start ()
 {
+  allocator_init();
+
   SetPaletteColor_1 (0xa46422);
   SetPaletteColor_2 (0xeb8931);
   SetPaletteColor_3 (0xd8d3cd);
