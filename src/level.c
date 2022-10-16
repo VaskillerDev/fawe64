@@ -396,6 +396,8 @@ bool level_isDone(Level *level)
       return false;
   }
 
+  level->clearedArea[level->levelChunk->x][level->levelChunk->y] = true;
+
   return true;
 }
 
@@ -448,7 +450,11 @@ bool level_processChunkMoving(LoadLevelArgs *args, Player *player)
 
 void level_spawnEnemies(Level *level)
 {
+  
   level_spawnRocks(level);
+  
+  if(level->clearedArea[level->levelChunk->x][level->levelChunk->y])
+    return;
 
   uint_32 enemyCount = level->navRootCount;
 

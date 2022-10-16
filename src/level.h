@@ -18,6 +18,7 @@ typedef struct Level
     Dungeon dungeon;
    
     uint_8 destroyedRocks[32][4];
+    bool clearedArea[8][8];
 
     bool pause;
     bool isTilesActive;
