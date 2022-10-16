@@ -10,14 +10,14 @@ WASM_OPT = wasm-opt
 WASM_OPT_FLAGS = -Oz --zero-filled-memory --strip-producers
 
 # Whether to build for debugging instead of release
-DEBUG = 1
+DEBUG = 0
 
 # Compilation flags
 CFLAGS = -W -Wall -Wextra -Werror -Wno-unused -MMD -MP -fno-exceptions
 ifeq ($(DEBUG), 1)
 	CFLAGS += -DDEBUG -O0 -g
 else
-	CFLAGS += -DNDEBUG -Oz -flto
+	CFLAGS += -DNDEBUG -Oz
 endif
 
 # Linker flags
