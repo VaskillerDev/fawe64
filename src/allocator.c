@@ -1,9 +1,9 @@
 #include "libs.h"
 
-#define allocatorPoolSize (36000)
+#define allocatorPoolSize (34000)
 
 static AllocatorNode* allocator = NULL;
-static unsigned long freeMemory = 36000 - sizeof(AllocatorNode);
+static unsigned long freeMemory = allocatorPoolSize - sizeof(AllocatorNode);
 
 void allocator_init()
 {

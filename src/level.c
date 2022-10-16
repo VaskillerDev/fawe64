@@ -24,6 +24,11 @@ Level *level_new()
   eventEmitter_on(&level->emitter, E_LEVEL_BORDER_CONTACT, &on_level_border_contact);
   eventEmitter_on(&level->emitter, E_ENEMY_ATTACK_BULLET, &on_level_enemy_attack_bullet);
 
+  for (uint_8 i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint_8)); ++i)
+  {
+    level->destroyedRocks[i][0] = 100;
+  }
+
   return level;
 }
 
@@ -47,6 +52,7 @@ void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent *event)
       .speed = unitMetaData.bulletSpeed,
       .lifetime = unitMetaData.bulletLifetime,
       .senderType = BulletSenderType_Enemy,
+      .owner = event->enemy->sprite
   };
 
   bulletManager_createBullet(bm, bulletMetaData);
@@ -95,9 +101,10 @@ Enemy *level_spawnEnemy(Level *level)
   return newEnemy;
 }
 
-struct EnemyUnit level_spawnUnit(Level *level, EnemyTypeName type)
+struct EnemyUnit level_spawnUnit(Level *level, EnemyTypeName type, NavRoot *navRoot)
 {
   Enemy *enemy = level_spawnEnemy(level);
+  enemy->navRoot = navRoot;
 
   EnemyUnitNewArgs args = {
       .level = level,
@@ -389,6 +396,8 @@ bool level_isDone(Level *level)
       return false;
   }
 
+  level->clearedArea[level->levelChunk->x][level->levelChunk->y] = true;
+
   return true;
 }
 
@@ -441,33 +450,26 @@ bool level_processChunkMoving(LoadLevelArgs *args, Player *player)
 
 void level_spawnEnemies(Level *level)
 {
+  
   level_spawnRocks(level);
+  
+  if(level->clearedArea[level->levelChunk->x][level->levelChunk->y])
+    return;
 
-  uint_32 enemyCount = RANDOMIZE(0, 0);
+  uint_32 enemyCount = level->navRootCount;
 
   for (uint_32 i = 0; i < enemyCount; i++)
   {
-    EnemyUnit newEnemy = level_spawnUnit(level, EnemyTypeName_Rock);
+    EnemyUnit newEnemy = level_spawnUnit(level, level->navRoots[i].entityId, &level->navRoots[i]);
 
-    newEnemy.enemy->sprite->position.x = RANDOMIZE(30, 60);
-    newEnemy.enemy->sprite->position.y = RANDOMIZE(30, 130);
-    uint_32 tryCount = 0;
-    while (tryCount < 10 && (player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(1, 0)) ||
-                             player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(-1, 0)) ||
-                             player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(0, 1)) ||
-                             player_checkCollision(newEnemy.enemy->sprite, level, vec2_new(0, -1))))
+    newEnemy.enemy->sprite->position.x = level->navRoots[i].navPointArray[0].x;
+    newEnemy.enemy->sprite->position.y = level->navRoots[i].navPointArray[0].y;
+
+    if(newEnemy.enemy->navRoot->navPointArraySize == 1)
     {
-      newEnemy.enemy->sprite->position.x = RANDOMIZE(25, 135);
-      newEnemy.enemy->sprite->position.y = RANDOMIZE(25, 135);
-      tryCount++;
+      newEnemy.enemy->navRoot = NULL;
     }
 
-    if (tryCount >= 9)
-    {
-      HpPointsOverEvent e;
-      e.parent = newEnemy.enemy;
-      enemy_death(e);
-    }
   }
 }
 
@@ -477,21 +479,74 @@ void level_spawnRocks(Level *level)
   {
     if (level->levelChunk->x == ROCK_LEVEL[i][0] && level->levelChunk->y == ROCK_LEVEL[i][1])
     {
-      EnemyUnit newEnemy = level_spawnUnit(level, EnemyTypeName_Rock);
 
-      newEnemy.enemy->sprite->position.x = 24 +  16 * ROCK_LEVEL[i][2];
+      bool destroyed = false;
+
+      for (unsigned long j = 0; j < sizeof(level->destroyedRocks) / (sizeof(uint8_t) * 4); ++j)
+      {
+        if (level->destroyedRocks[j][0] == level->levelChunk->x && level->destroyedRocks[j][1] == level->levelChunk->y && level->destroyedRocks[j][2] == ROCK_LEVEL[i][2] && level->destroyedRocks[j][3] == ROCK_LEVEL[i][3])
+        {
+          destroyed = true;
+        }
+      }
+
+      if (destroyed)
+      {
+        continue;
+      }
+
+      EnemyUnit newEnemy = level_spawnUnit(level, EnemyTypeName_Rock, NULL);
+
+      newEnemy.enemy->sprite->position.x = 24 + 16 * ROCK_LEVEL[i][2];
       newEnemy.enemy->sprite->position.y = 24 + 16 * ROCK_LEVEL[i][3];
+    }
+  }
+}
+
+void level_loadNavRoots(Level *level)
+{
+  level->navRootCount = 0;
+
+  for (uint_8 i = 0; i < 32; ++i)
+  {
+    if (LEVEL_PATH[i][0] == level->levelChunk->x && LEVEL_PATH[i][1] == level->levelChunk->y)
+    {
+      struct NavRoot *currentRoot = &level->navRoots[level->navRootCount];
+
+      currentRoot->navPointArraySize = 0;
+      currentRoot->currentPointIndex = 0;
+      currentRoot->entityId = LEVEL_PATH[i][2];
+
+      for (uint_8 j = 0; j < 8; ++j)
+      {
+        currentRoot->navPointArray[j].x = 24 + LEVEL_PATH[i][3 + j * 2] * 16;
+        currentRoot->navPointArray[j].y = 24 + LEVEL_PATH[i][3 + j * 2 + 1] * 16;
+
+        if (LEVEL_PATH[i][3 + j * 2] == 101 && currentRoot->navPointArraySize == 0)
+        {
+          currentRoot->navPointArraySize = j;
+        }
+      }
+
+      if (currentRoot->navPointArraySize == 0)
+      {
+        currentRoot->navPointArraySize = 8;
+      }
+
+      ++level->navRootCount;
     }
   }
 }
 
 void level_loadLevel(LoadLevelArgs *args, ChunkMovingDirection to)
 {
+  Level *level = args->level;
 
-  level_clear(args->level);
-  level_setImagePool(args->level, args->imagePool);
-  level_setChunk(args->level, args->newChunkPosition, args->newChunk);
-  level_spawnEnemies(args->level);
+  level_clear(level);
+  level_setImagePool(level, args->imagePool);
+  level_setChunk(level, args->newChunkPosition, args->newChunk);
+  level_loadNavRoots(level);
+  level_spawnEnemies(level);
 
   Vec2 startPosition;
   switch (to)
@@ -555,5 +610,21 @@ Vec2 level_directionAsStartPosition(ChunkMovingDirection direction)
     return vec2_new(0, -1);
   default:
     return vec2_new(0, 0);
+  }
+}
+
+void level_addDestroyedRock(Level *level, Vec2 pos)
+{
+  for (uint_8 i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint_8)); ++i)
+  {
+    if (level->destroyedRocks[i][0] == 100)
+    {
+      level->destroyedRocks[i][0] = level->levelChunk->x;
+      level->destroyedRocks[i][1] = level->levelChunk->y;
+      level->destroyedRocks[i][2] = (pos.x - 24) / 16;
+      level->destroyedRocks[i][3] = (pos.y - 24) / 16;
+
+      break;
+    }
   }
 }

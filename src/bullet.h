@@ -9,6 +9,7 @@ typedef enum BulletSenderType {
 
 typedef struct BulletMetaData {
     BulletSenderType senderType;
+    Sprite* owner;
     Vec2 startPosition;
     uint_8 lifetime;
     uint_8 speed;

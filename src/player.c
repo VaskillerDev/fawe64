@@ -88,7 +88,7 @@ bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
 
       if (horizontal)
       {
-        if (abs((*currentObject)->position.y - player->position.y) < 8)
+        if (abs((*currentObject)->position.y - player->position.y) <= 8)
           goto RAY_CASTING;
 
         if (abs(dir.y) > 0)
@@ -709,7 +709,7 @@ void player_useItem()
     if (!setupBomb())
       return;
     break;
-  case PlayerItem_PlasticExplosive:
+  case PlayerItem_DirectBomb:
     if (!setupDirectedBomb())
       return;
     break;
