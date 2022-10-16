@@ -1,7 +1,7 @@
 #include "libs.h"
 #include "allocator.h"
 
-#define DEBUG_BOUNDING_VOLUME 1
+#define DEBUG_BOUNDING_VOLUME 0
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 

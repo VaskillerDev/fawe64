@@ -210,7 +210,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
 
   player.itemImages[0] = level->imagePool->images[PoolIdx_Potion];
   player.itemImages[1] = level->imagePool->images[PoolIdx_Bomb];
-  player.itemImages[2] = player.goBottomFrames[0];
+  player.itemImages[2] = level->imagePool->images[PoolIdx_DirectedBomb];
 
   return player;
 }
@@ -623,7 +623,7 @@ void player_draw(Player *player, Level *level)
 
   if (level->pause)
   {
-    uint_16 selectorColors[4] = {2, 4, 0, 0};
+    uint_16 selectorColors[4] = {1, 4, 1, 0};
     textColors[0] = 3;
     textColors[1] = 4;
 

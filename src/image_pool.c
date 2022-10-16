@@ -3,8 +3,8 @@
 
 void imagePool_init(ImagePool *pool)
 {
-    pool->imageCount = 50;
-    pool->data = allocate(sizeof(uint8_t) * (32 * 7 + 64 * 43 + 2560));
+    pool->imageCount = 51;
+    pool->data = allocate(sizeof(uint8_t) * (32 * 7 + 64 * 44 + 2560));
     pool->images = (Image **)allocate(sizeof(Image) * pool->imageCount);
     pool->offset = 0;
 
@@ -73,8 +73,9 @@ void imagePool_init(ImagePool *pool)
   *(pool->images + 47) = imagePool_addImage (pool, (void*)enmy1_go_img_2, 64, 16, 16, menuImgColors, BLIT_2BPP);
 
   *(pool->images + 48) = imagePool_addImage (pool, (void*)rock_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
-  *(pool->images + 49) = imagePool_addImage (pool, (void*)bomb_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
+  *(pool->images + 49) = imagePool_addImage (pool, (void*)bomb_img, 64, 16, 16, bombImgColors, BLIT_2BPP);
   *(pool->images + 50) = imagePool_addImage (pool, (void*)potion_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
+  *(pool->images + 51) = imagePool_addImage (pool, (void*)bomb2_img, 64, 16, 16, bomb2ImgColors, BLIT_2BPP);
 }
 
 Image *imagePool_addImage(ImagePool *pool, void *dataPtr, uint_32 size, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags)

@@ -12,6 +12,8 @@
 #define menuImgHeight 128
 #define menuImgFlags BLIT_1BPP
 extern uint_16 menuImgColors[4];
+extern uint_16 bombImgColors[4];
+extern uint_16 bomb2ImgColors[4];
 extern uint_16 pliligrimLeftColors[4];
 extern uint_16 pliligrimUpAttackColors[4];
 extern uint16_t enemy0ImgColors[4];
@@ -90,6 +92,7 @@ extern const uint8_t enmy1_go_img_2[64];
 
 extern const uint8_t rock_img[64];
 extern const uint8_t bomb_img[64];
+extern const uint8_t bomb2_img[64];
 extern const uint8_t potion_img[64];
 
 #endif //_ASSETS_H_
