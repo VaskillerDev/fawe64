@@ -458,6 +458,12 @@ void level_spawnEnemies(Level *level)
 
     newEnemy.enemy->sprite->position.x = level->navRoots[i].navPointArray[0].x;
     newEnemy.enemy->sprite->position.y = level->navRoots[i].navPointArray[0].y;
+
+    if(newEnemy.enemy->navRoot->navPointArraySize == 1)
+    {
+      newEnemy.enemy->navRoot = NULL;
+    }
+
   }
 }
 

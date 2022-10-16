@@ -206,6 +206,15 @@ void bat_behaviour(Enemy* enemy) {
         }
       return;
     }
+    else
+    {
+      if(enemy->navRoot)
+      {
+         enemy->direction = 0;
+         enemy->moveDir = vec2_new(0, 0);
+        Navigation_Move(enemy, enemy->navRoot, 1);
+      }
+    }
 }
 
 EnemyUnit rock_new(Enemy* enemy, Level* level) {
