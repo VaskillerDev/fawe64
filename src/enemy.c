@@ -1,8 +1,9 @@
 #include "libs.h"
+#include "allocator.h"
 
 Enemy *new_enemy(Level *level)
 {
-  Enemy *enemy = (Enemy *)malloc(sizeof(Enemy));
+  Enemy *enemy = (Enemy *)allocate(sizeof(Enemy));
   enemy->level = level;
   // todo: hp only for test. rm later
   enemy->health = hp_new(1, enemy, 2, 1, false);
@@ -15,7 +16,8 @@ Enemy *new_enemy(Level *level)
   enemy->metaData = metaData;
   enemy->emitter = eventEmitter_new();
   enemy->moveDir = vec2_new (0,0);
-
+  enemy->navRoot = NULL;
+  
   eventEmitter_on (&enemy->emitter, E_ENEMY_HAS_GOT_BULLET_COLLISION, &on_enemy_has_got_bullet_collision);
   eventEmitter_on (&enemy->emitter, E_ENEMY_ACTION_STATE_CHANGED, &on_enemy_change_animation);
   eventEmitter_on (&enemy->emitter, E_ENEMY_ATTACK_BULLET, &on_enemy_attack_bullet);

@@ -36,6 +36,8 @@ extern const uint8_t tile6[64];
 extern const uint8_t tile7[64];
 
 extern const uint8_t PLAIN_LEVEL[8][8][64];
+extern const uint8_t ROCK_LEVEL[32][2 + 2];
+extern const uint8_t LEVEL_PATH[32][2 + 1 + (8 * 2)];
 
 extern const uint8_t piligrim_go_b_img_0[64];
 extern const uint8_t piligrim_go_b_img_1[64];

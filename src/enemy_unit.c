@@ -91,19 +91,31 @@ void warlock_behaviour(Enemy *enemy)
   /**
    * TODO: Пока delay > 0 movDist не тратится
    */
+
   if (enemy->delay > 0) {
     enemy->actionState = EnemyAction_Idle;
   } else if(enemy->movDist > 0)
     {
+      if(enemy->navRoot)
+        {
+          Navigation_Move(enemy, enemy->navRoot, 1);
+        }
       enemy->actionState = EnemyAction_Go;
     } else if (enemy->movDist == 0)
     {
         enemy->delay = 30;
         enemy->movDist = RANDOMIZE(20, 60);
+        if(enemy->navRoot)
+        {
+          Navigation_Move(enemy, enemy->navRoot, 1);
+          enemy->delay = 60;
+          enemy->direction = 0;
+        }
+        else
+        {
+          enemy->direction = (EnemyMovementDirection) RANDOMIZE(1, 5);
 
-        enemy->direction = (EnemyMovementDirection) RANDOMIZE(1, 5);
-
-        switch (enemy->direction)
+          switch (enemy->direction)
           {
             case EnemyDir_Bottom: {
                 enemy->moveDir = vec2_new(0, -1);
@@ -120,6 +132,7 @@ void warlock_behaviour(Enemy *enemy)
                 sprite_setFlipH (enemy->sprite, false);
               } break;
           }
+        }
         return;
     }
 }
@@ -192,6 +205,15 @@ void bat_behaviour(Enemy* enemy) {
             } break;
         }
       return;
+    }
+    else
+    {
+      if(enemy->navRoot)
+      {
+         enemy->direction = 0;
+         enemy->moveDir = vec2_new(0, 0);
+        Navigation_Move(enemy, enemy->navRoot, 1);
+      }
     }
 }
 

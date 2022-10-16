@@ -1,17 +1,7 @@
 {
     "files.associations": {
-        "timer.h": "c",
-        "sprite.h": "c",
-        "game.h": "c",
-        "bullet.h": "c",
-        "player.h": "c",
-        "render.h": "c",
-        "enemy.h": "c",
-        "sword.h": "c",
-        "dungeon.h": "c",
-        "level.h": "c",
-        "assets.h": "c",
         "libs.h": "c",
-        "math.h": "c"
+        "cstdlib": "c",
+        "hp.h": "c"
     }
 }

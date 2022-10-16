@@ -29,15 +29,36 @@ void bullet_update(Bullet* bullet) {
 
   Vec2 position = vec2_fromVec2f (bullet->position);
   Level* l = player_getInstance()->level;
+    
+  Vec2 bulletPos = vec2_fromVec2f(bullet->position);
+  BoundingVolume bv = 
+      {
+        .position = &bulletPos,
+        .shape = BOX,
+        .size = {8, 8},
+        .tag = BoundingVolumeTag_Tile
+      };
 
   Sprite* nearTile = level_findNearestTile (l, position);
   if (nearTile != NULL) {
       Vec2 distance = vec2_sub(nearTile->position, position);
 
-      if (vec2_getLength (distance) < 8) {
-          bullet->wasCollision = true;
-        }
+      bullet->wasCollision = CheckCollision(&nearTile->boundingVolume, &bv);
     }
+
+if(!bullet->wasCollision)
+{
+  Enemy **currentObject = NULL;
+  while ((currentObject = (Enemy **)utarray_next(l->enemies, currentObject)))
+  {
+    if((*currentObject)->sprite != bullet->metaData.owner)
+    {
+     bullet->wasCollision = CheckCollision(&(*currentObject)->sprite->boundingVolume, &bv);
+     if(bullet->wasCollision)
+      break;
+    }
+  }
+}
 
   if (bullet->metaData.senderType == BulletSenderType_Enemy) { // отправитель - противник
       Vec2 playerPosition = player_getInstance()->sprite->position;

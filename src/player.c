@@ -17,10 +17,10 @@ bool player_checkTileCollision(Sprite *player, Level *level, Vec2 dir)
   Vec2 pos = vec2_new((originalPos.x - 24 + 8) / 16, (originalPos.y - 24 + 8) / 16);
   Vec2 targetPos = vec2_add(pos, dir);
 
-  if(targetPos.x < 0 || targetPos.x > 7)
+  if (targetPos.x < 0 || targetPos.x > 7)
     return true;
 
-  if(targetPos.y < 0 || targetPos.y > 7)
+  if (targetPos.y < 0 || targetPos.y > 7)
     return true;
 
   return level->levelChunk->tiles[targetPos.y * 8 + targetPos.x].collision;
@@ -64,15 +64,58 @@ bool player_checkCollision(Sprite *player, Level *level, Vec2 dir)
     if (!isClash)
       continue;
 
-    Vec2f rayDir = vec2_normalize(vec2_sub((*currentObject)->position, player->position));
-    if (fabsf(fabsf(rayDir.x) - fabsf(rayDir.y)) < 0.00000001)
-      continue;
+    Vec2 objPos = (*currentObject)->position;
 
-    (fabsf(rayDir.x) > fabsf(rayDir.y)) ? (rayDir.y = 0) : (rayDir.x = 0);
-    rayDir = vec2f_normalize(rayDir);
+    if ((*currentObject)->size.x == 16 && (*currentObject)->size.y == 16)
+    {
+    RAY_CASTING:
+      currentObject;
+      Vec2f rayDir = vec2_normalize(vec2_sub(objPos, player->position));
+      if (fabsf(fabsf(rayDir.x) - fabsf(rayDir.y)) < 0.00000001)
+        continue;
 
-    if (vec2f_dot(rayDir, vec2f_fromVec2(dir)) > 0)
-      return true;
+      (fabsf(rayDir.x) > fabsf(rayDir.y)) ? (rayDir.y = 0) : (rayDir.x = 0);
+      rayDir = vec2f_normalize(rayDir);
+
+      if (vec2f_dot(rayDir, vec2f_fromVec2(dir)) > 0)
+        return true;
+    }
+    else
+    {
+      bool horizontal = (*currentObject)->size.x > (*currentObject)->size.y;
+
+      Vec2f rayDir = vec2_normalize(vec2_sub(objPos, player->position));
+
+      if (horizontal)
+      {
+        if (abs((*currentObject)->position.y - player->position.y) <= 8)
+          goto RAY_CASTING;
+
+        if (abs(dir.y) > 0)
+          if ((rayDir.y > 0 && dir.y > 0) || (rayDir.y < 0 && dir.y < 0))
+          {
+            if (abs((*currentObject)->position.x - player->position.x) < (*currentObject)->size.x / 2)
+            {
+              return true;
+            }
+          }
+      }
+
+      if (!horizontal)
+      {
+        if (abs((*currentObject)->position.x - player->position.x) < 8)
+          goto RAY_CASTING;
+
+        if (abs(dir.x) > 0)
+          if ((rayDir.x > 0 && dir.x > 0) || (rayDir.x < 0 && dir.x < 0))
+          {
+            if (abs((*currentObject)->position.y - player->position.y) < (*currentObject)->size.y / 2)
+            {
+              return true;
+            }
+          }
+      }
+    }
   }
 
   return false;
@@ -155,6 +198,8 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
   sprite_initBoundingVolume(player.sprite, BOX, BoundingVolumeTag_Player);
   player.health = hp_new(2, &player, 20, 20, false);
 
+  player.sprite->boundingVolume.size = vec2_new(12, 12);
+
   eventEmitter_on(&player.health.emitter, E_HP_POINTS_OVER, &on_player_death);
   eventEmitter_on(&player.sword.emitter, E_SWORD_ATTACK_HIT, &on_player_attack);
   eventEmitter_on(&player.emitter, E_PLAYER_HAS_GOT_BULLET_COLLISION, &on_player_has_got_bullet_collision);
@@ -163,7 +208,7 @@ Player player_new(Level *level, GameState *gameState, Vec2 spawnPosition)
   eventEmitter_on(&player.emitter, E_PLAYER_ENTER_DUNGEON, &on_player_enter_dungeon);
   eventEmitter_on(&player.collisionBulletTimer.emitter, E_TIMER_EXPIRED, &on_collision_bullet_timer_expired);
 
-  player.itemImages[0] = player.goBottomFrames[0];
+  player.itemImages[0] = level->imagePool->images[PoolIdx_Potion];
   player.itemImages[1] = level->imagePool->images[PoolIdx_Bomb];
   player.itemImages[2] = player.goBottomFrames[0];
 
@@ -661,11 +706,11 @@ void player_useItem()
     usePoition();
     break;
   case PlayerItem_Bomb:
-    if(!setupBomb())
+    if (!setupBomb())
       return;
     break;
-case PlayerItem_PlasticExplosive:
-    if(!setupDirectedBomb())
+  case PlayerItem_DirectBomb:
+    if (!setupDirectedBomb())
       return;
     break;
 

@@ -1,10 +1,11 @@
 #include"libs.h"
+#include "allocator.h"
 
 void imagePool_init(ImagePool *pool)
 {
     pool->imageCount = 50;
-    pool->data = malloc(sizeof(uint8_t) * (32 * 7 + 64 * 43 + 2560));
-    pool->images = (Image **)malloc(sizeof(Image) * pool->imageCount);
+    pool->data = allocate(sizeof(uint8_t) * (32 * 7 + 64 * 43 + 2560));
+    pool->images = (Image **)allocate(sizeof(Image) * pool->imageCount);
     pool->offset = 0;
 
     *pool->images = imagePool_addImage(pool, (void*)menuImg, 2560, 160, 128, menuImgColors, BLIT_1BPP);

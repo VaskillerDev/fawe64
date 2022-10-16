@@ -5,11 +5,11 @@
 
 struct Sprite
 {
-    uint_32 currentImageIndex;
     Image* currentImage;
     Hp* health;
     Image** images;
     
+    uint_32 currentImageIndex;
     uint_32 imageCount;
     uint_32 frameCounter;
     uint_32 animDelay;

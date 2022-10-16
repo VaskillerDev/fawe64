@@ -12,6 +12,7 @@
 
 #include "types.h"
 
+#include "allocator.h"
 #include "vec2.h"
 #include "image.h"
 #include "tiled.h"
@@ -22,6 +23,7 @@
 #include "sprite.h"
 #include "game.h"
 #include "hp.h"
+#include "navigation.h"
 #include "enemy.h"
 #include "render.h"
 #include "sword.h"
