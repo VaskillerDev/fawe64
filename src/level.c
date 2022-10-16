@@ -246,7 +246,7 @@ void level_spawnCollisionByTiles(Level *level)
 
       int edges = 0;
       edges += (i % 8 == 0);
-      if (i > 8)
+      if (i > 8 && i <= 55)
       {
         edges += (i % 8 == 1);
       }
