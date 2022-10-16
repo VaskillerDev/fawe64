@@ -16,7 +16,7 @@ import ItemModeInspector from "./ItemModeInspector";
 const BLOCK_SIZE = 16;
 const CHUNK_SIZE = 8;
 export const CHUNK_LEN_IN_MAP = 8;
-const MAP_VIEW_SIZE = BLOCK_SIZE * CHUNK_SIZE * CHUNK_LEN_IN_MAP + 512;
+const MAP_VIEW_SIZE = BLOCK_SIZE * CHUNK_SIZE * CHUNK_LEN_IN_MAP;
 
 export default class GridViewGl extends Component {
     
@@ -39,11 +39,14 @@ export default class GridViewGl extends Component {
     isBrushMode = false;
     isItemBrushMode = false;
     isRockBrushMode = false;
-    rockBrushButtonDisableActivate = false;
+    //rockBrushButtonDisableActivate = false;
+    //itemBrushButtonDisableActivate = false;
+    
+    pickedButtonIndex = -1;
     
     pathLineArr = [];
     itemIdNum = 0;
-
+    
     createMap() {
         for (let i = 0 ; i < CHUNK_LEN_IN_MAP; i++) {
             for (let j = 0 ; j < CHUNK_LEN_IN_MAP; j++) {
@@ -96,7 +99,13 @@ export default class GridViewGl extends Component {
             for (let gridPosY = 0 ; gridPosY < 64; gridPosY++) {
                 const mbRock = localStorage.getItem(`item:${gridPosX}:${gridPosY}`);
                 if (mbRock === null) continue;
-                this.spawnItem(this.viewport, gridPosX, gridPosY);
+                this.setState({itemCount: this.state.itemCount +=1});
+                
+                const [,,itemId] = mbRock.split(',');
+                const itemIdNum = Number.parseInt(itemId);
+                console.log(itemIdNum);
+                
+                this.spawnItem(this.viewport, gridPosX, gridPosY, itemIdNum, true);
             }
         }
     }
@@ -180,7 +189,7 @@ export default class GridViewGl extends Component {
         this.currentPickedTileIndex = index;
 
         this.isRockBrushMode = false;
-        this.rockBrushButtonDisableActivate = true;
+        this.pickedButtonIndex = -1;
         
         this.setMouseCursorBlock(this.tilesImg,
             this.currentPickedTileIndex,
@@ -196,13 +205,22 @@ export default class GridViewGl extends Component {
     handleItemBrushActivated(isActivate) {
         this.isRockBrushMode = false;
         this.isItemBrushMode = isActivate;
+        this.pickedButtonIndex = isActivate ? 6 : -1;
+        
         this.setState({isItemInspectorEnabled: isActivate})
+
+        this.setMouseCursorBlock(this.tilesImg,
+            this.currentPickedTileIndex,
+            this.currentPickedTileIsFlipH,
+            this.currentPickedTileIsFlipV,
+            this.currentPickedTileIsFlipD);
     }
     
     handleRockBrushActivated(isActivate) {
         this.isItemBrushMode = false;
         this.isRockBrushMode = isActivate;
-        this.rockBrushButtonDisableActivate = false;
+        this.pickedButtonIndex = isActivate ? 3 : -1;
+        
         this.setMouseCursorBlock(this.tilesImg,
             this.currentPickedTileIndex,
             this.currentPickedTileIsFlipH,
@@ -249,7 +267,9 @@ export default class GridViewGl extends Component {
         
         this.state = {
             isPathInspectorEnabled: false,
-            isItemInspectorEnabled: false
+            isItemInspectorEnabled: false,
+            itemCount: 0,
+            rockCount:  0,
         }
     }
     
@@ -346,7 +366,7 @@ export default class GridViewGl extends Component {
             }
             
             if (this.isItemBrushMode) {
-                this.spawnItem(viewport, gridX, gridY);
+                this.spawnItem(viewport, gridX, gridY, this.itemIdNum);
                 return;
             }
             
@@ -436,7 +456,7 @@ export default class GridViewGl extends Component {
         const sprite = viewport.addChild(new PIXI.Sprite(this.rockImg))
 
         sprite.width = sprite.height = BLOCK_SIZE
-        //sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
+        sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
         sprite.scale.x =  1;
         sprite.scale.y = 1;
         sprite.anchor.x = 0.5
@@ -449,8 +469,8 @@ export default class GridViewGl extends Component {
         this.saveRock(gridX, gridY);
     }
     
-    spawnItem(viewport, gridX, gridY) {
-        const sprite = viewport.addChild(new PIXI.Sprite(this.itemsImg[this.itemIdNum]))
+    spawnItem(viewport, gridX, gridY, itemIdNum, withoutSave) {
+        const sprite = viewport.addChild(new PIXI.Sprite(this.itemsImg[itemIdNum]))
         sprite.width = sprite.height = BLOCK_SIZE
         sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
         sprite.scale.x =  1;
@@ -461,21 +481,38 @@ export default class GridViewGl extends Component {
         sprite.zIndex = -1;
         sprite.position.set( sprite.position.x + BLOCK_SIZE / 2,  sprite.position.y + BLOCK_SIZE / 2);
         
-        this.saveItem(gridX, gridY);
+        if (withoutSave) {
+            this.setState( {rockCount: this.state.rockCount+=1});
+            return;
+        }
+        
+        this.saveItem(gridX, gridY, itemIdNum);
     }
     
     saveRock(gridX, gridY) {
         const chunkPos = gridPosToChunk({x: gridX, y: gridY});
         const localPos = globalPosToLocalPos(chunkPos, {x: gridX, y: gridY});
+        const key = `rock:${gridX}:${gridY}`;
+        const val = `${localPos.x},${localPos.y}`;
         
-        localStorage.setItem(`rock:${gridX}:${gridY}`, `${localPos.x},${localPos.y}`);
+        if (!localStorage.getItem(key)) {
+            this.setState( {rockCount: this.state.rockCount+=1});
+        }
+        
+        localStorage.setItem(key, val);
     }
     
-    saveItem(gridX, gridY) {
+    saveItem(gridX, gridY, itemIdNum) {
         const chunkPos = gridPosToChunk({x: gridX, y: gridY});
         const localPos = globalPosToLocalPos(chunkPos, {x: gridX, y: gridY});
+        const key = `item:${gridX}:${gridY}`;
+        const val = `${localPos.x},${localPos.y},${itemIdNum}`;
+
+        if (!localStorage.getItem(key)) {
+            this.setState( {itemCount: this.state.itemCount+=1});
+        }
         
-        localStorage.setItem(`item:${gridX}:${gridY}`, `${localPos.x},${localPos.y},${this.itemIdNum}`);
+        localStorage.setItem(key, val);
     }
     
     saveTile(gridX, gridY, tileCode) {
@@ -632,9 +669,8 @@ export default class GridViewGl extends Component {
                 <TilePicker handleCurrentPickedTileIndex={this.handleCurrentPickedTileIndex}/>
                 <TileFlipper handleFlipTile={this.handleFlipTile}/>
                 <RockBrushButton
-                    disableActivate={this.rockBrushButtonDisableActivate}
                     handleRockBrushActivated={this.handleRockBrushActivated}
-                    
+                    isPicked = {this.pickedButtonIndex === 3}
                 />
                 <PathModeToggler 
                     handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}
@@ -644,7 +680,10 @@ export default class GridViewGl extends Component {
                 <DownloadMapButton/>
                 <ItemBrushButton 
                     handleItemBrushActivated = {this.handleItemBrushActivated}
+                    isPicked = {this.pickedButtonIndex === 6}
                 />
+                    <p>Picked: {this.pickedButtonIndex}</p>
+                    <p>Items: {this.state.itemCount} / 32</p>
                     {PathInspectorComponent}
                     {ItemInspectorComponent}
                 </div>
