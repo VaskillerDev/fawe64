@@ -2,15 +2,19 @@ import './App.css';
 import GridViewGl from "./GridViewGl";
 import React from "react";
 import GridPositionComponent from "./GridPositionComponent";
-import SaveLocalStorage from "./SaveLocalStorage";
-import LoadToLocalStorage from "./LoadToLocalStorage";
 
+import ClearRock from "./command/ClearRock";
+import ClearChunk from "./command/ClearChunk";
+import SaveLocalStorage from "./command/SaveLocalStorage";
+import LoadToLocalStorage from "./command/LoadToLocalStorage";
+
+window.ClearChunk = ClearChunk;
+window.ClearRock = ClearRock;
 window.Save = SaveLocalStorage;
 window.Load = LoadToLocalStorage;
 
 class App extends React.Component {
-
-
+    
     handleGridPositionChanged(gridX, gridY) {
         this.setState({
             currentGridX: gridX,

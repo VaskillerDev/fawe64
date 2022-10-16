@@ -1,4 +1,4 @@
-﻿import {CHUNK_LEN_IN_MAP} from "./GridViewGl";
+﻿import {CHUNK_LEN_IN_MAP} from "../GridViewGl";
 
 export default function SaveLocalStorage() {
     const map = {};

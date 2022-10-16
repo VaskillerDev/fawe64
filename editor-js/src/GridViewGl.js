@@ -10,11 +10,13 @@ import rawPosToNormalPos from "./util/rawPosToNormalPos";
 import RockBrushButton from "./RockBrushButton";
 import gridPosToChunk from "./util/gridPosToChunk";
 import globalPosToLocalPos from "./util/globalPosToLocalPos";
+import ItemBrushButton from "./ItemBrushButton";
+import ItemModeInspector from "./ItemModeInspector";
 
 const BLOCK_SIZE = 16;
 const CHUNK_SIZE = 8;
 export const CHUNK_LEN_IN_MAP = 8;
-const MAP_VIEW_SIZE = BLOCK_SIZE * CHUNK_SIZE * CHUNK_LEN_IN_MAP;
+const MAP_VIEW_SIZE = BLOCK_SIZE * CHUNK_SIZE * CHUNK_LEN_IN_MAP + 512;
 
 export default class GridViewGl extends Component {
     
@@ -25,18 +27,22 @@ export default class GridViewGl extends Component {
     currentPickedTileIsFlipV = false;
     currentPickedTileIsFlipD = false;
 
-    tiles;
-    rock;
+    tilesImg;
+    rockImg;
+    itemsImg;
+    
     viewport;
     mouseCursorBlock;
 
     pathPoint;
     
     isBrushMode = false;
-    isRockBrushMode = false
+    isItemBrushMode = false;
+    isRockBrushMode = false;
     rockBrushButtonDisableActivate = false;
     
     pathLineArr = [];
+    itemIdNum = 0;
 
     createMap() {
         for (let i = 0 ; i < CHUNK_LEN_IN_MAP; i++) {
@@ -82,9 +88,15 @@ export default class GridViewGl extends Component {
             for (let gridPosY = 0 ; gridPosY < 64; gridPosY++) {
                 const mbRock = localStorage.getItem(`rock:${gridPosX}:${gridPosY}`);
                 if (mbRock === null) continue;
-                //const [rockPosX, rockPosY] = mbRock.split(',');
-                //const rockPos = {x: Number.parseInt(rockPosX), y: Number.parseInt(rockPosY)};
                 this.spawnRock(this.viewport, gridPosX, gridPosY);
+            }
+        }
+
+        for (let gridPosX = 0 ; gridPosX < 64; gridPosX++) {
+            for (let gridPosY = 0 ; gridPosY < 64; gridPosY++) {
+                const mbRock = localStorage.getItem(`item:${gridPosX}:${gridPosY}`);
+                if (mbRock === null) continue;
+                this.spawnItem(this.viewport, gridPosX, gridPosY);
             }
         }
     }
@@ -110,7 +122,7 @@ export default class GridViewGl extends Component {
             isFlipV = true;
         }
         
-        this.spawnTile(this.tiles, this.viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD, true)
+        this.spawnTile(this.tilesImg, this.viewport, tileId, gridX, gridY, isFlipH, isFlipV, isFlipD, true)
     }
 
     handlePathModePathEditorChanged(count, text) {
@@ -170,27 +182,32 @@ export default class GridViewGl extends Component {
         this.isRockBrushMode = false;
         this.rockBrushButtonDisableActivate = true;
         
-        this.setMouseCursorBlock(this.tiles,
+        this.setMouseCursorBlock(this.tilesImg,
             this.currentPickedTileIndex,
             this.currentPickedTileIsFlipH,
             this.currentPickedTileIsFlipV,
-            this.currentPickedTileIsFlipD,
-            this.isRockBrushMode);
+            this.currentPickedTileIsFlipD);
     }
 
     handlePathModeInspectorInit(pathTextArr) {
         console.log(pathTextArr);
     }
 
+    handleItemBrushActivated(isActivate) {
+        this.isRockBrushMode = false;
+        this.isItemBrushMode = isActivate;
+        this.setState({isItemInspectorEnabled: isActivate})
+    }
+    
     handleRockBrushActivated(isActivate) {
+        this.isItemBrushMode = false;
         this.isRockBrushMode = isActivate;
         this.rockBrushButtonDisableActivate = false;
-        this.setMouseCursorBlock(this.tiles,
+        this.setMouseCursorBlock(this.tilesImg,
             this.currentPickedTileIndex,
             this.currentPickedTileIsFlipH,
             this.currentPickedTileIsFlipV,
-            this.currentPickedTileIsFlipD,
-            this.isRockBrushMode);
+            this.currentPickedTileIsFlipD);
     }
     
     handleFlipTile(indexFlip, isFlip) {
@@ -201,18 +218,28 @@ export default class GridViewGl extends Component {
             case 2: { this.currentPickedTileIsFlipD = isFlip; break; }
         }
         
-        this.setMouseCursorBlock(this.tiles,
+        this.setMouseCursorBlock(this.tilesImg,
             this.currentPickedTileIndex,
             this.currentPickedTileIsFlipH,
             this.currentPickedTileIsFlipV,
-            this.currentPickedTileIsFlipD,
-            this.isRockBrushMode);
+            this.currentPickedTileIsFlipD);
+    }
+
+    handleItemIdChanged(itemIdNum) {
+        this.itemIdNum = itemIdNum;
+
+        this.setMouseCursorBlock(this.tilesImg, 0,
+            this.currentPickedTileIsFlipH,
+            this.currentPickedTileIsFlipV,
+            this.currentPickedTileIsFlipD);
     }
     
     constructor(props) {
         super(props);
         
+        this.handleItemIdChanged = this.handleItemIdChanged.bind(this);
         this.handleRockBrushActivated = this.handleRockBrushActivated.bind(this);
+        this.handleItemBrushActivated = this.handleItemBrushActivated.bind(this);
         this.handlePathModeInspectorInit = this.handlePathModeInspectorInit.bind(this);
         this.handleCurrentPickedTileIndex = this.handleCurrentPickedTileIndex.bind(this);
         this.handlePathModeTogglerChanged = this.handlePathModeTogglerChanged.bind(this);
@@ -221,17 +248,16 @@ export default class GridViewGl extends Component {
         this.handleFlipTile = this.handleFlipTile.bind(this);
         
         this.state = {
-            isPathInspectorEnabled: false
+            isPathInspectorEnabled: false,
+            isItemInspectorEnabled: false
         }
-        
-        
     }
     
     componentDidMount() {
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         this.app = new PIXI.Application({
-            width: window.innerWidth - 512,
-            height: window.innerHeight - 256,
+            width: window.innerWidth - 312,
+            height: window.innerHeight - 128,
             view: document.getElementById("gridCanvas"),
             backgroundColor:  0x282c34,
             clearBeforeRender: true
@@ -277,7 +303,7 @@ export default class GridViewGl extends Component {
             
             if (!this.isBrushMode) return;
 
-            this.spawnTile(this.tiles,
+            this.spawnTile(this.tilesImg,
                 viewport,
                 this.currentPickedTileIndex,
                 gridX,
@@ -290,18 +316,17 @@ export default class GridViewGl extends Component {
         
         const canvas = document.getElementById("gridCanvas");
 
-        canvas.addEventListener('mousedown', (e)=>{
-            if (e.button === 0) {
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.button === 0 && !this.isRockBrushMode && !this.isItemBrushMode) {
                 this.isBrushMode = true;
             }
         })
 
-        canvas.addEventListener('mouseup', (e)=>{
-            if (e.button === 0) {
+        canvas.addEventListener('mouseup', (e) => {
+            if (e.button === 0 && !this.isRockBrushMode && !this.isItemBrushMode) {
                 this.isBrushMode = false;
             }
         })
-        
         
         viewport.addListener('clicked', (e)=> {
             
@@ -320,7 +345,12 @@ export default class GridViewGl extends Component {
                 return;
             }
             
-            this.spawnTile(this.tiles,
+            if (this.isItemBrushMode) {
+                this.spawnItem(viewport, gridX, gridY);
+                return;
+            }
+            
+            this.spawnTile(this.tilesImg,
                 viewport,
                 this.currentPickedTileIndex,
                 gridX,
@@ -329,8 +359,6 @@ export default class GridViewGl extends Component {
                 this.currentPickedTileIsFlipV,
                 this.currentPickedTileIsFlipD);
         });
-
-        
         
         this.app.stage.addChild(viewport)
 
@@ -344,15 +372,15 @@ export default class GridViewGl extends Component {
 
         viewport.fit()
 
-        this.tiles = this.prepareAtlas();
-        this.rock = this.prepareRockImg()[0];
+        this.tilesImg = this.prepareAtlas();
+        this.rockImg = this.prepareRockImg()[0];
+        this.itemsImg = [this.preparePtnImg()[0], this.prepareBmbImg()[0], this.prepareW4Img()[0]];
 
         this.initMouseCursorBlock(viewport);
-        this.setMouseCursorBlock(this.tiles, 0, 
+        this.setMouseCursorBlock(this.tilesImg, 0, 
             this.currentPickedTileIsFlipH,
             this.currentPickedTileIsFlipV,
-            this.currentPickedTileIsFlipD,
-            this.isRockBrushMode);
+            this.currentPickedTileIsFlipD);
         
         this.drawBorder(borderLine, viewport)
         this.drawGrid(gridLine, viewport);
@@ -369,8 +397,10 @@ export default class GridViewGl extends Component {
         this.mouseCursorBlock.zIndex = 1;
     }
     
-    setMouseCursorBlock(tiles, tileId, isFlipH, isFlipV, isFlipD, isRockBrushMode) {
-        this.mouseCursorBlock.texture = isRockBrushMode ? this.rock : tiles[tileId];
+    setMouseCursorBlock(tiles, tileId, isFlipH, isFlipV, isFlipD) {
+        this.mouseCursorBlock.texture = this.isRockBrushMode ? this.rockImg 
+            : this.isItemBrushMode ? this.itemsImg[this.itemIdNum] 
+            : this.tilesImg[tileId];
         
         this.mouseCursorBlock.scale.x = isFlipH? -1 : 1;
         this.mouseCursorBlock.scale.y = isFlipV? -1 : 1;
@@ -403,10 +433,10 @@ export default class GridViewGl extends Component {
     }
     
     spawnRock(viewport, gridX, gridY) {
-        const sprite = viewport.addChild(new PIXI.Sprite(this.rock))
+        const sprite = viewport.addChild(new PIXI.Sprite(this.rockImg))
 
         sprite.width = sprite.height = BLOCK_SIZE
-        sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
+        //sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
         sprite.scale.x =  1;
         sprite.scale.y = 1;
         sprite.anchor.x = 0.5
@@ -419,11 +449,33 @@ export default class GridViewGl extends Component {
         this.saveRock(gridX, gridY);
     }
     
+    spawnItem(viewport, gridX, gridY) {
+        const sprite = viewport.addChild(new PIXI.Sprite(this.itemsImg[this.itemIdNum]))
+        sprite.width = sprite.height = BLOCK_SIZE
+        sprite.position.set(BLOCK_SIZE * gridX, BLOCK_SIZE * gridY);
+        sprite.scale.x =  1;
+        sprite.scale.y = 1;
+        sprite.anchor.x = 0.5
+        sprite.anchor.y = 0.5
+        sprite.rotation = 0;
+        sprite.zIndex = -1;
+        sprite.position.set( sprite.position.x + BLOCK_SIZE / 2,  sprite.position.y + BLOCK_SIZE / 2);
+        
+        this.saveItem(gridX, gridY);
+    }
+    
     saveRock(gridX, gridY) {
         const chunkPos = gridPosToChunk({x: gridX, y: gridY});
         const localPos = globalPosToLocalPos(chunkPos, {x: gridX, y: gridY});
         
         localStorage.setItem(`rock:${gridX}:${gridY}`, `${localPos.x},${localPos.y}`);
+    }
+    
+    saveItem(gridX, gridY) {
+        const chunkPos = gridPosToChunk({x: gridX, y: gridY});
+        const localPos = globalPosToLocalPos(chunkPos, {x: gridX, y: gridY});
+        
+        localStorage.setItem(`item:${gridX}:${gridY}`, `${localPos.x},${localPos.y},${this.itemIdNum}`);
     }
     
     saveTile(gridX, gridY, tileCode) {
@@ -471,8 +523,23 @@ export default class GridViewGl extends Component {
     }
     
     prepareRockImg() {
-        const bT = PIXI.BaseTexture.from('rck.png');
-        
+        return this.prepareImg("rck.png");
+    }
+
+    prepareW4Img() {
+        return this.prepareImg("w4.png");
+    }
+    
+    prepareBmbImg() {
+        return this.prepareImg("bmb.png");
+    }
+    
+    preparePtnImg() {
+        return this.prepareImg("ptn.png");
+    }
+    
+    prepareImg(imgName) {
+        const bT = PIXI.BaseTexture.from(imgName);
         return [new PIXI.Texture(bT, new PIXI.Rectangle(0,0, 16,16)),]
     }
     
@@ -486,8 +553,6 @@ export default class GridViewGl extends Component {
     
     drawGrid(line, viewport) {
         const chunkSize = 8 * BLOCK_SIZE;
-
-        const viewportPointRB = viewport.toWorld(viewport.right, viewport.bottom)
         
         for (let x = 0; x < MAP_VIEW_SIZE; x+=BLOCK_SIZE) {
             
@@ -544,11 +609,17 @@ export default class GridViewGl extends Component {
     }
 
     render() {
-        const InspectorComponent = this.state.isPathInspectorEnabled ?
+        const PathInspectorComponent = this.state.isPathInspectorEnabled ?
             (<PathModeInspector
                 handlePathModePathEditorChanged={this.handlePathModePathEditorChanged}
                 handlePathModeInspectorInit={this.handlePathModeInspectorInit}
             />)
+            : (<Fragment/>);
+
+        const ItemInspectorComponent = this.state.isItemInspectorEnabled ? 
+            (<ItemModeInspector
+                handleItemIdChanged={this.handleItemIdChanged}
+            />) 
             : (<Fragment/>);
         
         return (
@@ -571,7 +642,11 @@ export default class GridViewGl extends Component {
                     handlePathModeTogglerChanged = {this.handlePathModeTogglerChanged}
                 />
                 <DownloadMapButton/>
-                    {InspectorComponent}
+                <ItemBrushButton 
+                    handleItemBrushActivated = {this.handleItemBrushActivated}
+                />
+                    {PathInspectorComponent}
+                    {ItemInspectorComponent}
                 </div>
                 <div >
                
