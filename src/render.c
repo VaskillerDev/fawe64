@@ -7,15 +7,22 @@ void DrawRectangle(int_32 x, int_32 y, int_32 w, int_32 h, uint_16 colors[4])
    rect(x - w / 2, y - h / 2, w , h);
 }
 
-void DrawImage(Image *img, int_32 x, int_32 y, bool defaultColors)
+void DrawImage(Image *img, int_32 x, int_32 y)
 {
-    if (defaultColors)
-    {
-        SetDrawColor_1(img->colors[0]);
-        SetDrawColor_2(img->colors[1]);
-        SetDrawColor_3(img->colors[2]);
-        SetDrawColor_4(img->colors[3]);
-    }
+    SetDrawColor_1(img->colors[0]);
+    SetDrawColor_2(img->colors[1]);
+    SetDrawColor_3(img->colors[2]);
+    SetDrawColor_4(img->colors[3]);
+
+    blit(img->data, x, y, img->width, img->height, img->flags);
+}
+
+void DrawImageWithCustomColors(Image *img, int_32 x, int_32 y, uint_16 customColors[4])
+{
+    SetDrawColor_1(customColors[0]);
+    SetDrawColor_2(customColors[1]);
+    SetDrawColor_3(customColors[2]);
+    SetDrawColor_4(customColors[3]);
 
     blit(img->data, x, y, img->width, img->height, img->flags);
 }

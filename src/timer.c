@@ -27,9 +27,13 @@ void timer_resume(Timer* timer) {
 }
 
 void timer_update(Timer* timer) {
-  if (timer->isPause) return;
+  if (timer->isPause) 
+    return;
+  
   timer->time -=1;
-  if (timer->time != 0) return;
+  
+  if (timer->time != 0) 
+    return;
 
   TimerExpiredEvent event = {.id = 1, timer};
   eventEmitter_emit (&timer->emitter, E_TIMER_EXPIRED, &event);

@@ -21,6 +21,8 @@ struct Sprite
     bool isTile;
     bool isHide;
     bool isFlipH;
+    bool useCustomColors;
+    uint_16 colors[4];
 };
 
 typedef struct Sprite Sprite;

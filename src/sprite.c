@@ -86,7 +86,10 @@ void sprite_draw(Sprite *sprite)
     if (sprite->currentImage)
     {
         sprite->isFlipH ? (sprite->currentImage->flags |= BLIT_FLIP_X) : (sprite->currentImage->flags &= ~BLIT_FLIP_X);
-        DrawImage(sprite->currentImage, sprite->position.x - sprite->size.x / 2, sprite->position.y - sprite->size.y / 2, true);
+        if(sprite->useCustomColors)
+            DrawImageWithCustomColors(sprite->currentImage, sprite->position.x - sprite->size.x / 2, sprite->position.y - sprite->size.y / 2, sprite->colors);
+        else
+            DrawImage(sprite->currentImage, sprite->position.x - sprite->size.x / 2, sprite->position.y - sprite->size.y / 2);
     }
 
     if (DEBUG_BOUNDING_VOLUME)

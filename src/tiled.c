@@ -130,7 +130,7 @@ void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool)
 
       img->flags = flag;
 
-      DrawImage (img, drawOffset + x * 16, drawOffset + y * 16, true);
+      DrawImage (img, drawOffset + x * 16, drawOffset + y * 16);
       tileI +=1;
     }
   }

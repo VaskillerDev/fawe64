@@ -618,7 +618,7 @@ void player_draw(Player *player, Level *level)
   if (player->selectorIndex < PlayerItem_Count)
   {
     Image *itemImage = player->itemImages[player->selectorIndex];
-    DrawImage(itemImage, 155 - itemImage->width, 155 - itemImage->height, true);
+    DrawImage(itemImage, 155 - itemImage->width, 155 - itemImage->height);
   }
 
   if (level->pause)
@@ -633,7 +633,7 @@ void player_draw(Player *player, Level *level)
         selectorColors[1] = 3;
 
       DrawRectangle(45 + 34 * i, 80, 32, 32, selectorColors);
-      DrawImage(player->itemImages[i], 45 + 34 * i - player->itemImages[i]->width / 2, 80 - player->itemImages[i]->height / 2, true);
+      DrawImage(player->itemImages[i], 45 + 34 * i - player->itemImages[i]->width / 2, 80 - player->itemImages[i]->height / 2);
 
       char amountlText[3];
       amountlText[0] = player->itemsCount[i] / 10 + '0';
