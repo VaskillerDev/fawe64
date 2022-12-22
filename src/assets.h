@@ -95,4 +95,11 @@ extern const uint8_t bomb_img[64];
 extern const uint8_t bomb2_img[64];
 extern const uint8_t potion_img[64];
 
+extern const uint8_t boss0_img_0[64];
+extern const uint8_t boss0_img_1[64];
+extern const uint8_t boss0_img_2[64];
+extern const uint8_t boss0_img_3[64];
+extern const uint8_t boss0_img_4[64];
+extern const uint8_t boss0_img_5[64];
+
 #endif //_ASSETS_H_
