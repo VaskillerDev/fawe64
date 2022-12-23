@@ -30,12 +30,23 @@ EnemyRock ENEMY_ROCK_PROTOTYPE = {
     }
 };
 
+EnemyBoss0Head ENEMY_BOSS0_HEAD_PROTOTYPE = {
+        .metaData = {
+                .name = EnemyTypeName_Boss0Head,
+                .attackName = EnemyAttackTypeName_Melee,
+                .bulletLifetime = 1,
+                .bulletSpeed = 0,
+                .swordResistance = true
+        }
+};
+
 EnemyUnit enemyUnit_new(EnemyUnitNewArgs args) {
   switch (args.type)
   {
       case EnemyTypeName_Warlock: return warlock_new (args.enemy, args.level);
       case EnemyTypeName_Bat: return bat_new(args.enemy, args.level);
       case EnemyTypeName_Rock: return rock_new (args.enemy, args.level);
+      case EnemyTypeName_Boss0Head: return boss0Head_new(args.enemy, args.level);
 
       case EnemyTypeName_Unknown:
       default: return warlock_new (args.enemy, args.level);
@@ -256,4 +267,38 @@ void rock_behaviour(Enemy* enemy) {
       rect (rockPosition.x - 9, rockPosition.y - 9, 18, 18);
       *DRAW_COLORS =color;
   }
+}
+
+EnemyUnit boss0Head_new(Enemy* enemy, Level* level) {
+    enemy->sprite = level_spawnObject(level);
+    enemy->direction = EnemyDir_Bottom;
+    enemy->actionState = EnemyAction_Idle;
+
+    Image *frames[4] = {
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle0),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle1),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle2),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle3),
+    };
+
+    for (uint_8 i = 0; i < 4; i++) {
+        enemy->goFrames[i] = frames[i];
+    }
+
+    sprite_animated_init(enemy->sprite, enemy->goFrames, 4, 10);
+    sprite_initBoundingVolume(enemy->sprite, BOX, BoundingVolumeTag_Enemy);
+
+    enemy->sprite->health = &enemy->health;
+    enemy->sprite->position = vec2_new(80, 100);
+
+    EnemyBoss0Head head = ENEMY_BOSS0_HEAD_PROTOTYPE;
+    head.enemy = enemy;
+    enemy->sprite->health->swordResistance = head.metaData.swordResistance;
+    enemyUnit_updateAttackNameForEnemy(&head);
+    head.enemy->tactics = &warlock_behaviour;
+    return head;
+}
+
+void boss0Head_behaviour(Enemy* enemy) {
+    // todo: continue
 }

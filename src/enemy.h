@@ -8,6 +8,7 @@ enum EnemyTypeName {
     EnemyTypeName_Warlock,
     EnemyTypeName_Bat,
     EnemyTypeName_Rock,
+    EnemyTypeName_Boss0Head
 };
 
 enum EnemyAttackTypeName {

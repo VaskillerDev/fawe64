@@ -30,3 +30,8 @@ void bat_behaviour(Enemy* enemy);
 typedef struct EnemyUnit EnemyRock;
 EnemyUnit rock_new(Enemy* enemy, Level* level);
 void rock_behaviour(Enemy* enemy);
+
+// boss0
+typedef struct EnemyUnit EnemyBoss0Head;
+EnemyUnit boss0Head_new(Enemy* enemy, Level* level);
+void boss0Head_behaviour(Enemy* enemy);
