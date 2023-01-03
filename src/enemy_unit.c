@@ -1,5 +1,7 @@
 #include "enemy_unit.h"
 
+const uint_8 BOSS0_HEAD_DELAY = 240;
+
 EnemyWarlock ENEMY_WARLOCK_PROTOTYPE = {
     .metaData ={
       .name = EnemyTypeName_Warlock,
@@ -34,9 +36,9 @@ EnemyBoss0Head ENEMY_BOSS0_HEAD_PROTOTYPE = {
         .metaData = {
                 .name = EnemyTypeName_Boss0Head,
                 .attackName = EnemyAttackTypeName_Melee,
-                .bulletLifetime = 1,
-                .bulletSpeed = 0,
-                .swordResistance = true
+                .bulletLifetime = 32,
+                .bulletSpeed = 2,
+                .swordResistance = false
         }
 };
 
@@ -285,6 +287,16 @@ EnemyUnit boss0Head_new(Enemy* enemy, Level* level) {
         enemy->goFrames[i] = frames[i];
     }
 
+    Image *attackFrames[3] = {
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle0),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle0),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle0)
+    };
+
+    for (uint_8 i = 0; i < 3; i++) {
+        enemy->attackFrame[i] = attackFrames[i];
+    }
+
     sprite_animated_init(enemy->sprite, enemy->goFrames, 4, 10);
     sprite_initBoundingVolume(enemy->sprite, BOX, BoundingVolumeTag_Enemy);
 
@@ -295,10 +307,29 @@ EnemyUnit boss0Head_new(Enemy* enemy, Level* level) {
     head.enemy = enemy;
     enemy->sprite->health->swordResistance = head.metaData.swordResistance;
     enemyUnit_updateAttackNameForEnemy(&head);
-    head.enemy->tactics = &warlock_behaviour;
+    head.enemy->tactics = &boss0Head_behaviour;
+
+    // navigation
+    enemy->navRoot->navPointArray[0] = vec2_new(2 * 16,3 * 16);
+    enemy->navRoot->navPointArray[1] = vec2_new(8 * 16,3 * 16);
+    enemy->navRoot->navPointArray[2] = vec2_new(101,0);
+
+    enemy->delay = BOSS0_HEAD_DELAY;
+
     return head;
 }
 
 void boss0Head_behaviour(Enemy* enemy) {
-    // todo: continue
+    enemy->actionState = EnemyAction_Go;
+    bool isFlipH = player_getInstance()->sprite->position.x < enemy->sprite->position.x;
+    sprite_setFlipH (enemy->sprite, isFlipH);
+
+    if (enemy->delay <= 0) {
+        enemy->actionState = EnemyAction_Idle;
+        enemy->delay = BOSS0_HEAD_DELAY;
+    }
+
+    enemy->direction = 0;
+    enemy->moveDir = vec2_new(0, 0);
+    Navigation_Move(enemy, enemy->navRoot, 1);
 }

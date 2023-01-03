@@ -16,6 +16,8 @@ extern uint_16 bombImgColors[4];
 extern uint_16 bomb2ImgColors[4];
 extern uint_16 pliligrimLeftColors[4];
 extern uint_16 pliligrimUpAttackColors[4];
+extern uint_16 boss0ImgColors[4];
+extern uint_16 boss0ImgColors1[4];
 extern uint16_t enemy0ImgColors[4];
 extern uint_16 tile4Colors[4];
 extern uint_16 rockImgColors[4];
