@@ -6,7 +6,7 @@ void DrawImage(Image *img, int_32 x, int_32 y);
 void DrawImageWithCustomColors(Image *img, int_32 x, int_32 y, uint_16 customColors[4]);
 void DrawText(char* content, int_32 x, int_32 y, uint_16 colors[4]);
 void DrawBoundingVolume(BoundingVolume* bv);
-void DrawProgressBar(int val, int_32 x, int_32 y);
+void DrawProgressBar(int_32 val);
 
 void SetPaletteColor_1(uint_32 newColor);
 uint_32 GetPaletteColor_1();

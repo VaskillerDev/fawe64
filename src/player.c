@@ -645,6 +645,8 @@ void player_draw(Player *player, Level *level)
         selectorColors[1] = 4;
     }
   }
+
+    DrawProgressBar(98); // todo
 }
 
 void player_postUpdate(Player *player)
