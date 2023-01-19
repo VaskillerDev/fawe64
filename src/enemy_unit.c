@@ -42,6 +42,16 @@ EnemyBoss0Head ENEMY_BOSS0_HEAD_PROTOTYPE = {
         }
 };
 
+EnemyBoss0Hand  ENEMY_BOSS0_HAND_PROTOTYPE = {
+        .metaData = {
+                .name = EnemyTypeName_Boss0Hand,
+                .attackName = EnemyAttackTypeName_Melee,
+                .bulletLifetime = 5,
+                .bulletSpeed = 2,
+                .swordResistance = true
+        }
+};
+
 EnemyUnit enemyUnit_new(EnemyUnitNewArgs args) {
   switch (args.type)
   {
@@ -49,6 +59,7 @@ EnemyUnit enemyUnit_new(EnemyUnitNewArgs args) {
       case EnemyTypeName_Bat: return bat_new(args.enemy, args.level);
       case EnemyTypeName_Rock: return rock_new (args.enemy, args.level);
       case EnemyTypeName_Boss0Head: return boss0Head_new(args.enemy, args.level);
+      case EnemyTypeName_Boss0Hand: return boss0Hand_new(args.enemy, args.level);
 
       case EnemyTypeName_Unknown:
       default: return warlock_new (args.enemy, args.level);
@@ -271,10 +282,15 @@ void rock_behaviour(Enemy* enemy) {
   }
 }
 
+Enemy* bossHead = NULL;
+
 EnemyUnit boss0Head_new(Enemy* enemy, Level* level) {
+    bossHead = enemy;
     enemy->sprite = level_spawnObject(level);
     enemy->direction = EnemyDir_Bottom;
     enemy->actionState = EnemyAction_Idle;
+    enemy->health.maxPoints = 15;
+    enemy->health.currentPoints = enemy->health.maxPoints;
 
     Image *frames[4] = {
             imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle0),
@@ -320,6 +336,9 @@ EnemyUnit boss0Head_new(Enemy* enemy, Level* level) {
 }
 
 void boss0Head_behaviour(Enemy* enemy) {
+    int proc = (float)((float)enemy->health.currentPoints / (float)enemy->health.maxPoints) * 100;
+    DrawProgressBar(proc);
+
     enemy->actionState = EnemyAction_Go;
     bool isFlipH = player_getInstance()->sprite->position.x < enemy->sprite->position.x;
     sprite_setFlipH (enemy->sprite, isFlipH);
@@ -332,4 +351,72 @@ void boss0Head_behaviour(Enemy* enemy) {
     enemy->direction = 0;
     enemy->moveDir = vec2_new(0, 0);
     Navigation_Move(enemy, enemy->navRoot, 1);
+}
+
+EnemyUnit boss0Hand_new(Enemy* enemy, Level* level) {
+    enemy->sprite = level_spawnObject(level);
+    enemy->direction = EnemyDir_Bottom;
+    enemy->actionState = EnemyAction_Idle;
+    enemy->health.maxPoints = 15;
+    enemy->health.currentPoints = enemy->health.maxPoints;
+
+    Image *frames[3] = {
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0HandClose),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0HandClose),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0HandClose),
+    };
+
+    for (uint_8 i = 0; i < 3; i++) {
+        enemy->goFrames[i] = frames[i];
+    }
+
+    Image *attackFrames[3] = {
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0HandOpen),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0HandOpen),
+            imagePool_getImage(level->imagePool, PoolIdx_Boss0HandOpen),
+    };
+
+    for (uint_8 i = 0; i < 3; i++) {
+        enemy->attackFrame[i] = attackFrames[i];
+    }
+
+    sprite_animated_init(enemy->sprite, enemy->goFrames, 3, 10);
+    sprite_initBoundingVolume(enemy->sprite, BOX, BoundingVolumeTag_Enemy);
+
+    enemy->sprite->health = &enemy->health;
+    enemy->sprite->position = vec2_new(50, 100);
+
+    EnemyBoss0Hand hand = ENEMY_BOSS0_HAND_PROTOTYPE;
+    hand.enemy = enemy;
+    enemy->sprite->health->swordResistance = hand.metaData.swordResistance;
+    enemyUnit_updateAttackNameForEnemy(&hand);
+    hand.enemy->tactics = &boss0Hand_behaviour;
+
+    // navigation
+/*    enemy->navRoot->navPointArray[0] = vec2_new(1 * 16,4 * 16);
+    enemy->navRoot->navPointArray[1] = vec2_new(9 * 16,4 * 16);
+    enemy->navRoot->navPointArray[2] = vec2_new(101,0);*/
+
+    enemy->delay = BOSS0_HEAD_DELAY;
+
+    return hand;
+}
+
+void boss0Hand_behaviour(Enemy* enemy) {
+    enemy->actionState = EnemyAction_Go;
+
+    if (enemy->delay <= 0) {
+        enemy->actionState = EnemyAction_Idle;
+        enemy->delay = BOSS0_HEAD_DELAY;
+        enemy->sprite->position = vec2_add(enemy->sprite->position, vec2_new(-1,0));
+    }
+
+    if (bossHead != NULL) {
+        enemy->sprite->position = vec2_add(bossHead->sprite->position, vec2_new(-16,5));
+    }
+
+
+    enemy->direction = 0;
+    enemy->moveDir = vec2_new(0, 0);
+   // Navigation_Move(enemy, enemy->navRoot, 1);
 }
