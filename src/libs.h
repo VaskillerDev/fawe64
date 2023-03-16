@@ -32,6 +32,7 @@
 #include "bullet.h"
 #include "dungeon.h"
 #include "level.h"
+#include "boss0.h"
 #include "assets.h"
 
 #include "event.h"

@@ -33,9 +33,4 @@ void rock_behaviour(Enemy* enemy);
 
 // boss0
 typedef struct EnemyUnit EnemyBoss0Head;
-EnemyUnit boss0Head_new(Enemy* enemy, Level* level);
-void boss0Head_behaviour(Enemy* enemy);
-
 typedef struct EnemyUnit EnemyBoss0Hand;
-EnemyUnit boss0Hand_new(Enemy* enemy, Level* level);
-void boss0Hand_behaviour(Enemy* enemy);
