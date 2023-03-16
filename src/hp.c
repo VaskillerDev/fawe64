@@ -27,7 +27,8 @@ void hp_substract(Hp* hp, uint8_t points) {
 
   struct HpPointsChangedEvent changedEvent = {
       .id = hp->id,
-      .currentPoints = hp->currentPoints
+      .currentPoints = hp->currentPoints,
+      .parent = hp->parent
   };
 
   eventEmitter_emit (&hp->emitter, E_HP_POINTS_CHANGED, (void *) &changedEvent);

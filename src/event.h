@@ -79,6 +79,7 @@ typedef struct CurrentOptionChangedEvent {
 typedef struct HpPointsChangedEvent {
     uint8_t id;
     uint8_t currentPoints;
+    void* parent;
 } HpPointsChangedEvent;
 
 typedef struct HpPointsOverEvent {
