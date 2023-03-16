@@ -64,7 +64,7 @@ void enemy_death(HpPointsOverEvent eData)
 void enemy_update(Enemy *enemy)
 {
     enemy->prevActionState = enemy->actionState;
-    void (*tactics) () = enemy->tactics;
+    void (*tactics) (Enemy*) = enemy->tactics;
     tactics(enemy);
 
   if (enemy->actionState != enemy->prevActionState) {
