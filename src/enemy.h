@@ -19,7 +19,7 @@ enum EnemyAttackTypeName {
 typedef struct UnitMetaData {
     EnemyAttackTypeName attackName;
     EnemyTypeName name;
-
+    uint_8 hp;
     uint_8 bulletSpeed;
     uint_8 bulletLifetime;
     bool swordResistance;
@@ -47,6 +47,9 @@ struct Enemy
     struct NavRoot* navRoot;
 
     Hp health;
+    int hitAnimationMaxTimerValue;
+    int hitAnimationTimer;
+
     Vec2 moveDir;
     uint_8 movDist;
     uint_8 delay;
@@ -69,3 +72,4 @@ void enemy_update(Enemy* enemy);
 void on_enemy_change_animation(EnemyActionStateChangedEvent event);
 void on_enemy_attack_bullet(EnemyAttackBulletEvent* event);
 void on_enemy_has_got_bullet_collision(EnemyHasGotBulletCollisionEvent* e);
+void enemy_start_hitAnimation(HpPointsChangedEvent* eData);
