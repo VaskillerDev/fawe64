@@ -2,6 +2,9 @@
 #include <math.h>
 
 const uint_8 POITION_EFFECT = 5;
+const float maxExplosionRadius = 20;
+const float detonationAnimationTime = 120;
+const float explosionAnimationTime = 20;
 
 Bomb bomb_new(Level *level, Vec2 spawnPoint)
 {
@@ -19,7 +22,7 @@ Bomb bomb_new(Level *level, Vec2 spawnPoint)
     Bomb bomb =
         {
             .sprite = sprite,
-            .timer = timer_new(120, false),
+            .timer = timer_new(detonationAnimationTime + explosionAnimationTime, false),
             .directionalExplosion = false};
 
     timer_start(&bomb.timer);
@@ -36,7 +39,7 @@ void bomb_update(Level *level, Bomb *bomb)
 {
     timer_update(&bomb->timer);
 
-    if (timer_isOut(&bomb->timer))
+    if (bomb->timer.time == explosionAnimationTime)
     {
         Vec2 bombPos = bomb->sprite->position;
         bombPos.x += 8;
@@ -60,10 +63,22 @@ void bomb_update(Level *level, Bomb *bomb)
                 goto BOOM;
             }
         }
+    }
+    else
+    {
+        if(bomb->timer.time < explosionAnimationTime)
+        {
+            
+        tone(100, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE2);
+            float radius = maxExplosionRadius *  (1.0f - ((float) bomb->timer.time / explosionAnimationTime));
+            oval(bomb->sprite->position.x - radius, bomb->sprite->position.y - radius, radius * 2, radius * 2);
+        }
+    }
 
+    if(timer_isOut(&bomb->timer))
+    {
         level_deleteObject(level, bomb->sprite);
         bomb->sprite = NULL;
-        tone(100, 2 | (50 << 8), 40, TONE_NOISE | TONE_MODE2);
     }
 }
 

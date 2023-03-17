@@ -22,7 +22,6 @@ void menu_setImagePool(MenuState* menuState, ImagePool* imagePool) {
 }
 
 const uint8_t logoYPosMax = 4;
-MenuOptionType prevCurrentOption = 0;
 
 uint8_t prevGamepad = 0;
 const uint8_t optionXPos = 34;
@@ -48,9 +47,8 @@ void menu_processInput(struct MenuState *state, struct GameState *gameState)
 
   bool clickedButton1 = pressedThisFrame == BUTTON_1;
 
-  if (clickedButton1 && prevCurrentOption != state->currentOption)
+  if (clickedButton1)
   {
-    prevCurrentOption = state->currentOption;
 
     struct CurrentOptionChangedEvent event = {
         .currentOption = state->currentOption,
