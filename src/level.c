@@ -47,12 +47,14 @@ void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent *event)
   Vec2 startPosition = event->enemy->sprite->position;
   UnitMetaData unitMetaData = event->enemy->metaData;
 
-  BulletMetaData bulletMetaData = {
+  BulletMetaData bulletMetaData = 
+  {
       .startPosition = startPosition,
       .speed = unitMetaData.bulletSpeed,
       .lifetime = unitMetaData.bulletLifetime,
       .senderType = BulletSenderType_Enemy,
-      .owner = event->enemy->sprite
+      .owner = event->enemy->sprite,
+      .isHide = event->enemy->metaData.attackName == EnemyAttackTypeName_Melee
   };
 
   bulletManager_createBullet(bm, bulletMetaData);

@@ -13,6 +13,7 @@ typedef struct BulletMetaData {
     Vec2 startPosition;
     uint_8 lifetime;
     uint_8 speed;
+    bool isHide;
 } BulletMetaData;
 
 typedef struct Bullet {

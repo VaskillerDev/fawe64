@@ -34,7 +34,8 @@ void on_enemy_has_got_bullet_collision(EnemyHasGotBulletCollisionEvent *e)
 void on_enemy_attack_bullet(EnemyAttackBulletEvent *event)
 {
   struct LevelEnemyAttackBulletEvent attackEvent = {
-      .enemy = event->enemy};
+      .enemy = event->enemy
+      };
   eventEmitter_emit(&event->level->emitter, E_ENEMY_ATTACK_BULLET, (void *)&attackEvent);
 }
 
