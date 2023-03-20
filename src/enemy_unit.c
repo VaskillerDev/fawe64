@@ -1,4 +1,5 @@
 #include "enemy_unit.h"
+#include "bossState.h"
 
 const uint_8 BOSS0_HEAD_DELAY = 240;
 
@@ -332,28 +333,18 @@ EnemyUnit boss0Head_new(Enemy* enemy, Level* level) {
 
     enemy->delay = BOSS0_HEAD_DELAY;
 
+    bossState_new(enemy);
     return head;
 }
 
 void boss0Head_behaviour(Enemy* enemy) {
-    int proc = (float)((float)enemy->health.currentPoints / (float)enemy->health.maxPoints) * 100;
-    DrawProgressBar(proc);
-
-    enemy->actionState = EnemyAction_Go;
-    bool isFlipH = player_getInstance()->sprite->position.x < enemy->sprite->position.x;
-    sprite_setFlipH (enemy->sprite, isFlipH);
-
-    if (enemy->delay <= 0) {
-        enemy->actionState = EnemyAction_Idle;
-        enemy->delay = BOSS0_HEAD_DELAY;
-    }
-
-    enemy->direction = 0;
-    enemy->moveDir = vec2_new(0, 0);
-    Navigation_Move(enemy, enemy->navRoot, 1);
+    enemy;
+    bossState_update();
 }
 
 EnemyUnit boss0Hand_new(Enemy* enemy, Level* level) {
+    bossState_appendHand(enemy);
+
     enemy->sprite = level_spawnObject(level);
     enemy->direction = EnemyDir_Bottom;
     enemy->actionState = EnemyAction_Idle;
@@ -384,7 +375,7 @@ EnemyUnit boss0Hand_new(Enemy* enemy, Level* level) {
     sprite_initBoundingVolume(enemy->sprite, BOX, BoundingVolumeTag_Enemy);
 
     enemy->sprite->health = &enemy->health;
-    enemy->sprite->position = vec2_new(50, 100);
+    enemy->sprite->position = vec2_new(160, 160);
 
     EnemyBoss0Hand hand = ENEMY_BOSS0_HAND_PROTOTYPE;
     hand.enemy = enemy;
@@ -393,9 +384,9 @@ EnemyUnit boss0Hand_new(Enemy* enemy, Level* level) {
     hand.enemy->tactics = &boss0Hand_behaviour;
 
     // navigation
-/*    enemy->navRoot->navPointArray[0] = vec2_new(1 * 16,4 * 16);
+    enemy->navRoot->navPointArray[0] = vec2_new(3 * 16,4 * 16);
     enemy->navRoot->navPointArray[1] = vec2_new(9 * 16,4 * 16);
-    enemy->navRoot->navPointArray[2] = vec2_new(101,0);*/
+    enemy->navRoot->navPointArray[2] = vec2_new(101,0);
 
     enemy->delay = BOSS0_HEAD_DELAY;
 
@@ -408,15 +399,15 @@ void boss0Hand_behaviour(Enemy* enemy) {
     if (enemy->delay <= 0) {
         enemy->actionState = EnemyAction_Idle;
         enemy->delay = BOSS0_HEAD_DELAY;
-        enemy->sprite->position = vec2_add(enemy->sprite->position, vec2_new(-1,0));
+        //enemy->sprite->position = vec2_add(enemy->sprite->position, vec2_new(-1,0));
     }
 
     if (bossHead != NULL) {
-        enemy->sprite->position = vec2_add(bossHead->sprite->position, vec2_new(-16,5));
+        //enemy->sprite->position = vec2_add(bossHead->sprite->position, vec2_new(-16,5));
     }
 
 
-    enemy->direction = 0;
-    enemy->moveDir = vec2_new(0, 0);
+    //enemy->direction = 0;
+    //enemy->moveDir = vec2_new(0, 0);
    // Navigation_Move(enemy, enemy->navRoot, 1);
 }

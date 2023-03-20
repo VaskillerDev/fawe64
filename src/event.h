@@ -147,3 +147,7 @@ typedef struct EnemyHasGotBulletCollisionEvent {
     uint_8 damage;
     Enemy* enemy;
 } EnemyHasGotBulletCollisionEvent;
+
+typedef struct BossTimerExpiredEvent {
+
+} BossTimerExpiredEvent;
