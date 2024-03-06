@@ -34,13 +34,23 @@ void eventEmitter_emit (EventEmitter *emitter, enum EventName name, void *args)
         continue;
       }
 
-      void (*lambda) () = emitter->events[i].lambdaRefAsValue;
-      if (lambda == NULL)
+      void* lambdaPtr = emitter->events[i].lambdaRefAsValue;
+      if (lambdaPtr == NULL)
         {
           tracef ("calling %d event: is NULL", name);
           return;
         }
-      args == NULL ? lambda () : lambda (args);
+      
+      if(args == NULL)
+      {
+         void (*lambda) () = lambdaPtr;
+        lambda();
+      }
+      else
+      {
+         void (*lambda) (void*) = lambdaPtr;
+        lambda (args);
+      }
   }
 
 }
