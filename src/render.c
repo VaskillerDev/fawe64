@@ -48,6 +48,22 @@ void DrawBoundingVolume(BoundingVolume *bv)
         rect(bv->position->x - bv->size.x / 2, bv->position->y - bv->size.y / 2, bv->size.x , bv->size.y);
 }
 
+void DrawProgressBar(int_32 val) {
+    const int maxVal = 98;
+
+
+    val = val <= 0 ? 0 : val;
+    val = val >= 100 ? 100 : val;
+
+    float fVal = ((float)val / 100) * maxVal;
+    SetDrawColor_1(3);
+    rect(32, 2, (int) fVal, 10);
+
+    SetDrawColor_1(0);
+    SetDrawColor_2(4);
+    rect(32, 2, maxVal, 10);
+}
+
 void SetPaletteColor_1(uint_32 newColor)
 {
     PALETTE[0] = newColor;

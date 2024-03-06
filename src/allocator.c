@@ -40,7 +40,7 @@ void *allocate(unsigned long size)
             void* ptr = (void*)(((char*)currentAllocatorNode) + sizeof(AllocatorNode));
             memset(ptr, 0, size);
             freeMemory -= size;
-            tracef("alloc: %d, %d", (int)size, (int)freeMemory);
+            //tracef("alloc: %d, %d", (int)size, (int)freeMemory);
             return ptr;
         }
         else
@@ -58,7 +58,7 @@ void alloc_free(void* ptr)
     currentNode->free = true;
     memset(ptr, 0, currentNode->size);
     freeMemory += currentNode->size;
-    tracef("free: %d, %d", (int)currentNode->size, (int)freeMemory);
+    //tracef("free: %d, %d", (int)currentNode->size, (int)freeMemory);
     currentNode = allocator;
 
     while (currentNode != NULL)

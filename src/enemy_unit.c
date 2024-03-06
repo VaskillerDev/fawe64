@@ -39,6 +39,8 @@ EnemyUnit enemyUnit_new(EnemyUnitNewArgs args) {
       case EnemyTypeName_Warlock: return warlock_new (args.enemy, args.level);
       case EnemyTypeName_Bat: return bat_new(args.enemy, args.level);
       case EnemyTypeName_Rock: return rock_new (args.enemy, args.level);
+      case EnemyTypeName_Boss0Head: return rock_new (args.enemy, args.level);
+      case EnemyTypeName_Boss0Hand: return rock_new (args.enemy, args.level);
 
       case EnemyTypeName_Unknown:
       default: return warlock_new (args.enemy, args.level);
