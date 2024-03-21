@@ -1,4 +1,5 @@
-#include "libs.h"
+#include "bounding_volume.h"
+#include "stdbool.h"
 
 bool IsBox(BoundingVolume *bv)
 {

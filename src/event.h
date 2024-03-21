@@ -2,10 +2,14 @@
 // Created by user on 17.01.2022.
 //
 #pragma once
-#include "libs.h"
+#include "types.h"
+#include "stdlib.h"
+#include "vec2.h"
+#include "menu.h"
+
 #define MAX_EVENTS 64
 
-typedef enum EventName {
+enum EventName {
     E_UNKNOWN = 0,
     // MENU: 1
     /**
@@ -29,20 +33,20 @@ typedef enum EventName {
     E_LEVEL_BORDER_CONTACT = 38,
     E_LEVEL_CHUNK_MOVED = 39,
     E_TIMER_EXPIRED = 40
-} EventName;
+};
 
 /**
  * Пара ключ-значение
  */
-typedef struct EventKeyValue {
+struct EventKeyValue {
     enum EventName eventNameAsKey;
     void *lambdaRefAsValue;
-} EventKeyValue;
+};
 
 /**
  * Эмиттер
  */
-typedef struct EventEmitter {
+struct EventEmitter {
     /**
      * Контейнер с прослушиваемыми событиями
      */
@@ -51,7 +55,7 @@ typedef struct EventEmitter {
      * Кол-во прослушиваемых событий в текущий момент
      */
     int listeningEventCount;
-} EventEmitter;
+};
 
 EventEmitter eventEmitter_new (void);
 
@@ -71,80 +75,80 @@ void eventEmitter_on (EventEmitter *emitter, enum EventName name, void *lambda);
  */
 void eventEmitter_emit (EventEmitter *emitter, enum EventName name, void *args);
 
-typedef struct CurrentOptionChangedEvent {
+struct CurrentOptionChangedEvent {
     GameState* gameState;
     MenuOptionType currentOption;
-} CurrentOptionChangedEvent;
+};
 
-typedef struct HpPointsChangedEvent {
+struct HpPointsChangedEvent {
     uint8_t id;
     uint8_t currentPoints;
     void* parent;
-} HpPointsChangedEvent;
+};
 
-typedef struct HpPointsOverEvent {
+struct HpPointsOverEvent {
     uint8_t id;
     void* parent;
-} HpPointsOverEvent;
+};
 
-typedef struct HpPointsFilledEvent {
+struct HpPointsFilledEvent {
     uint8_t id;
-} HpPointsFilledEvent;
+};
 
-typedef struct EnemyActionStateChangedEvent {
+struct EnemyActionStateChangedEvent {
     Enemy* enemy;
-    uint_8 state;
-} EnemyActionStateChangedEvent;
+    uint8_t state;
+};
 
-typedef struct EnemySwordAttackHitEvent {
+struct EnemySwordAttackHitEvent {
     Player* player;
     Sword* sword;
     Sprite* target;
-} EnemySwordAttackHitEvent;
+};
 
-typedef struct PlayerAttackAnimationTimeoutEvent {
-    uint_8 timeout;
+struct PlayerAttackAnimationTimeoutEvent {
+    uint8_t timeout;
     Player* player;
-} PlayerAttackAnimationTimeoutEvent;
+};
 
-typedef struct PlayerLevelChunkMovedEvent {
+struct PlayerLevelChunkMovedEvent {
     Level* level;
     Vec2 startPosition;
-} PlayerLevelChunkMovedEvent;
+};
 
-typedef struct EnemyAttackBulletEvent {
+struct EnemyAttackBulletEvent {
     Level* level;
     Enemy* enemy;
-} EnemyAttackBulletEvent;
+};
 
-typedef struct LevelEnemyAttackBulletEvent {
+struct LevelEnemyAttackBulletEvent {
     Enemy* enemy;
-    uint_8 lifetimeMs;
-} LevelEnemyAttackBulletEvent;
+    uint8_t lifetimeMs;
+};
 
-typedef struct LevelBorderContactEvent {
-    uint_8 direction; // 0 left 1 top 2 right 3 bottom
-} LevelBorderContactEvent;
+struct LevelBorderContactEvent {
+    uint8_t direction; // 0 left 1 top 2 right 3 bottom
+};
 
-typedef struct PlayerHasGotBulletCollisionEvent {
-    uint_8 damage;
-} PlayerHasGotBulletCollisionEvent;
+struct PlayerHasGotBulletCollisionEvent {
+    uint8_t damage;
+};
 
-typedef struct TimerExpiredEvent {
-    uint_8 id;
+struct TimerExpiredEvent {
+    uint8_t id;
     Timer* timer;
-} TimerExpiredEvent;
+};
 
-typedef struct BoundingVolumeCollidedEvent {
+struct BoundingVolumeCollidedEvent {
     BoundingVolume *bv1;
     BoundingVolume *bv2;
-} BoundingVolumeCollidedEvent;
+};
 
-typedef struct PlayerEnterDungeonEvent {
+struct PlayerEnterDungeonEvent {
     Vec2f startPosition;
-}PlayerEnterDungeonEvent;
+};
 
-typedef struct EnemyHasGotBulletCollisionEvent {
-    uint_8 damage;
+struct EnemyHasGotBulletCollisionEvent {
+    uint8_t damage;
     Enemy* enemy;
-} EnemyHasGotBulletCollisionEvent;
+};

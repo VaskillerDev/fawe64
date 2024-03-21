@@ -1,5 +1,8 @@
-#include"libs.h"
+#include "image_pool.h"
+#include "assets.h"
 #include "allocator.h"
+#include "wasm4.h"
+
 
 void imagePool_init(ImagePool *pool)
 {
@@ -78,16 +81,16 @@ void imagePool_init(ImagePool *pool)
   *(pool->images + 51) = imagePool_addImage (pool, (void*)bomb2_img, 64, 16, 16, bomb2ImgColors, BLIT_2BPP);
 }
 
-Image *imagePool_addImage(ImagePool *pool, void *dataPtr, uint_32 size, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags)
+Image *imagePool_addImage(ImagePool *pool, void *dataPtr, uint32_t size, uint32_t w, uint32_t h, uint16_t colors[4], uint32_t flags)
 {
-    void* newImageDataPtr = (uint_8*)pool->data + pool->offset;
+    void* newImageDataPtr = (uint8_t*)pool->data + pool->offset;
     memcpy(newImageDataPtr, dataPtr, size);
     pool->offset += size;
 
     return image_new(newImageDataPtr, w, h, colors, flags);
 }
 
-Image* imagePool_getImage(ImagePool* pool,uint_32 index)
+Image* imagePool_getImage(ImagePool* pool,uint32_t index)
 {
     return *(pool->images + index);
 }

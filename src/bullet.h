@@ -1,5 +1,8 @@
 #pragma once
-#include "libs.h"
+#include "sprite.h"
+#include "vec2.h"
+#include "stdint.h"
+#include "image.h"
 
 typedef enum BulletSenderType {
     BulletSenderType_Unknown,
@@ -11,8 +14,8 @@ typedef struct BulletMetaData {
     BulletSenderType senderType;
     Sprite* owner;
     Vec2 startPosition;
-    uint_8 lifetime;
-    uint_8 speed;
+    uint8_t lifetime;
+    uint8_t speed;
 } BulletMetaData;
 
 typedef struct Bullet {
@@ -35,7 +38,7 @@ bool bullet_isEmpty(Bullet* bullet);
 
 typedef struct BulletManager {
     Bullet bulletArray[8];
-    uint_8 lastIndex;
+    uint8_t lastIndex;
 } BulletManager;
 
 BulletManager bulletManager_new();

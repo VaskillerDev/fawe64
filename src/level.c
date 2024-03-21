@@ -1,7 +1,8 @@
-#include "libs.h"
-#include "enemy.h"
-#include "enemy_unit.h"
+#include "level.h"
+#include "assets.h"
 #include "allocator.h"
+#include "enemy_unit.h"
+#include "player.h"
 
 UT_icd object_icd = {sizeof(Sprite *), NULL, NULL, NULL};
 UT_icd enemy_icd = {sizeof(Enemy *), NULL, NULL, NULL};
@@ -24,7 +25,7 @@ Level *level_new()
   eventEmitter_on(&level->emitter, E_LEVEL_BORDER_CONTACT, &on_level_border_contact);
   eventEmitter_on(&level->emitter, E_ENEMY_ATTACK_BULLET, &on_level_enemy_attack_bullet);
 
-  for (uint_8 i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint_8)); ++i)
+  for (uint8_t i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint8_t)); ++i)
   {
     level->destroyedRocks[i][0] = 100;
   }
@@ -148,7 +149,7 @@ void level_draw(Level *level)
 
 Enemy *level_findNearestEnemy(Level *level, Vec2 position)
 {
-  uint_32 i = 0;
+  uint32_t i = 0;
 
   float minDistance = (float)INT32_MAX;
   Enemy *result;
@@ -172,7 +173,7 @@ Enemy *level_findNearestEnemy(Level *level, Vec2 position)
 
 Sprite *level_findNearestTile(Level *level, Vec2 position)
 {
-  uint_32 i = 0;
+  uint32_t i = 0;
 
   float minDistance = (float)INT32_MAX;
   Sprite *result;
@@ -234,11 +235,11 @@ void level_spawnCollisionByTiles(Level *level)
 
   for (int i = 0; i < 64; ++i)
   {
-    uint_8 tileCollision = level->levelChunk->tiles[i].collision;
+    uint8_t tileCollision = level->levelChunk->tiles[i].collision;
 
     if (tileCollision)
     {
-      uint_8 collisionDirs = 0;
+      uint8_t collisionDirs = 0;
       collisionDirs += (i + 1 < 64 && (i % 8 != 1) && level->levelChunk->tiles[i + 1].collision);
       collisionDirs += (i - 1 >= 0 && (i % 8 != 0) && level->levelChunk->tiles[i - 1].collision);
       collisionDirs += (i + 8 < 64 && level->levelChunk->tiles[i + 8].collision);
@@ -334,7 +335,7 @@ void level_spawnCollisionByTiles(Level *level)
 
 void level_deleteObject(Level *level, Sprite *object)
 {
-  uint_32 i = 0;
+  uint32_t i = 0;
   Sprite **currentObject = NULL;
   while ((currentObject = (Sprite **)utarray_next(level->objects, currentObject)))
   {
@@ -351,7 +352,7 @@ void level_deleteObject(Level *level, Sprite *object)
 
 void level_deleteEnemy(Level *level, struct Enemy *enemy)
 {
-  uint_32 i = 0;
+  uint32_t i = 0;
   Enemy **currentObject = NULL;
   while ((currentObject = (Enemy **)utarray_next(level->enemies, currentObject)))
   {
@@ -452,9 +453,9 @@ void level_spawnEnemies(Level *level)
   if(level->clearedArea[level->levelChunk->x][level->levelChunk->y])
     return;
 
-  uint_32 enemyCount = level->navRootCount;
+  uint32_t enemyCount = level->navRootCount;
 
-  for (uint_32 i = 0; i < enemyCount; i++)
+  for (uint32_t i = 0; i < enemyCount; i++)
   {
     EnemyUnit newEnemy = level_spawnUnit(level, level->navRoots[i].entityId, &level->navRoots[i]);
 
@@ -503,7 +504,7 @@ void level_loadNavRoots(Level *level)
 {
   level->navRootCount = 0;
 
-  for (uint_8 i = 0; i < 32; ++i)
+  for (uint8_t i = 0; i < 32; ++i)
   {
     if (LEVEL_PATH[i][0] == level->levelChunk->x && LEVEL_PATH[i][1] == level->levelChunk->y)
     {
@@ -513,7 +514,7 @@ void level_loadNavRoots(Level *level)
       currentRoot->currentPointIndex = 0;
       currentRoot->entityId = LEVEL_PATH[i][2];
 
-      for (uint_8 j = 0; j < 8; ++j)
+      for (uint8_t j = 0; j < 8; ++j)
       {
         currentRoot->navPointArray[j].x = 24 + LEVEL_PATH[i][3 + j * 2] * 16;
         currentRoot->navPointArray[j].y = 24 + LEVEL_PATH[i][3 + j * 2 + 1] * 16;
@@ -573,8 +574,8 @@ void level_loadLevel(LoadLevelArgs *args, ChunkMovingDirection to)
 
 void level_moveAndLoadLevel(LoadLevelArgs *args, ChunkMovingDirection to)
 {
-  int_32 chunkX = (int_32)args->level->levelChunk->x;
-  int_32 chunkY = (int_32)args->level->levelChunk->y;
+  int32_t chunkX = (int32_t)args->level->levelChunk->x;
+  int32_t chunkY = (int32_t)args->level->levelChunk->y;
 
   Vec2 from = vec2_new(chunkX, chunkY);
   Vec2 addingTo = level_directionAsStartPosition(to);
@@ -611,7 +612,7 @@ Vec2 level_directionAsStartPosition(ChunkMovingDirection direction)
 
 void level_addDestroyedRock(Level *level, Vec2 pos)
 {
-  for (uint_8 i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint_8)); ++i)
+  for (uint8_t i = 0; i < sizeof(level->destroyedRocks) / (4 * sizeof(uint8_t)); ++i)
   {
     if (level->destroyedRocks[i][0] == 100)
     {

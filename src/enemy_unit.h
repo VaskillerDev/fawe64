@@ -1,5 +1,6 @@
 #pragma once
 #include"enemy.h"
+#include "level.h"
 
 struct EnemyUnit {
     UnitMetaData metaData;

@@ -3,7 +3,9 @@
 //
 
 #pragma once
-#include "libs.h"
+#include "types.h"
+#include "stdbool.h"
+#include "stdint.h"
 
 /**
  * Информация о тайле
@@ -29,7 +31,7 @@ typedef struct TileData {
      /**
       * id тайла
       */
-      uint_8 id;
+      uint8_t id;
 } TileData;
 
 /**
@@ -37,7 +39,7 @@ typedef struct TileData {
  * @param data gid
  * @return
  */
-TileData tileData_new(uint_8 data);
+TileData tileData_new(uint8_t data);
 
 void tileData_debug(TileData* tileData);
 
@@ -48,17 +50,17 @@ typedef struct TiledLevelChunk {
     /**
      * Позиция чанка по x
      */
-    uint_32 x;
+    uint32_t x;
     /**
      * Позиция чанка по y
      */
-    uint_32 y;
+    uint32_t y;
     /**
      * Тайлы чанка
      */
     TileData tiles [64];
 } TiledLevelChunk;
 
-void tiledLevelChunk_read(TiledLevelChunk* chunk, uint_8 x, uint_8 y);
+void tiledLevelChunk_read(TiledLevelChunk* chunk, uint8_t x, uint8_t y);
 
 void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool);

@@ -1,4 +1,7 @@
-#include "libs.h"
+#include "dungeon.h"
+#include "player.h"
+#include "sprite.h"
+#include "level.h"
 
 Dungeon dungeon_new(Vec2f lastPosition) {
   return (Dungeon) {
@@ -25,7 +28,7 @@ void on_dungeon_level_border_contact(LevelBorderContactEvent event) {
   dungeon_leave(dungeon, event.direction);
 }
 
-void dungeon_leave(Dungeon* dungeon, uint_8 direction) {
+void dungeon_leave(Dungeon* dungeon, uint8_t direction) {
   direction;
   dungeon->isActive = false;
   player_getInstance()->level->isTilesActive = true;

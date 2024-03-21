@@ -1,5 +1,8 @@
 #pragma once
-#include "libs.h"
+#include "stdlib.h"
+#include "string.h"
+#include "wasm4.h"
+#include "stdbool.h"
 
 typedef struct AllocatorNode
 {

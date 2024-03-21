@@ -1,21 +1,25 @@
 //
 // Created by user on 20.01.2022.
 //
-#include "libs.h"
+#include "tiled.h"
+#include "image_pool.h"
+#include "render.h"
+#include "wasm4.h"
+#include "assets.h"
 
-TileData tileData_new (uint_8 data)
+TileData tileData_new (uint8_t data)
 {
   bool fh = 0;
   bool fv = 0;
   bool fd = 0;
-  uint_8 id = 0;
+  uint8_t id = 0;
 
   if (data >= 100)
     { // есть horizontal
       fh = true;
 
-      uint_8 f2 = (data - 100);
-      uint_8 f2r = f2 / 10;
+      uint8_t f2 = (data - 100);
+      uint8_t f2r = f2 / 10;
 
       if (f2r == 0) {
          fv = false;
@@ -34,7 +38,7 @@ TileData tileData_new (uint_8 data)
 
   if (data >= 10)
     { // есть (vertical,diagonal)
-      uint_8 f2r = data / 10;
+      uint8_t f2r = data / 10;
       fv = f2r == 1;
       fd = f2r == 2;
       if (f2r == 3) {
@@ -71,14 +75,14 @@ void tileData_debug (TileData *tileData)
   tracef ("id: %d", tileData->id);
 }
 
-void tiledLevelChunk_read (TiledLevelChunk* chunk, uint_8 x, uint_8 y)
+void tiledLevelChunk_read (TiledLevelChunk* chunk, uint8_t x, uint8_t y)
 {
   chunk->x = x;
   chunk->y = y;
 
-  for (uint_8 i = 0; i < 64; i++)
+  for (uint8_t i = 0; i < 64; i++)
     {
-      uint_8 dataFromAssets = PLAIN_LEVEL[x][y][i];
+      uint8_t dataFromAssets = PLAIN_LEVEL[x][y][i];
       chunk->tiles[i] = tileData_new (dataFromAssets);
     }
   return;
@@ -86,11 +90,11 @@ void tiledLevelChunk_read (TiledLevelChunk* chunk, uint_8 x, uint_8 y)
 
 void tiledLevelChunk_draw(TiledLevelChunk* chunk, ImagePool* imagePool)
 {
-  const uint_8 drawOffset = 16;
-  uint_8 tileI = 0;
+  const uint8_t drawOffset = 16;
+  uint8_t tileI = 0;
 
-  for (uint_8 y = 0; y < 8 ; y++) {
-    for (uint_8 x = 0; x < 8 ; x++) {
+  for (uint8_t y = 0; y < 8 ; y++) {
+    for (uint8_t x = 0; x < 8 ; x++) {
 
       TileData * data = &chunk->tiles[tileI];
       Image * img = NULL;

@@ -1,7 +1,7 @@
-#include "libs.h"
-#include <math.h>
+#include "vec2.h"
+#include "math.h"
 
-Vec2 vec2_new(int_32 x, int_32 y)
+Vec2 vec2_new(int32_t x, int32_t y)
 {
     Vec2 newVec;
     newVec.x = x;

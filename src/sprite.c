@@ -1,4 +1,7 @@
-#include "libs.h"
+#include "sprite.h"
+#include "bounding_volume.h"
+#include "render.h"
+#include "wasm4.h"
 #include "allocator.h"
 
 #define DEBUG_BOUNDING_VOLUME 0
@@ -38,7 +41,7 @@ void sprite_delete(Sprite *sprite)
     alloc_free(sprite);
 }
 
-Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount, uint_32 animDelay)
+Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint32_t imageCount, uint32_t animDelay)
 {
     sprite->frameCounter = 0;
     sprite->animDelay = animDelay;
@@ -51,7 +54,7 @@ Sprite *sprite_animated_init(Sprite *sprite, Image *images[], uint_32 imageCount
     {
         sprite->images = images;
 
-        //for (uint_32 i = 0; i < imageCount; ++i)
+        //for (uint32_t i = 0; i < imageCount; ++i)
          //   sprite->images[i] = images[i];
     }
 

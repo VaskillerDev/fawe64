@@ -1,5 +1,10 @@
-#include "libs.h"
-#include <math.h>
+#include "sword.h"
+#include "math.h"
+#include "image_pool.h"
+#include "sprite.h"
+#include "level.h"
+#include "wasm4.h"
+#include "player.h"
 
 Sword sword_new(Level *level)
 {
