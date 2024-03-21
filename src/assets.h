@@ -13,6 +13,8 @@ extern uint16_t pliligrimUpAttackColors[4];
 extern uint16_t enemy0ImgColors[4];
 extern uint16_t tile4Colors[4];
 extern uint16_t rockImgColors[4];
+extern uint16_t boss0ImgColors[4];
+extern uint16_t boss0ImgColors1[4];
 extern const uint8_t menuImg[2560];
 
 #define piligrimWidth 16
@@ -88,3 +90,10 @@ extern const uint8_t rock_img[64];
 extern const uint8_t bomb_img[64];
 extern const uint8_t bomb2_img[64];
 extern const uint8_t potion_img[64];
+
+extern const uint8_t boss0_img_0[64];
+extern const uint8_t boss0_img_1[64];
+extern const uint8_t boss0_img_2[64];
+extern const uint8_t boss0_img_3[64];
+extern const uint8_t boss0_img_4[64];
+extern const uint8_t boss0_img_5[64];

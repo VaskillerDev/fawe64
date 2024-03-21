@@ -12,11 +12,8 @@ static const struct Bullet EMPTY_BULLET_TEMPLATE;
 void bullet_new(Bullet* bullet, BulletMetaData metaData) {
   bullet->wasCollision = false;
   bullet->metaData = metaData;
+  bullet->direction = metaData.direction;
   bullet->position = vec2f_fromVec2 (bullet->metaData.startPosition);
-  Vec2 playerPosition = player_getInstance()->sprite->position;
-  bullet->direction = vec2_fromPoints (
-      vec2_fromVec2f (bullet->position), playerPosition
-      );
 }
 
 bool bullet_isEmpty(Bullet* bullet) {

@@ -14,6 +14,7 @@ typedef struct BulletMetaData {
     BulletSenderType senderType;
     Sprite* owner;
     Vec2 startPosition;
+    Vec2 direction;
     uint8_t lifetime;
     uint8_t speed;
 } BulletMetaData;

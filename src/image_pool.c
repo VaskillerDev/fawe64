@@ -7,7 +7,7 @@
 void imagePool_init(ImagePool *pool)
 {
     pool->imageCount = 51;
-    pool->data = allocate(sizeof(uint8_t) * (32 * 7 + 64 * 44 + 2560));
+    pool->data = allocate(sizeof(uint8_t) * (32 * 7 + 64 * 50 + 2560));
     pool->images = (Image **)allocate(sizeof(Image) * pool->imageCount);
     pool->offset = 0;
 
@@ -79,6 +79,13 @@ void imagePool_init(ImagePool *pool)
   *(pool->images + 49) = imagePool_addImage (pool, (void*)bomb_img, 64, 16, 16, bombImgColors, BLIT_2BPP);
   *(pool->images + 50) = imagePool_addImage (pool, (void*)potion_img, 64, 16, 16, rockImgColors, BLIT_2BPP);
   *(pool->images + 51) = imagePool_addImage (pool, (void*)bomb2_img, 64, 16, 16, bomb2ImgColors, BLIT_2BPP);
+
+  *(pool->images + 52) = imagePool_addImage (pool, (void*)boss0_img_0, 64, 16, 16, boss0ImgColors, BLIT_2BPP);
+  *(pool->images + 53) = imagePool_addImage (pool, (void*)boss0_img_1, 64, 16, 16, boss0ImgColors, BLIT_2BPP);
+  *(pool->images + 54) = imagePool_addImage (pool, (void*)boss0_img_2, 64, 16, 16, boss0ImgColors, BLIT_2BPP);
+  *(pool->images + 55) = imagePool_addImage (pool, (void*)boss0_img_3, 64, 16, 16, boss0ImgColors1, BLIT_2BPP);
+  *(pool->images + 56) = imagePool_addImage (pool, (void*)boss0_img_4, 64, 16, 16, boss0ImgColors1, BLIT_2BPP);
+  *(pool->images + 57) = imagePool_addImage (pool, (void*)boss0_img_5, 64, 16, 16, boss0ImgColors, BLIT_2BPP);
 }
 
 Image *imagePool_addImage(ImagePool *pool, void *dataPtr, uint32_t size, uint32_t w, uint32_t h, uint16_t colors[4], uint32_t flags)

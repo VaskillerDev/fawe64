@@ -47,14 +47,40 @@ void on_level_enemy_attack_bullet(LevelEnemyAttackBulletEvent *event)
   BulletManager *bm = &event->enemy->level->bulletManager;
   Vec2 startPosition = event->enemy->sprite->position;
   UnitMetaData unitMetaData = event->enemy->metaData;
+  Vec2 playerPosition = player_getInstance()->sprite->position;
 
   BulletMetaData bulletMetaData = {
       .startPosition = startPosition,
       .speed = unitMetaData.bulletSpeed,
       .lifetime = unitMetaData.bulletLifetime,
       .senderType = BulletSenderType_Enemy,
+      .direction = vec2_fromPoints (startPosition, playerPosition),
       .owner = event->enemy->sprite
   };
+
+  // for boss0
+  if (event->enemy->metaData.name == EnemyTypeName_Boss0Head) {
+      BulletMetaData rightBulletMetaData = {
+              .startPosition = startPosition,
+              .speed = unitMetaData.bulletSpeed,
+              .lifetime = unitMetaData.bulletLifetime,
+              .direction =  vec2_fromPoints (startPosition, vec2_add(playerPosition, vec2_new(20,0))),
+              .senderType = BulletSenderType_Enemy,
+              .owner = event->enemy->sprite
+      };
+
+      BulletMetaData leftBulletMetaData = {
+              .startPosition = startPosition,
+              .speed = unitMetaData.bulletSpeed,
+              .lifetime = unitMetaData.bulletLifetime,
+              .direction =  vec2_fromPoints (startPosition, vec2_sub(playerPosition, vec2_new(20,0))),
+              .senderType = BulletSenderType_Enemy,
+              .owner = event->enemy->sprite
+      };
+
+      bulletManager_createBullet(bm, rightBulletMetaData);
+      bulletManager_createBullet(bm, leftBulletMetaData);
+  }
 
   bulletManager_createBullet(bm, bulletMetaData);
 }
