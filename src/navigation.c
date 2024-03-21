@@ -1,5 +1,7 @@
-#include "libs.h"
-#include <math.h>
+#include "navigation.h"
+#include "enemy.h"
+#include "math.h"
+#include "sprite.h"
 
 NavPoint *Navigation_GetCurrentNavPoint(struct NavRoot *const navRoot)
 {

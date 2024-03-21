@@ -1,6 +1,8 @@
 #pragma once
-#include "libs.h"
+#include "types.h"
 #include "event.h"
+#include "bounding_volume.h"
+#include "image.h"
 #include "hp.h"
 
 struct Sprite
@@ -9,10 +11,10 @@ struct Sprite
     Hp* health;
     Image** images;
     
-    uint_32 currentImageIndex;
-    uint_32 imageCount;
-    uint_32 frameCounter;
-    uint_32 animDelay;
+    uint32_t currentImageIndex;
+    uint32_t imageCount;
+    uint32_t frameCounter;
+    uint32_t animDelay;
 
     Vec2 position;
     Vec2 size;
@@ -22,14 +24,14 @@ struct Sprite
     bool isHide;
     bool isFlipH;
     bool useCustomColors;
-    uint_16 colors[4];
+    uint16_t colors[4];
 };
 
 typedef struct Sprite Sprite;
 
 Sprite* sprite_new(Image* image);
 void sprite_delete(Sprite* sprite);
-Sprite* sprite_animated_init(Sprite* sprite, Image* images[], uint_32 imageCount, uint_32 animDelay);
+Sprite* sprite_animated_init(Sprite* sprite, Image* images[], uint32_t imageCount, uint32_t animDelay);
 Sprite* sprite_init(Sprite* sprite, Image* image);
 
 void sprite_setFlipH(Sprite* sprite, bool flip);

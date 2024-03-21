@@ -1,5 +1,10 @@
 #pragma once
+#include "types.h"
 #include "event.h"
+
+#include "stdlib.h"
+#include "stdbool.h"
+
 
 typedef struct Timer {
     uint16_t startTime;

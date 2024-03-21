@@ -1,14 +1,16 @@
-#include "libs.h"
-#include <math.h>
+#include "items.h"
+#include "level.h"
+#include "wasm4.h"
+#include "player.h"
 
-const uint_8 POITION_EFFECT = 5;
+const uint8_t POITION_EFFECT = 5;
 
 Bomb bomb_new(Level *level, Vec2 spawnPoint)
 {
     Sprite *sprite = level_spawnObject(level);
     sprite->useCustomColors = true;
     sprite->images = &level->imagePool->images[PoolIdx_Bomb];
-    memcpy(sprite->colors, sprite->images[0]->colors, sizeof(uint_16) * 4);
+    memcpy(sprite->colors, sprite->images[0]->colors, sizeof(uint16_t) * 4);
     sprite->position = spawnPoint;
     sprite->imageCount = 1;
     sprite->currentImage = 0;
@@ -172,7 +174,7 @@ void bombManager_update(Level *level, BombManager *bombManager)
 
         if(bomb->timer.time % (3 + bomb->timer.time / 16) == 0)
         {
-            uint_16 t = bomb->sprite->colors[0];
+            uint16_t t = bomb->sprite->colors[0];
             bomb->sprite->colors[0] = bomb->sprite->colors[1];
             bomb->sprite->colors[1] = t;
         }

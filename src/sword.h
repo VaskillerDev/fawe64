@@ -1,13 +1,17 @@
 #pragma once
-#include "libs.h"
+#include "types.h"
+#include "event.h"
+#include "stdint.h"
+#include "stdbool.h"
+#include "image.h"
 
 struct Sword
 {
    struct Sprite* sprite;
 
-    uint_8 attackDelay;
-    uint_8 counter;
-    uint_8 damage;
+    uint8_t attackDelay;
+    uint8_t counter;
+    uint8_t damage;
     Vec2 dir;
     Vec2f damageRange;
     bool usage;
@@ -21,8 +25,6 @@ struct Sword
 
     EventEmitter emitter;
 };
-
-typedef struct Sword Sword;
 
 Sword sword_new(Level* level);
 Sword sword_empty();

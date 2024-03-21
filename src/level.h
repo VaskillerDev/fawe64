@@ -1,5 +1,11 @@
 #pragma once
-#include "libs.h"
+#include "stdlib.h"
+#include "tiled.h"
+#include "image_pool.h"
+#include "navigation.h"
+#include "items.h"
+#include "bullet.h"
+#include "3dparty/utarray.h"
 
 /**
  * Класс, отвечающий за игровой уровень
@@ -16,15 +22,15 @@ typedef struct Level
     BulletManager bulletManager;
     BombManager bombManager;
     Dungeon dungeon;
-   
-    uint_8 destroyedRocks[32][4];
+
+    uint8_t destroyedRocks[32][4];
     bool clearedArea[8][8];
 
     bool pause;
     bool isTilesActive;
 
     NavRoot navRoots[4];
-    uint_8 navRootCount;
+    uint8_t navRootCount;
 } Level;
 
 /**

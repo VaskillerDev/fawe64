@@ -2,7 +2,8 @@
 // Created by user on 15.01.2022.
 //
 #pragma once
-#include "libs.h"
+#include "stdbool.h"
+
 /**
  * 
  * Дефолтный конструктор состояния меню
@@ -37,12 +38,12 @@ void menu_setImagePool(MenuState* menu, ImagePool* imagePool);
 /**
  * Опции меню
  */
-typedef enum MenuOptionType {
+enum MenuOptionType {
     CONTINUE_GAME = 1,
     NEW_GAME,
     SETTINGS,
     CREDITS
-} MenuOptionType;
+};
 
 struct Sprite;
 

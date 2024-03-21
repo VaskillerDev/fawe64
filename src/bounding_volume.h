@@ -1,6 +1,8 @@
 #pragma once
+#include "types.h"
 #include "event.h"
-#include "enemy.h"
+#include "vec2.h"
+#include "stdbool.h"
 
 typedef enum BoundingVolumeTag {
     BoundingVolumeTag_Unknown,

@@ -1,15 +1,15 @@
 #pragma once
-#include "libs.h"
+#include "stdint.h"
 
-struct Image* image_new(void* dataPtr, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags);
+struct Image* image_new(void* dataPtr, uint32_t w, uint32_t h, uint16_t colors[4], uint32_t flags);
 
 struct Image
 {
     void* data;
-    uint_32 width;
-    uint_32 height;
-    uint_16 colors[4];
-    uint_32 flags;
+    uint32_t width;
+    uint32_t height;
+    uint16_t colors[4];
+    uint32_t flags;
 };
 
 typedef struct Image Image;

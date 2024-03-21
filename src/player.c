@@ -1,5 +1,10 @@
-#include "libs.h"
-#include <math.h>
+#include "player.h"
+#include "sprite.h"
+#include "level.h"
+#include "wasm4.h"
+#include "game.h"
+#include "render.h"
+#include "math.h"
 
 #define ATTACK_ANIMATION_TIMEOUT_VALUE 30
 
@@ -219,11 +224,11 @@ void player_respawn(PlayerInitInstanceArgs args)
 {
   Player *currentPlayer = player_getInstance();
 
-  uint_8 currentHP = currentPlayer->health.currentPoints;
-  uint_8 currentSelector = currentPlayer->selectorIndex;
-  uint_8 currentItemCount[PlayerItem_Count];
+  uint8_t currentHP = currentPlayer->health.currentPoints;
+  uint8_t currentSelector = currentPlayer->selectorIndex;
+  uint8_t currentItemCount[PlayerItem_Count];
 
-  for (uint_8 i = 0; i < PlayerItem_Count; ++i)
+  for (uint8_t i = 0; i < PlayerItem_Count; ++i)
   {
     currentItemCount[i] = currentPlayer->itemsCount[i];
   }
@@ -234,7 +239,7 @@ void player_respawn(PlayerInitInstanceArgs args)
   currentPlayer->health.currentPoints = currentHP;
   currentPlayer->selectorIndex = currentSelector;
 
-  for (uint_8 i = 0; i < PlayerItem_Count; ++i)
+  for (uint8_t i = 0; i < PlayerItem_Count; ++i)
   {
     currentPlayer->itemsCount[i] = currentItemCount[i];
   }
@@ -603,7 +608,7 @@ void player_draw(Player *player, Level *level)
   lText[0] = player->health.currentPoints / 10 + '0';
   lText[1] = player->health.currentPoints % 10 + '0';
   lText[2] = '\0';
-  uint_16 textColors[4] = {4, 0, 0, 0};
+  uint16_t textColors[4] = {4, 0, 0, 0};
   DrawText(lText, 16, 150, textColors);
 
   if (player->selectorIndex != PlayerItem_Count)
@@ -611,7 +616,7 @@ void player_draw(Player *player, Level *level)
     lText[0] = player->itemsCount[player->selectorIndex] / 10 + '0';
     lText[1] = player->itemsCount[player->selectorIndex] % 10 + '0';
     lText[2] = '\0';
-    uint_16 textColors[4] = {4, 0, 0, 0};
+    uint16_t textColors[4] = {4, 0, 0, 0};
     DrawText(lText, 120, 150, textColors);
   }
 
@@ -623,11 +628,11 @@ void player_draw(Player *player, Level *level)
 
   if (level->pause)
   {
-    uint_16 selectorColors[4] = {1, 4, 1, 0};
+    uint16_t selectorColors[4] = {1, 4, 1, 0};
     textColors[0] = 3;
     textColors[1] = 4;
 
-    for (uint_8 i = 0; i < PlayerItem_Count; i++)
+    for (uint8_t i = 0; i < PlayerItem_Count; i++)
     {
       if (i == player->selectorIndex)
         selectorColors[1] = 3;
@@ -652,7 +657,7 @@ void player_postUpdate(Player *player)
   if (player->actionState == PlayerAction_Attack)
   {
 
-    uint_8 *timeout = &player->attackAnimationTimeout;
+    uint8_t *timeout = &player->attackAnimationTimeout;
     *timeout -= 1;
     if (*timeout <= 0)
     {

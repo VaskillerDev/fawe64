@@ -1,24 +1,18 @@
-// Статичные файлы игры
-// Created by user on 15.01.2022.
-//
-
-
-#ifndef _ASSETS_H_
-#define _ASSETS_H_
-
-#include "types.h"
+// In-game assets encoded as bytes
+#pragma once
+#include "stdlib.h"
 
 #define menuImgWidth 160
 #define menuImgHeight 128
 #define menuImgFlags BLIT_1BPP
-extern uint_16 menuImgColors[4];
-extern uint_16 bombImgColors[4];
-extern uint_16 bomb2ImgColors[4];
-extern uint_16 pliligrimLeftColors[4];
-extern uint_16 pliligrimUpAttackColors[4];
+extern uint16_t menuImgColors[4];
+extern uint16_t bombImgColors[4];
+extern uint16_t bomb2ImgColors[4];
+extern uint16_t pliligrimLeftColors[4];
+extern uint16_t pliligrimUpAttackColors[4];
 extern uint16_t enemy0ImgColors[4];
-extern uint_16 tile4Colors[4];
-extern uint_16 rockImgColors[4];
+extern uint16_t tile4Colors[4];
+extern uint16_t rockImgColors[4];
 extern const uint8_t menuImg[2560];
 
 #define piligrimWidth 16
@@ -94,5 +88,3 @@ extern const uint8_t rock_img[64];
 extern const uint8_t bomb_img[64];
 extern const uint8_t bomb2_img[64];
 extern const uint8_t potion_img[64];
-
-#endif //_ASSETS_H_

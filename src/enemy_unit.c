@@ -1,4 +1,6 @@
 #include "enemy_unit.h"
+#include "player.h"
+#include "wasm4.h"
 
 EnemyWarlock ENEMY_WARLOCK_PROTOTYPE = {
     .metaData ={
@@ -61,7 +63,7 @@ EnemyWarlock warlock_new(Enemy *enemy, Level *level)
       imagePool_getImage(level->imagePool, PoolIdx_Enemy0Go2)
   };
 
-  for (uint_8 i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < 3; i++) {
     enemy->goFrames[i] = frames[i];
   }
 
@@ -71,7 +73,7 @@ EnemyWarlock warlock_new(Enemy *enemy, Level *level)
       imagePool_getImage(level->imagePool, PoolIdx_Enemy0Attack)
   };
 
-  for (uint_8 i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < 3; i++) {
       enemy->attackFrame[i] = attackFrames[i];
     }
 
@@ -153,7 +155,7 @@ EnemyUnit bat_new(Enemy* enemy, Level* level) {
       imagePool_getImage(level->imagePool, PoolIdx_Enemy1Go2)
   };
 
-  for (uint_8 i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < 3; i++) {
       enemy->goFrames[i] = frames[i];
     }
 
@@ -163,7 +165,7 @@ EnemyUnit bat_new(Enemy* enemy, Level* level) {
       imagePool_getImage(level->imagePool, PoolIdx_Enemy1Go2)
   };
 
-  for (uint_8 i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < 3; i++) {
       enemy->attackFrame[i] = attackFrames[i];
     }
 
@@ -258,7 +260,7 @@ void rock_behaviour(Enemy* enemy) {
   float distance = vec2_getLength(vec2_sub(playerPosition, rockPosition));
 
   if (distance < 24) {
-      uint_16 color = *DRAW_COLORS;
+      uint16_t color = *DRAW_COLORS;
       *DRAW_COLORS = 0x30;
       rect (rockPosition.x - 9, rockPosition.y - 9, 18, 18);
       *DRAW_COLORS =color;

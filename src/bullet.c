@@ -1,4 +1,9 @@
-#include "libs.h"
+#include "bullet.h"
+#include "vec2.h"
+#include "level.h"
+#include "player.h"
+#include "wasm4.h"
+#include "3dparty/utarray.h"
 
 UT_icd bullet_icd = {sizeof(Bullet ), NULL, NULL, NULL};
 
@@ -16,8 +21,8 @@ void bullet_new(Bullet* bullet, BulletMetaData metaData) {
 
 bool bullet_isEmpty(Bullet* bullet) {
   return
-  (uint_8)bullet->position.x == (uint_8)EMPTY_BULLET_TEMPLATE.position.x
-  && (uint_8)bullet->position.y == (uint_8)EMPTY_BULLET_TEMPLATE.position.y
+  (uint8_t)bullet->position.x == (uint8_t)EMPTY_BULLET_TEMPLATE.position.x
+  && (uint8_t)bullet->position.y == (uint8_t)EMPTY_BULLET_TEMPLATE.position.y
   && bullet->metaData.speed == EMPTY_BULLET_TEMPLATE.metaData.speed;
 }
 

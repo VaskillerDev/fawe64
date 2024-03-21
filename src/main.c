@@ -1,6 +1,12 @@
-#include "libs.h"
 #include "enemy_unit.h"
+#include "image_pool.h"
+#include "event.h"
+#include "game.h"
+#include "level.h"
+#include "player.h"
+#include "render.h"
 #include "allocator.h"
+
 EventEmitter emitter;
 MenuState menuState;
 GameState gameSate;
