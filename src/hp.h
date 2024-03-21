@@ -2,9 +2,13 @@
 // Created by stepaniuk on 21.01.2022.
 //
 #pragma once
-#include "libs.h"
+#include "types.h"
+#include "event.h"
 
-typedef struct Hp {
+#include "stdbool.h"
+#include "stdlib.h"
+
+struct Hp {
 
     uint8_t id;
 
@@ -22,7 +26,7 @@ typedef struct Hp {
      uint8_t maxPoints;
 
      bool swordResistance;
-} Hp;
+};
 
 Hp hp_new(uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints, bool swordResistance);
 

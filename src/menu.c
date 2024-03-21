@@ -1,8 +1,12 @@
 //
 // Created by user on 15.01.2022.
 //
-#include "libs.h"
+#include "event.h"
+#include "menu.h"
+#include "wasm4.h"
 #include "render.h"
+#include "sprite.h"
+#include "image_pool.h"
 
 struct MenuState menuState_new(void)
 {
@@ -64,7 +68,7 @@ void menu_processInput(struct MenuState *state, struct GameState *gameState)
 
 void menu_draw_logo(struct MenuState *state)
 {
-  uint_16 textColors[4] = {3, 0, 0, 0};
+  uint16_t textColors[4] = {3, 0, 0, 0};
   DrawText ("FAWE 64", 8, state->logoYPos,textColors);
   sprite_draw (state->logo);
 
@@ -95,7 +99,7 @@ void menu_draw_options(struct MenuState *state, bool isCanContinue)
     break;
   }
 
-  uint_16 textColors[4] = {3, 0, 0, 0};
+  uint16_t textColors[4] = {3, 0, 0, 0};
   DrawText(textContent, optionXPos, optionYPos, textColors);
 }
 

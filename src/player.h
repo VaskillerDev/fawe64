@@ -1,18 +1,23 @@
 #pragma once
-#include "libs.h"
+#include "sword.h"
+#include "types.h"
+#include "vec2.h"
+#include "hp.h"
+#include "image.h"
+#include "timer.h"
 
-typedef enum PlayerMovementDirection {
+enum PlayerMovementDirection {
     PlayerDir_Right,
     PlayerDir_Up,
     PlayerDir_Left,
     PlayerDir_Bottom
-} PlayerMovementState;
+};
 
-typedef enum PlayerActionState {
+enum PlayerActionState {
     PlayerAction_Idle,
     PlayerAction_Go,
     PlayerAction_Attack
-} PlayerActionState;
+};
 
 enum PlayerItemType
 {
@@ -62,23 +67,21 @@ struct Player
 
     GameState* gameState;
 
-    uint_8 attackAnimationTimeout;
+    uint8_t attackAnimationTimeout;
 
-    uint_8 itemsCount[PlayerItem_Count];
+    uint8_t itemsCount[PlayerItem_Count];
     Image* itemImages[PlayerItem_Count];
-    uint_8 selectorIndex;
+    uint8_t selectorIndex;
 };
-
-typedef struct Player Player;
 
 /**
  * Сигнатура взятия инстанса игрока при первом создании
  */
-typedef struct PlayerInitInstanceArgs {
+struct PlayerInitInstanceArgs {
     Level* level;
     GameState* gameState;
     Vec2 spawnPosition;
-} PlayerInitInstanceArgs;
+};
 
 Player player_new(Level *level, GameState* gameState, Vec2 spawnPosition);
 

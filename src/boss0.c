@@ -1,8 +1,11 @@
 #include "boss0.h"
 #include "enemy_unit.h"
+#include "player.h"
+#include "wasm4.h"
+#include "render.h"
 
-const uint_8 BOSS0_HEAD_DELAY = 240;
-const uint_8 BOSS0_HAND_DELAY = 100;
+const uint8_t BOSS0_HEAD_DELAY = 240;
+const uint8_t BOSS0_HAND_DELAY = 100;
 
 /**
  * Prototype of boss.head instance
@@ -84,7 +87,7 @@ EnemyUnit boss0_headInit(Boss0* boss0) {
             imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle3),
     };
 
-    for (uint_8 i = 0; i < 4; i++) {
+    for (uint8_t i = 0; i < 4; i++) {
         enemy->goFrames[i] = frames[i];
     }
 
@@ -94,7 +97,7 @@ EnemyUnit boss0_headInit(Boss0* boss0) {
             imagePool_getImage(level->imagePool, PoolIdx_Boss0Idle0)
     };
 
-    for (uint_8 i = 0; i < 3; i++) {
+    for (uint8_t i = 0; i < 3; i++) {
         enemy->attackFrame[i] = attackFrames[i];
     }
 
@@ -159,7 +162,7 @@ EnemyUnit boss0_handInit(Boss0* boss0, bool isLeft) {
             imagePool_getImage(level->imagePool, PoolIdx_Boss0HandClose),
     };
 
-    for (uint_8 i = 0; i < 3; i++) {
+    for (uint8_t i = 0; i < 3; i++) {
         enemy->goFrames[i] = frames[i];
     }
 
@@ -169,7 +172,7 @@ EnemyUnit boss0_handInit(Boss0* boss0, bool isLeft) {
             imagePool_getImage(level->imagePool, PoolIdx_Boss0HandOpen),
     };
 
-    for (uint_8 i = 0; i < 3; i++) {
+    for (uint8_t i = 0; i < 3; i++) {
         enemy->attackFrame[i] = attackFrames[i];
     }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "libs.h"
+#include "enemy.h"
 
 typedef struct Boss0State {
 } Boss0State;

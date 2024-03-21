@@ -1,5 +1,7 @@
 #pragma once
-#include "libs.h"
+#include "timer.h"
+#include "dungeon.h"
+#include "enemy.h"
 
 typedef struct Bomb
 {

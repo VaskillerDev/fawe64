@@ -1,7 +1,8 @@
 //
 // Created by user on 17.01.2022.
 //
-#include "libs.h"
+#include "event.h"
+#include "wasm4.h"
 
 EventEmitter eventEmitter_new (void)
 {
@@ -29,7 +30,7 @@ void eventEmitter_emit (EventEmitter *emitter, enum EventName name, void *args)
     return;
   }
 
-  for (uint_8 i = 0; i < emitter->listeningEventCount; i++) {
+  for (uint8_t i = 0; i < emitter->listeningEventCount; i++) {
       if (emitter->events[i].eventNameAsKey != name) {
         continue;
       }

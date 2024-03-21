@@ -1,4 +1,4 @@
-#include "libs.h"
+#include "timer.h"
 
 Timer timer_new(uint16_t time, bool isLoop) {
   return (Timer) {

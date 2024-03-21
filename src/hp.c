@@ -1,7 +1,7 @@
 //
 // Created by stepaniuk on 21.01.2022.
 //
-#include "libs.h"
+#include "hp.h"
 
 Hp hp_new (uint8_t id, void* parent, uint8_t maxPoints, uint8_t currentPoints, bool swordResistance)
 {

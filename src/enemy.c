@@ -1,5 +1,7 @@
-#include "libs.h"
+#include "enemy.h"
 #include "allocator.h"
+#include "level.h"
+#include "player.h"
 
 Enemy *new_enemy(Level *level)
 {

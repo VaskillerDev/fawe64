@@ -1,12 +1,14 @@
 #pragma once
-#include"libs.h"
+#include "types.h"
+#include "stdlib.h"
+#include "image.h"
 
 struct ImagePool
 {
     void* data;
     Image** images;
-    uint_32 imageCount;
-    uint_32 offset;
+    uint32_t imageCount;
+    uint32_t offset;
 };
 
 /**
@@ -94,5 +96,5 @@ typedef enum ImagePoolIndex {
 } ImagePoolIndex;
 
 void imagePool_init(ImagePool* pool);
-Image* imagePool_addImage(ImagePool* pool, void* dataPtr, uint_32 size, uint_32 w, uint_32 h, uint_16 colors[4], uint_32 flags);
-Image* imagePool_getImage(ImagePool* pool, uint_32 index);
+Image* imagePool_addImage(ImagePool* pool, void* dataPtr, uint32_t size, uint32_t w, uint32_t h, uint16_t colors[4], uint32_t flags);
+Image* imagePool_getImage(ImagePool* pool, uint32_t index);

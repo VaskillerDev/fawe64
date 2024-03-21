@@ -1,6 +1,9 @@
 #pragma once
-#include "libs.h"
+#include "types.h"
+#include "event.h"
 #include "hp.h"
+#include "image.h"
+
 #define RANDOMIZE(a, b) (a) + ((float)rand() / (float)RAND_MAX * (b - a))
 
 enum EnemyTypeName {
@@ -21,9 +24,9 @@ enum EnemyAttackTypeName {
 typedef struct UnitMetaData {
     EnemyAttackTypeName attackName;
     EnemyTypeName name;
-    uint_8 hp;
-    uint_8 bulletSpeed;
-    uint_8 bulletLifetime;
+    uint8_t hp;
+    uint8_t bulletSpeed;
+    uint8_t bulletLifetime;
     bool swordResistance;
 } UnitMetaData;
 
@@ -53,8 +56,8 @@ struct Enemy
     int hitAnimationTimer;
 
     Vec2 moveDir;
-    uint_8 movDist;
-    uint_8 delay;
+    uint8_t movDist;
+    uint8_t delay;
 
     UnitMetaData metaData;
 
