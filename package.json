@@ -1,0 +1,17 @@
+{
+  "name": "fawe64",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "make",
+    "watch": "npx w4 watch /build/cart.wasm",
+    "start" : "npx w4 run --no-open --no-qr ./build/cart.wasm"
+  },
+  "devDependencies": {
+    "wasm4": "^2.6.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

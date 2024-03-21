@@ -40,3 +40,8 @@ build
 wasi-sdk-14.0
 
 src/.vscode
+
+
+#nodejs
+node_modules
+package-lock.json
