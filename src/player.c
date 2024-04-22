@@ -378,8 +378,6 @@ void player_update(Player *player, Level *level)
     }
   }
 
-  tracef("prev button: %d %d",  (int)gamepda_diff, (int)prev_pressed_button);
-
   if (button_1)
   {
     ++button_1_pressTime;
