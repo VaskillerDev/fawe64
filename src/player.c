@@ -364,6 +364,9 @@ void player_update(Player *player, Level *level)
   const bool button_1 = gamepad & BUTTON_1;
   const bool button_2 = gamepad & BUTTON_2;
 
+  // remove button1 and button2 info
+  gamepad = gamepad & 252;
+
   const int gamepda_diff = (int)gamepad - prev_gamepad;
 
   if (gamepda_diff > 0)
@@ -381,7 +384,6 @@ void player_update(Player *player, Level *level)
   if (button_1)
   {
     ++button_1_pressTime;
-    gamepad -= BUTTON_1;
 
     if (level->pause)
     {
@@ -406,7 +408,6 @@ void player_update(Player *player, Level *level)
   if (button_2)
   {
     ++button_2_pressTime;
-    gamepad -= BUTTON_2;
   }
   else
   {
