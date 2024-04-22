@@ -358,13 +358,32 @@ void player_update(Player *player, Level *level)
   static uint8_t button_R_pressTime = 0;
   static uint8_t pauseOff_time = 0;
 
-  bool button_1 = gamepad & BUTTON_1;
-  bool button_2 = gamepad & BUTTON_2;
+  static uint8_t prev_gamepad = 0;
+  static uint8_t prev_pressed_button = 0;
+
+  const bool button_1 = gamepad & BUTTON_1;
+  const bool button_2 = gamepad & BUTTON_2;
+
+  // remove button1 and button2 info
+  gamepad = gamepad & 252;
+
+  const int gamepda_diff = (int)gamepad - prev_gamepad;
+
+  if (gamepda_diff > 0)
+  {
+    prev_pressed_button = gamepda_diff;
+  }
+  else
+  {
+    if (gamepda_diff < 0)
+    {
+      prev_pressed_button = prev_gamepad + gamepda_diff;
+    }
+  }
 
   if (button_1)
   {
     ++button_1_pressTime;
-    gamepad -= BUTTON_1;
 
     if (level->pause)
     {
@@ -389,7 +408,6 @@ void player_update(Player *player, Level *level)
   if (button_2)
   {
     ++button_2_pressTime;
-    gamepad -= BUTTON_2;
   }
   else
   {
@@ -403,7 +421,7 @@ void player_update(Player *player, Level *level)
 
   if (level->pause)
   {
-    if (gamepad == GAMEPAD_LEFT)
+    if (gamepad & GAMEPAD_LEFT)
     {
       ++button_L_pressTime;
 
@@ -473,7 +491,7 @@ void player_update(Player *player, Level *level)
       tone(1000, 1 | (10 << 8), 3, TONE_NOISE | TONE_MODE4);
   }
 
-  if (gamepad == GAMEPAD_LEFT)
+  if (gamepad & GAMEPAD_LEFT & prev_pressed_button)
   {
     if (player->actionState != PlayerAction_Attack)
     {
@@ -482,7 +500,7 @@ void player_update(Player *player, Level *level)
     player->sword.dir = vec2_new(-1, 0);
     goto MOVE_PLAYER;
   }
-  if (gamepad == GAMEPAD_RIGHT)
+  if (gamepad & GAMEPAD_RIGHT & prev_pressed_button)
   {
     if (player->actionState != PlayerAction_Attack)
     {
@@ -491,7 +509,7 @@ void player_update(Player *player, Level *level)
     player->sword.dir = vec2_new(1, 0);
     goto MOVE_PLAYER;
   }
-  if (gamepad == GAMEPAD_DOWN)
+  if (gamepad & GAMEPAD_DOWN & prev_pressed_button)
   {
     if (player->actionState != PlayerAction_Attack)
     {
@@ -500,7 +518,7 @@ void player_update(Player *player, Level *level)
     player->sword.dir = vec2_new(0, 1);
     goto MOVE_PLAYER;
   }
-  if (gamepad == GAMEPAD_UP)
+  if (gamepad & GAMEPAD_UP & prev_pressed_button)
   {
     if (player->actionState != PlayerAction_Attack)
     {
@@ -539,6 +557,7 @@ MOVE_PLAYER:
 
   button_1_prev = button_1;
   button_2_prev = button_2;
+  prev_gamepad = gamepad;
 }
 
 void player_draw(Player *player, Level *level)
