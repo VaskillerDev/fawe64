@@ -45,3 +45,6 @@ src/.vscode
 #nodejs
 node_modules
 package-lock.json
+# cargo
+/target
+Cargo.lock
