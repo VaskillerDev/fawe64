@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "libs.h": "c",
-        "cstdlib": "c",
-        "hp.h": "c",
-        "allocator.h": "c"
-    }
-}
